@@ -1,0 +1,28 @@
+{
+  "name": "peerforge",
+  "version": "1.0.0",
+  "description": "PeerForge is a peer-to-peer mock interview platform where developers can practice interviews with each other, exchange roles, and improve their interview skills through feedback.",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "bugs": {
+    "url": "https://github.com/atishaycodes/peerForge/issues"
+  },
+  "homepage": "https://github.com/atishaycodes/peerForge#readme",
+  "dependencies": {
+    "lucide-react": "^1.68.0",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^6.2.1",
+    "autoprefixer": "^10.6.2",
+    "postcss": "^8.5.32",
+    "tailwindcss": "^3.4.19",
+    "vite": "^8.3.5"
+  }
+}
