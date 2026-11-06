@@ -86,3 +86,4 @@
 ## Deferred Ideas
 - Persistent Yjs CRDT server for multi-party editing (2-peer direct Socket.IO synchronization is sufficient for 1-on-1 MVP).
 - Full remote Docker sandbox for compiled languages (client-side JS/TS engine is sufficient for MVP).
+
