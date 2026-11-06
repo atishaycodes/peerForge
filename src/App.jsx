@@ -1,8 +1,12 @@
 import React from 'react';
-import { AsciiArt } from './components/AsciiArt';
-import LoginForm from './components/LoginForm';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { AuthProvider } from '@/context/AuthContext';
+import ProtectedRoute from '@/components/ProtectedRoute';
+import { AsciiArt } from '@/components/AsciiArt';
+import LoginForm from '@/components/LoginForm';
+import Dashboard from '@/pages/Dashboard';
 
-export default function App() {
+function LoginPage() {
   const handleBack = () => {
     if (window.history.length > 1) {
       window.history.back();
@@ -41,5 +45,27 @@ export default function App() {
         <LoginForm />
       </section>
     </main>
+  );
+}
+
+export default function App() {
+  return (
+    <BrowserRouter>
+      <AuthProvider>
+        <Routes>
+          <Route path="/login" element={<LoginPage />} />
+          <Route
+            path="/dashboard"
+            element={
+              <ProtectedRoute>
+                <Dashboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route path="/" element={<Navigate to="/dashboard" replace />} />
+          <Route path="*" element={<Navigate to="/dashboard" replace />} />
+        </Routes>
+      </AuthProvider>
+    </BrowserRouter>
   );
 }

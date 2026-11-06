@@ -1,13 +1,19 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Eye, EyeOff, Check, AlertCircle, Loader2 } from 'lucide-react';
+import { useAuth } from '../context/AuthContext.jsx';
 
 export default function LoginForm() {
+  const navigate = useNavigate();
+  const { login, register } = useAuth();
+
   const [isSignUp, setIsSignUp] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
 
   const [formData, setFormData] = useState({
     name: '',
@@ -21,26 +27,71 @@ export default function LoginForm() {
       ...prev,
       [e.target.name]: e.target.value
     }));
+    // Clear errors when user types
+    if (errorMessage) setErrorMessage('');
   };
 
-  const handleSubmit = (e) => {
+  const handleToggleMode = () => {
+    setIsSignUp(prev => !prev);
+    setSuccessMessage('');
+    setErrorMessage('');
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setIsLoading(true);
+    setErrorMessage('');
     setSuccessMessage('');
 
-    // Simulate authentication
-    setTimeout(() => {
+    if (isSignUp && formData.password !== formData.confirmPassword) {
+      setErrorMessage('Passwords do not match');
+      return;
+    }
+
+    setIsLoading(true);
+
+    try {
+      if (isSignUp) {
+        const res = await register({
+          name: formData.name,
+          email: formData.email,
+          password: formData.password,
+        });
+
+        if (res.success) {
+          setSuccessMessage('Account created successfully! Welcome to PeerForge.');
+          setTimeout(() => {
+            navigate('/dashboard');
+          }, 600);
+        } else {
+          setErrorMessage(res.error || 'Failed to create account');
+        }
+      } else {
+        const res = await login({
+          email: formData.email,
+          password: formData.password,
+        });
+
+        if (res.success) {
+          setSuccessMessage('Signed in successfully! Welcome back.');
+          setTimeout(() => {
+            navigate('/dashboard');
+          }, 600);
+        } else {
+          setErrorMessage(res.error || 'Invalid email or password');
+        }
+      }
+    } catch (err) {
+      setErrorMessage(err.message || 'An unexpected error occurred');
+    } finally {
       setIsLoading(false);
-      setSuccessMessage(isSignUp ? 'Account created successfully! Welcome to PeerForge.' : 'Signed in successfully! Welcome back.');
-      setTimeout(() => setSuccessMessage(''), 4000);
-    }, 1000);
+    }
   };
 
   return (
     <div className="w-full h-full flex flex-col justify-center items-center px-6 sm:px-10 lg:px-14 py-10 bg-white">
       <div className="w-full max-w-[420px] mx-auto">
         
-        {/* Header matching reference */}
+        {/* Header */}
         <div className="mb-8">
           <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-neutral-900 font-sans">
             {isSignUp ? 'Create an Account' : 'Welcome Back'}
@@ -49,10 +100,7 @@ export default function LoginForm() {
             {isSignUp ? 'Already have an account? ' : "Don't have an account? "}
             <button
               type="button"
-              onClick={() => {
-                setIsSignUp(!isSignUp);
-                setSuccessMessage('');
-              }}
+              onClick={handleToggleMode}
               className="text-blue-600 hover:text-blue-700 font-medium hover:underline transition-colors focus:outline-none"
             >
               {isSignUp ? 'Sign in' : 'Sign up'}
@@ -60,11 +108,19 @@ export default function LoginForm() {
           </p>
         </div>
 
-        {/* Feedback message */}
+        {/* Success message */}
         {successMessage && (
           <div className="mb-6 p-3.5 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-sm flex items-center gap-2.5 animate-in fade-in">
             <Check className="w-4 h-4 text-emerald-600 shrink-0" />
             <span>{successMessage}</span>
+          </div>
+        )}
+
+        {/* Error message */}
+        {errorMessage && (
+          <div className="mb-6 p-3.5 rounded-xl bg-red-50 border border-red-200 text-red-800 text-sm flex items-center gap-2.5 animate-in fade-in">
+            <AlertCircle className="w-4 h-4 text-red-600 shrink-0" />
+            <span>{errorMessage}</span>
           </div>
         )}
 
@@ -116,7 +172,7 @@ export default function LoginForm() {
                 required
                 value={formData.password}
                 onChange={handleChange}
-                placeholder="Password"
+                placeholder="Password (min 6 characters)"
                 className="w-full px-4 py-2.5 sm:py-3 pr-11 text-sm text-neutral-900 bg-white border border-neutral-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-neutral-900 focus:border-transparent transition-all placeholder:text-neutral-400"
               />
               <button
@@ -154,6 +210,7 @@ export default function LoginForm() {
                   type="button"
                   onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                   className="absolute inset-y-0 right-0 pr-3.5 flex items-center text-neutral-400 hover:text-neutral-600 focus:outline-none transition-colors"
+                  aria-label={showConfirmPassword ? 'Hide password' : 'Show password'}
                 >
                   {showConfirmPassword ? (
                     <EyeOff className="w-4 h-4" />
@@ -179,7 +236,7 @@ export default function LoginForm() {
               </label>
               <a
                 href="#forgot"
-                onClick={(e) => { e.preventDefault(); alert('Reset password link sent to email!'); }}
+                onClick={(e) => { e.preventDefault(); alert('Password reset will be available soon.'); }}
                 className="text-xs sm:text-sm font-medium text-blue-600 hover:text-blue-700 hover:underline transition-colors"
               >
                 Forgot password?
@@ -204,7 +261,7 @@ export default function LoginForm() {
           </button>
         </form>
 
-        {/* Divider matching reference */}
+        {/* Divider */}
         <div className="relative my-6">
           <div className="absolute inset-0 flex items-center">
             <div className="w-full border-t border-neutral-200" />
@@ -216,12 +273,12 @@ export default function LoginForm() {
           </div>
         </div>
 
-        {/* Social Login Buttons side-by-side matching reference */}
+        {/* Social Login Buttons */}
         <div className="grid grid-cols-2 gap-3">
           {/* Continue with Google */}
           <button
             type="button"
-            onClick={() => alert('Signing in with Google...')}
+            onClick={() => alert('Google social authentication will be activated in Phase 2')}
             className="w-full flex items-center justify-center gap-2 px-3 py-2.5 sm:py-3 rounded-xl border border-neutral-200 hover:border-neutral-300 bg-white hover:bg-neutral-50/80 active:bg-neutral-100 transition-all text-xs sm:text-sm font-medium text-neutral-700 shadow-sm group"
           >
             <svg className="w-4 h-4 shrink-0 transition-transform group-hover:scale-110" viewBox="0 0 24 24">
@@ -248,7 +305,7 @@ export default function LoginForm() {
           {/* Continue with GitHub */}
           <button
             type="button"
-            onClick={() => alert('Signing in with GitHub...')}
+            onClick={() => alert('GitHub social authentication will be activated in Phase 2')}
             className="w-full flex items-center justify-center gap-2 px-3 py-2.5 sm:py-3 rounded-xl border border-neutral-200 hover:border-neutral-300 bg-white hover:bg-neutral-50/80 active:bg-neutral-100 transition-all text-xs sm:text-sm font-medium text-neutral-700 shadow-sm group"
           >
             <svg className="w-4 h-4 shrink-0 text-neutral-900 transition-transform group-hover:scale-110" fill="currentColor" viewBox="0 0 24 24">
@@ -266,4 +323,3 @@ export default function LoginForm() {
     </div>
   );
 }
-
