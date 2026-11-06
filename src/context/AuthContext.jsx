@@ -100,6 +100,30 @@ export function AuthProvider({ children }) {
     }
   };
 
+  // Update Profile action
+  const updateProfile = async (profileData) => {
+    try {
+      setError(null);
+      const res = await fetch("/api/profile", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify(profileData),
+      });
+
+      const data = await res.json();
+      if (!res.ok) {
+        throw new Error(data.message || "Failed to update profile");
+      }
+
+      setUser(data.user);
+      return { success: true, user: data.user };
+    } catch (err) {
+      setError(err.message);
+      return { success: false, error: err.message };
+    }
+  };
+
   const value = {
     user,
     loading,
@@ -107,6 +131,7 @@ export function AuthProvider({ children }) {
     login,
     register,
     logout,
+    updateProfile,
     checkAuth,
   };
 
@@ -122,3 +147,4 @@ export function useAuth() {
 }
 
 export default AuthContext;
+

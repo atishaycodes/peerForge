@@ -5,6 +5,7 @@ import ProtectedRoute from '@/components/ProtectedRoute';
 import { AsciiArt } from '@/components/AsciiArt';
 import LoginForm from '@/components/LoginForm';
 import Dashboard from '@/pages/Dashboard';
+import Profile from '@/pages/Profile';
 
 function LoginPage() {
   const handleBack = () => {
@@ -59,6 +60,14 @@ export default function App() {
             element={
               <ProtectedRoute>
                 <Dashboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/profile"
+            element={
+              <ProtectedRoute>
+                <Profile />
               </ProtectedRoute>
             }
           />
