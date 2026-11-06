@@ -7,6 +7,7 @@ import {
   handleDecline,
   cleanupSocketMatches,
 } from "../services/matchmakingService.js";
+import { registerRoomHandlers, handleUserLeaveRoom } from "./roomSignaling.js";
 
 // Helper to parse cookie string from handshake headers
 const parseCookie = (cookieHeader) => {
@@ -157,13 +158,18 @@ export const setupSocket = (io) => {
       }
     });
 
+    // Register Live Room & WebRTC Signaling Handlers
+    registerRoomHandlers(io, socket);
+
     // Handle Disconnect
     socket.on("disconnect", () => {
       console.log(`[Socket Disconnected] User: ${socket.user.name} (${socket.id})`);
       removeFromQueue(socket.id);
       cleanupSocketMatches(socket.id);
+      handleUserLeaveRoom(io, socket);
     });
   });
 };
 
 export default setupSocket;
+
