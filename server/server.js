@@ -1,15 +1,19 @@
 import dotenv from "dotenv";
 dotenv.config();
 
+import http from "http";
 import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
+import { Server } from "socket.io";
 import { connectDB } from "./config/db.js";
 import authRoutes from "./routes/authRoutes.js";
 import profileRoutes from "./routes/profileRoutes.js";
+import { setupSocket } from "./socket/index.js";
 
 const app = express();
 const PORT = process.env.PORT || 5000;
+const CLIENT_URL = process.env.CLIENT_URL || "http://localhost:5173";
 
 // Connect to MongoDB
 connectDB();
@@ -19,7 +23,7 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(
   cors({
-    origin: process.env.CLIENT_URL || "http://localhost:5173",
+    origin: CLIENT_URL,
     credentials: true,
   })
 );
@@ -48,11 +52,24 @@ app.use((err, req, res, next) => {
   });
 });
 
+// Create HTTP Server & Attach Socket.IO
+const httpServer = http.createServer(app);
+const io = new Server(httpServer, {
+  cors: {
+    origin: CLIENT_URL,
+    credentials: true,
+  },
+});
+
+// Setup Real-time Sockets & Matchmaking
+setupSocket(io);
+
 // Start Server if not imported as module in tests
 if (process.env.NODE_ENV !== "test") {
-  app.listen(PORT, () => {
-    console.log(`[Server] PeerForge backend listening on port ${PORT}`);
+  httpServer.listen(PORT, () => {
+    console.log(`[Server] PeerForge backend & Socket.IO listening on port ${PORT}`);
   });
 }
 
+export { app, httpServer, io };
 export default app;
