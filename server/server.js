@@ -6,6 +6,7 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 import { connectDB } from "./config/db.js";
 import authRoutes from "./routes/authRoutes.js";
+import profileRoutes from "./routes/profileRoutes.js";
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -33,6 +34,9 @@ app.get("/api/health", (req, res) => {
 
 // Authentication Routes
 app.use("/api/auth", authRoutes);
+
+// Profile & Preferences Routes
+app.use("/api/profile", profileRoutes);
 
 // Global Error Handler
 app.use((err, req, res, next) => {

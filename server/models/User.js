@@ -3,8 +3,15 @@ import bcrypt from "bcryptjs";
 
 const profileSchema = new mongoose.Schema(
   {
+    avatarUrl: {
+      type: String,
+      trim: true,
+      default: "",
+    },
     bio: {
       type: String,
+      trim: true,
+      maxlength: [300, "Bio cannot exceed 300 characters"],
       default: "",
     },
     targetRoles: {
@@ -18,6 +25,16 @@ const profileSchema = new mongoose.Schema(
     timeZone: {
       type: String,
       default: "UTC",
+    },
+    availability: {
+      isSearching: {
+        type: Boolean,
+        default: true,
+      },
+      preferredWindows: {
+        type: [String],
+        default: ["Weekday Evenings", "Weekends"],
+      },
     },
   },
   { _id: false }
@@ -77,3 +94,4 @@ userSchema.statics.hashPassword = async function (plainPassword) {
 
 export const User = mongoose.model("User", userSchema);
 export default User;
+
