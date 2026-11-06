@@ -84,3 +84,4 @@
 - Email verification and password recovery flows.
 - OAuth 2.0 social login backend handshake.
 - Extended developer profile customization and skill badges (scoped to Phase 2).
+

@@ -42,3 +42,4 @@
 
 - Local React state hooks (`useState`) manage UI states in `LoginForm.jsx` (mode toggle, password visibility, form field changes, simulated submission loading).
 - No global state management library currently configured.
+

@@ -15,3 +15,4 @@ router.post("/logout", logout);
 router.get("/me", auth, getCurrentUser);
 
 export default router;
+

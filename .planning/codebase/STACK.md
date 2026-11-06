@@ -44,3 +44,4 @@
 - `tailwind.config.js` - Custom fonts (`Inter`), brand color extensions
 - `postcss.config.js` - Tailwind and Autoprefixer hooks
 - `package.json` - `"type": "module"`, scripts: `dev`, `build`, `preview`
+

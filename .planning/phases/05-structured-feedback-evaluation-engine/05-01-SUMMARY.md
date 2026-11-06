@@ -19,3 +19,4 @@
 - Verified `Session` and `Feedback` models and validation rules.
 - Verified `/api/feedback` route mounting in `server/server.js`.
 - Verified socket export signatures.
+

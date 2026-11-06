@@ -23,3 +23,4 @@
 - Verified `@monaco-editor/react` presence in `package.json`.
 - Verified `server/socket/roomSignaling.js` module imports and export signatures.
 - Verified socket event binding in `server/socket/index.js`.
+

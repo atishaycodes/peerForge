@@ -20,3 +20,4 @@
 
 - Client-side form validation using HTML5 attributes (`required`, `type="email"`).
 - State-driven conditional rendering for interactive messages (`successMessage`, `isLoading`).
+

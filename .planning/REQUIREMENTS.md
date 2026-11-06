@@ -35,3 +35,4 @@
 - **PERF-02:** Real-time code synchronization latency < 150ms over Socket.IO.
 - **SEC-01:** Passwords hashed with bcrypt; JWT stored securely in HTTP-only cookies or secure headers.
 - **SEC-02:** Room access restricted strictly to paired participants.
+

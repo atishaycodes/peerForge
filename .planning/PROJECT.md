@@ -38,3 +38,4 @@ PeerForge is a peer-to-peer mock interview platform where developers practice in
 - Paid coaching transactions or monetized tutor matching.
 - AI automated avatar interviewers (focus is on genuine peer-to-peer collaboration).
 - Heavy enterprise team management or recruiter hiring pipelines.
+

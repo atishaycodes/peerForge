@@ -12,3 +12,4 @@
 
 - Build verification via `npm run build` (`vite build`).
 - Manual verification via local Vite dev server (`npm run dev` at `http://localhost:3000`).
+

@@ -38,3 +38,4 @@ peerForge/
   - `src/components/LoginForm.jsx`
   - `src/components/AsciiArt.jsx`
 - **Configuration:** `vite.config.js`, `tailwind.config.js`, `package.json`
+

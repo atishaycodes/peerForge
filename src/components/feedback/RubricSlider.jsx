@@ -61,3 +61,4 @@ export const RubricSlider = ({ label, description, value, onChange }) => {
 };
 
 export default RubricSlider;
+

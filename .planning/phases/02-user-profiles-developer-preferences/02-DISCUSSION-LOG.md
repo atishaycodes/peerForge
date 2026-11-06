@@ -65,3 +65,4 @@
 - Social profile links (LinkedIn, GitHub OAuth sync)
 - Public developer profile preview link (`/u/:username`)
 - Resume PDF upload & parsing
+

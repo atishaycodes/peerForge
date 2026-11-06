@@ -18,3 +18,4 @@
 
 5. **Static Media Footprint in Repository:**
    - Multiple temporary or prototype images exist in `public/` (`ref-008.webp`, `statue.png`, `ref-source-uploaded.jpg`). Only `vignette-bloom.mp4` and `vignette-bloom.webp` are currently active.
+

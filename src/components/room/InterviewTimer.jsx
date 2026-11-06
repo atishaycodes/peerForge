@@ -120,3 +120,4 @@ export const InterviewTimer = ({
 };
 
 export default InterviewTimer;
+

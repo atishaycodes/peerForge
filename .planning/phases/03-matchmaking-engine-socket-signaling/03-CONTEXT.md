@@ -104,3 +104,4 @@ This phase delivers real-time matchmaking, Socket.IO server infrastructure, pair
 - Google Calendar sync / ICS file export — deferred post-MVP.
 
 </deferred>
+

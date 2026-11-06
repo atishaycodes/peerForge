@@ -96,3 +96,4 @@ This phase delivers end-to-end user profile management and interview preferences
 - Resume upload & PDF parsing — out of scope for Phase 2.
 
 </deferred>
+

@@ -82,3 +82,4 @@ export const MediaControls = ({
 };
 
 export default MediaControls;
+

@@ -126,3 +126,4 @@ export default function SkillTagInput({ value = [], onChange }) {
     </div>
   );
 }
+

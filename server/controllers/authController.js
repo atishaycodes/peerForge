@@ -140,3 +140,4 @@ export const getCurrentUser = async (req, res) => {
     user: req.user,
   });
 };
+

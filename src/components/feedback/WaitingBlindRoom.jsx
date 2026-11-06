@@ -100,3 +100,4 @@ export const WaitingBlindRoom = ({
 };
 
 export default WaitingBlindRoom;
+

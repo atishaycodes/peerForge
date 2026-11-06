@@ -66,3 +66,4 @@ None - plan executed exactly as written.
 
 ## Next Steps
 Proceed to Plan 01-02: Authentication API Endpoints & Auth Middleware (`/api/auth/register`, `/login`, `/logout`, `/me`).
+
