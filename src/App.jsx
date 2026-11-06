@@ -1,11 +1,14 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from '@/context/AuthContext';
+import { SocketProvider } from '@/context/SocketContext';
 import ProtectedRoute from '@/components/ProtectedRoute';
 import { AsciiArt } from '@/components/AsciiArt';
 import LoginForm from '@/components/LoginForm';
 import Dashboard from '@/pages/Dashboard';
 import Profile from '@/pages/Profile';
+import Lobby from '@/pages/Lobby';
+import InterviewRoom from '@/pages/InterviewRoom';
 
 function LoginPage() {
   const handleBack = () => {
@@ -53,27 +56,45 @@ export default function App() {
   return (
     <BrowserRouter>
       <AuthProvider>
-        <Routes>
-          <Route path="/login" element={<LoginPage />} />
-          <Route
-            path="/dashboard"
-            element={
-              <ProtectedRoute>
-                <Dashboard />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/profile"
-            element={
-              <ProtectedRoute>
-                <Profile />
-              </ProtectedRoute>
-            }
-          />
-          <Route path="/" element={<Navigate to="/dashboard" replace />} />
-          <Route path="*" element={<Navigate to="/dashboard" replace />} />
-        </Routes>
+        <SocketProvider>
+          <Routes>
+            <Route path="/login" element={<LoginPage />} />
+            <Route
+              path="/dashboard"
+              element={
+                <ProtectedRoute>
+                  <Dashboard />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/profile"
+              element={
+                <ProtectedRoute>
+                  <Profile />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/lobby"
+              element={
+                <ProtectedRoute>
+                  <Lobby />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/room/:roomId"
+              element={
+                <ProtectedRoute>
+                  <InterviewRoom />
+                </ProtectedRoute>
+              }
+            />
+            <Route path="/" element={<Navigate to="/dashboard" replace />} />
+            <Route path="*" element={<Navigate to="/dashboard" replace />} />
+          </Routes>
+        </SocketProvider>
       </AuthProvider>
     </BrowserRouter>
   );

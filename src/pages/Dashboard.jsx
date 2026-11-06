@@ -260,21 +260,30 @@ export default function Dashboard() {
             </div>
           </div>
 
-          {/* Next Milestone Card: Matchmaking */}
-          <div className="rounded-xl border border-neutral-800 bg-neutral-900/30 p-5 flex flex-col justify-between">
+          {/* Phase 3 Active: Matchmaking Lobby */}
+          <div className="rounded-xl border border-neutral-800 bg-neutral-900/40 p-5 flex flex-col justify-between">
             <div>
-              <div className="w-8 h-8 rounded-lg bg-neutral-800/80 border border-neutral-700/50 flex items-center justify-center text-neutral-300 mb-3">
+              <div className="w-8 h-8 rounded-lg bg-neutral-800/80 border border-neutral-700/50 flex items-center justify-center text-white mb-3">
                 <Users className="w-4 h-4" />
               </div>
               <h3 className="text-sm font-medium text-white mb-1">Mock Interview Lobby</h3>
               <p className="text-xs text-neutral-400 leading-relaxed">
-                Peer matchmaking queue for Data Structures, Algorithms, System Design, and Frontend architecture.
+                Live matchmaking queue for DSA, Frontend Architecture, and Backend System Design.
               </p>
             </div>
 
             <div className="mt-4 pt-3 border-t border-neutral-800/60 flex items-center justify-between text-xs">
-              <span className="text-neutral-500 font-mono text-[11px]">Phase 3 Scope</span>
-              <span className="text-neutral-400 text-xs">Coming soon</span>
+              <span className="text-emerald-400 font-mono text-[11px] flex items-center gap-1">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                Live Matching
+              </span>
+              <button
+                onClick={() => navigate('/lobby')}
+                className="text-white hover:text-neutral-300 font-medium cursor-pointer flex items-center gap-1"
+              >
+                <span>Enter Lobby</span>
+                <ArrowRight className="w-3 h-3" />
+              </button>
             </div>
           </div>
         </div>
@@ -288,10 +297,13 @@ export default function Dashboard() {
           <p className="text-xs text-neutral-400 max-w-sm mt-1 mb-4 leading-relaxed">
             Your completed mock interviews, peer feedback rubrics, and performance metrics will appear here after your first session.
           </p>
-          <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-neutral-900 border border-neutral-800 text-xs text-neutral-400 font-mono">
-            <Clock className="w-3.5 h-3.5 text-neutral-500" />
-            Lobby opens in Phase 3
-          </div>
+          <button
+            onClick={() => navigate('/lobby')}
+            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-md bg-white hover:bg-neutral-200 text-neutral-950 text-xs font-medium cursor-pointer transition-colors"
+          >
+            <Clock className="w-3.5 h-3.5 text-neutral-800" />
+            <span>Join Lobby to Pair</span>
+          </button>
         </section>
       </main>
     </div>
