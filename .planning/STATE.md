@@ -1,7 +1,7 @@
 # Project State — PeerForge
 
 **Last Updated:** 2026-11-06
-**Current Phase:** Phase 2: User Profiles & Developer Preferences (Context Ready)
+**Current Phase:** Phase 2: User Profiles & Developer Preferences (Planned)
 
 ## Project Status
 
@@ -12,7 +12,7 @@
 ## Milestones & Phases
 
 - [x] **Phase 1: Backend Foundation & Authentication** (Executed — plans 01-01, 01-02, 01-03 complete)
-- [ ] **Phase 2: User Profiles & Developer Preferences** (Context gathered, ready for `/gsd-plan-phase 2`)
+- [ ] **Phase 2: User Profiles & Developer Preferences** (Planned — 2 plans ready for execution)
 - [ ] **Phase 3: Matchmaking Engine & Socket.IO Signaling**
 - [ ] **Phase 4: WebRTC Video/Audio & Collaborative Code Room**
 - [ ] **Phase 5: Structured Feedback & Evaluation Engine**
@@ -20,5 +20,5 @@
 
 ## Next Action
 
-Run `/gsd-plan-phase 2` to create detailed execution plans for Phase 2.
+Run `/gsd-execute-phase 2` to execute Phase 2 plans.
 
