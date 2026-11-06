@@ -1,72 +1,389 @@
-import React from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Video, Code2, Users, Clock, ShieldCheck } from 'lucide-react';
-import { useAuth } from '../context/AuthContext';
+import React, { useState, useEffect, useCallback } from "react";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
+import { ArrowLeft, ShieldAlert, Wifi, WifiOff } from "lucide-react";
+import { useAuth } from "../context/AuthContext";
+import { useSocket } from "../context/SocketContext";
+import { useWebRTC } from "../hooks/useWebRTC";
+import { ProblemDrawer } from "../components/room/ProblemDrawer";
+import { CodeEditor } from "../components/room/CodeEditor";
+import { ConsoleDrawer } from "../components/room/ConsoleDrawer";
+import { VideoTiles } from "../components/room/VideoTiles";
+import { InterviewTimer } from "../components/room/InterviewTimer";
+import { executeCode } from "../utils/codeExecutor";
+import { PROBLEMS, getProblemsByTrack, getProblemById } from "../data/problems";
 
+/**
+ * InterviewRoom
+ * Main 3-column live technical mock interview workspace.
+ */
 export default function InterviewRoom() {
   const { roomId } = useParams();
-  const { user } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
+  const { user } = useAuth();
+  const { socket, isConnected } = useSocket();
+
+  // Route state passes initial track/difficulty from lobby if available
+  const initialTrack = location.state?.track || "Data Structures & Algorithms (DSA)";
+  const initialDifficulty = location.state?.difficulty || "Mid-Level";
+
+  // WebRTC Media & Peer Hook
+  const {
+    localStream,
+    remoteStream,
+    isMuted,
+    isVideoOff,
+    isScreenSharing,
+    connectionStatus,
+    peerMediaStatus,
+    toggleAudio,
+    toggleVideo,
+    toggleScreenShare,
+    leaveCall,
+  } = useWebRTC(socket, roomId, user);
+
+  // Room & Layout State
+  const [track, setTrack] = useState(initialTrack);
+  const [difficulty, setDifficulty] = useState(initialDifficulty);
+  const [userRole, setUserRole] = useState("candidate"); // "candidate" | "interviewer"
+  const [peerRole, setPeerRole] = useState("interviewer");
+  const [peerUser, setPeerUser] = useState(null);
+  const [timerState, setTimerState] = useState(null);
+
+  // Problem & Code State
+  const [problem, setProblem] = useState(() => getProblemsByTrack(initialTrack)[0] || PROBLEMS[0]);
+  const [language, setLanguage] = useState("javascript");
+  const [code, setCode] = useState(() => problem.starterCode?.javascript || "");
+
+  // Execution & Drawer State
+  const [isRunning, setIsRunning] = useState(false);
+  const [testResults, setTestResults] = useState([]);
+  const [consoleLogs, setConsoleLogs] = useState([]);
+  const [executionTimeMs, setExecutionTimeMs] = useState(undefined);
+  const [executionError, setExecutionError] = useState(null);
+
+  const [isProblemDrawerCollapsed, setIsProblemDrawerCollapsed] = useState(false);
+  const [isConsoleCollapsed, setIsConsoleCollapsed] = useState(false);
+  const [leaveModalOpen, setLeaveModalOpen] = useState(false);
+
+  // Initialize and Join Room on Mount
+  useEffect(() => {
+    if (!socket || !roomId) return;
+
+    socket.emit(
+      "room:join",
+      { roomId, track, difficulty },
+      (response) => {
+        if (response?.success) {
+          setUserRole(response.myRole || "candidate");
+          setPeerRole(response.myRole === "candidate" ? "interviewer" : "candidate");
+          if (response.track) setTrack(response.track);
+          if (response.difficulty) setDifficulty(response.difficulty);
+          if (response.timer) setTimerState(response.timer);
+
+          // Find other peer if already in room
+          if (response.participants) {
+            const partner = response.participants.find((p) => p.userId !== user?._id?.toString());
+            if (partner) {
+              setPeerUser(partner);
+              setPeerRole(partner.role);
+            }
+          }
+
+          // Restore synced problem if preset
+          if (response.activeProblemId) {
+            const activeProb = getProblemById(response.activeProblemId);
+            setProblem(activeProb);
+            if (response.code) {
+              setCode(response.code);
+            } else {
+              setCode(activeProb.starterCode?.[response.language || "javascript"] || "");
+            }
+          }
+
+          if (response.language) {
+            setLanguage(response.language);
+          }
+        }
+      }
+    );
+
+    // Listeners for peer lifecycle
+    const handlePeerJoined = ({ peer, participants }) => {
+      setPeerUser(peer);
+      if (peer.role) setPeerRole(peer.role);
+    };
+
+    const handlePeerLeft = () => {
+      setPeerUser(null);
+    };
+
+    // Role swap listener
+    const handleRoleSwapped = ({ participants }) => {
+      if (participants) {
+        const me = participants.find((p) => p.userId === user?._id?.toString());
+        const them = participants.find((p) => p.userId !== user?._id?.toString());
+        if (me) setUserRole(me.role);
+        if (them) setPeerRole(them.role);
+      }
+    };
+
+    // Problem update listener
+    const handleProblemUpdated = ({ problemId, code: newCode }) => {
+      const nextProblem = getProblemById(problemId);
+      setProblem(nextProblem);
+      if (newCode) setCode(newCode);
+    };
+
+    socket.on("room:peer-joined", handlePeerJoined);
+    socket.on("room:peer-left", handlePeerLeft);
+    socket.on("room:role-swapped", handleRoleSwapped);
+    socket.on("room:problem-updated", handleProblemUpdated);
+
+    return () => {
+      socket.off("room:peer-joined", handlePeerJoined);
+      socket.off("room:peer-left", handlePeerLeft);
+      socket.off("room:role-swapped", handleRoleSwapped);
+      socket.off("room:problem-updated", handleProblemUpdated);
+    };
+  }, [socket, roomId, track, difficulty, user?._id]);
+
+  // Code change handler
+  const handleCodeChange = useCallback((newCode, shouldSync = true) => {
+    setCode(newCode);
+  }, []);
+
+  // Language change handler
+  const handleLanguageChange = useCallback(
+    (newLang, shouldSync = true) => {
+      setLanguage(newLang);
+      if (problem.starterCode?.[newLang]) {
+        setCode(problem.starterCode[newLang]);
+      }
+    },
+    [problem]
+  );
+
+  // Reset code to starter template
+  const handleResetCode = () => {
+    const starter = problem.starterCode?.[language] || "";
+    setCode(starter);
+    if (socket && roomId) {
+      socket.emit("room:code-change", {
+        roomId,
+        code: starter,
+        version: Date.now(),
+      });
+    }
+  };
+
+  // Switch problem prompt (Interviewer action)
+  const handleSelectProblem = (newProb) => {
+    setProblem(newProb);
+    const starter = newProb.starterCode?.[language] || "";
+    setCode(starter);
+    setTestResults([]);
+    setConsoleLogs([]);
+    setExecutionError(null);
+
+    if (socket && roomId) {
+      socket.emit("room:problem-change", {
+        roomId,
+        problemId: newProb.id,
+        starterCode: starter,
+      });
+    }
+  };
+
+  // Run in-browser code evaluation
+  const handleRunCode = async () => {
+    setIsRunning(true);
+    setExecutionError(null);
+    setIsConsoleCollapsed(false); // Auto-expand console drawer on run
+
+    try {
+      const result = await executeCode({
+        code,
+        language,
+        problem,
+      });
+
+      setTestResults(result.testResults || []);
+      setConsoleLogs(result.consoleLogs || []);
+      setExecutionTimeMs(result.executionTimeMs);
+      setExecutionError(result.error);
+    } catch (err) {
+      setExecutionError(err.message || "Failed to execute code");
+    } finally {
+      setIsRunning(false);
+    }
+  };
+
+  // Role swap trigger
+  const handleSwapRoles = () => {
+    if (socket && roomId) {
+      socket.emit("room:role-swap", { roomId });
+    }
+  };
+
+  // Clean exit
+  const handleConfirmLeave = () => {
+    leaveCall();
+    if (socket && roomId) {
+      socket.emit("room:leave", { roomId });
+    }
+    navigate("/dashboard");
+  };
 
   return (
-    <div className="min-h-screen bg-neutral-950 text-neutral-100 flex flex-col font-sans selection:bg-neutral-800">
-      {/* Top Bar */}
-      <header className="border-b border-neutral-800/80 bg-neutral-950/80 backdrop-blur-md px-6 py-3.5 flex items-center justify-between sticky top-0 z-50">
+    <div className="h-screen w-screen bg-neutral-950 text-neutral-100 flex flex-col font-sans overflow-hidden select-none">
+      {/* Top Navigation Bar */}
+      <header className="h-12 border-b border-neutral-800 bg-neutral-950/90 backdrop-blur px-4 flex items-center justify-between z-40 shrink-0">
+        {/* Left: Branding & Room ID */}
         <div className="flex items-center gap-3">
           <button
             type="button"
-            onClick={() => navigate('/dashboard')}
-            className="p-1 rounded-md text-neutral-400 hover:text-white hover:bg-neutral-900 transition-colors cursor-pointer"
-            title="Leave Room"
+            onClick={() => setLeaveModalOpen(true)}
+            className="p-1.5 rounded text-neutral-400 hover:text-neutral-100 hover:bg-neutral-900 border border-neutral-800 transition-colors"
+            title="Leave Session"
           >
             <ArrowLeft className="w-4 h-4" />
           </button>
-          <span className="font-medium text-sm tracking-tight text-white">PeerForge</span>
-          <span className="text-neutral-600 text-xs">/</span>
-          <span className="text-xs text-neutral-400 font-mono">Room: {roomId}</span>
+          <div className="flex items-center gap-2">
+            <span className="font-semibold text-xs tracking-tight text-neutral-100">PeerForge</span>
+            <span className="text-neutral-600 text-xs">/</span>
+            <span className="text-xs text-neutral-400 font-mono hidden md:inline">
+              Room: {roomId?.substring(0, 16)}
+            </span>
+          </div>
+          <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-neutral-900 border border-neutral-800 text-neutral-400 hidden lg:inline">
+            {track}
+          </span>
         </div>
 
-        <div className="flex items-center gap-3">
-          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-neutral-900 border border-neutral-800 text-[11px] font-mono text-emerald-400">
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-            Match Connected
+        {/* Center: Global 60-min Timer & Role Controller */}
+        <InterviewTimer
+          userRole={userRole}
+          partnerRole={peerRole}
+          timerState={timerState}
+          onSwapRoles={handleSwapRoles}
+        />
+
+        {/* Right: Connection State */}
+        <div className="flex items-center gap-2.5">
+          <span className="flex items-center gap-1.5 px-2.5 py-1 rounded bg-neutral-900 border border-neutral-800 text-[11px] font-mono text-neutral-300">
+            <span
+              className={`w-1.5 h-1.5 rounded-full ${
+                isConnected ? "bg-emerald-500 animate-pulse" : "bg-rose-500"
+              }`}
+            />
+            <span className="hidden sm:inline">{isConnected ? "Connected" : "Disconnected"}</span>
           </span>
         </div>
       </header>
 
-      {/* Main Room Preview Canvas */}
-      <main className="flex-1 max-w-5xl w-full mx-auto p-6 sm:p-8 flex flex-col items-center justify-center text-center gap-6">
-        <div className="w-16 h-16 rounded-2xl bg-neutral-900 border border-neutral-800 flex items-center justify-center text-white mb-2">
-          <Video className="w-8 h-8 text-neutral-400" />
+      {/* Main 3-Column Workspace Canvas */}
+      <div className="flex-1 flex overflow-hidden">
+        {/* Column 1: Problem Specification Drawer (Left 25% or Collapsed) */}
+        <div
+          className={`h-full transition-all duration-200 shrink-0 ${
+            isProblemDrawerCollapsed ? "w-10" : "w-1/4 min-w-[280px] max-w-[380px]"
+          }`}
+        >
+          <ProblemDrawer
+            problem={problem}
+            track={track}
+            userRole={userRole}
+            isCollapsed={isProblemDrawerCollapsed}
+            onToggleCollapse={() => setIsProblemDrawerCollapsed(!isProblemDrawerCollapsed)}
+            onSelectProblem={handleSelectProblem}
+          />
         </div>
 
-        <div className="space-y-2 max-w-md">
-          <h1 className="text-xl font-semibold tracking-tight text-white">
-            Interview Session Staged
-          </h1>
-          <p className="text-xs text-neutral-400 leading-relaxed font-mono">
-            Room ID: {roomId}
-          </p>
-          <p className="text-xs text-neutral-400 leading-relaxed">
-            Phase 3 match confirmation is verified. Live WebRTC video, synchronized Monaco code editor, and role switcher are scheduled for Phase 4.
-          </p>
+        {/* Column 2: Collaborative Monaco Editor + Test Console (Center Flex) */}
+        <div className="flex-1 h-full flex flex-col min-w-0">
+          {/* Monaco Editor (flex-1) */}
+          <div className="flex-1 min-h-0">
+            <CodeEditor
+              code={code}
+              language={language}
+              onChangeCode={handleCodeChange}
+              onChangeLanguage={handleLanguageChange}
+              onResetCode={handleResetCode}
+              onRunCode={handleRunCode}
+              isRunning={isRunning}
+              socket={socket}
+              roomId={roomId}
+              peerName={peerUser?.name}
+            />
+          </div>
+
+          {/* Test & Output Console Drawer (docked at bottom) */}
+          <ConsoleDrawer
+            testResults={testResults}
+            consoleLogs={consoleLogs}
+            executionTimeMs={executionTimeMs}
+            error={executionError}
+            isCollapsed={isConsoleCollapsed}
+            onToggleCollapse={() => setIsConsoleCollapsed(!isConsoleCollapsed)}
+          />
         </div>
 
-        <div className="flex gap-3">
-          <button
-            onClick={() => navigate('/lobby')}
-            className="px-4 py-2 rounded-md bg-neutral-900 hover:bg-neutral-850 border border-neutral-800 text-xs font-medium text-neutral-300 transition-colors cursor-pointer"
-          >
-            Return to Lobby
-          </button>
-          <button
-            onClick={() => navigate('/dashboard')}
-            className="px-4 py-2 rounded-md bg-white hover:bg-neutral-200 text-neutral-950 font-medium text-xs transition-colors cursor-pointer"
-          >
-            Dashboard
-          </button>
+        {/* Column 3: WebRTC Video Tiles & AV Controls (Right 20%) */}
+        <div className="w-1/5 min-w-[260px] max-w-[320px] h-full shrink-0">
+          <VideoTiles
+            localStream={localStream}
+            remoteStream={remoteStream}
+            isMuted={isMuted}
+            isVideoOff={isVideoOff}
+            isScreenSharing={isScreenSharing}
+            connectionStatus={connectionStatus}
+            peerMediaStatus={peerMediaStatus}
+            user={user}
+            peerUser={peerUser}
+            userRole={userRole}
+            peerRole={peerRole}
+            onToggleAudio={toggleAudio}
+            onToggleVideo={toggleVideo}
+            onToggleScreenShare={toggleScreenShare}
+            onLeaveRoom={() => setLeaveModalOpen(true)}
+          />
         </div>
-      </main>
+      </div>
+
+      {/* Leave Session Confirmation Dialog */}
+      {leaveModalOpen && (
+        <div className="fixed inset-0 bg-neutral-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-neutral-900 border border-neutral-800 rounded-xl p-5 max-w-sm w-full space-y-4 shadow-2xl">
+            <div className="flex items-center gap-2 text-rose-400">
+              <ShieldAlert className="w-5 h-5" />
+              <h3 className="font-mono text-sm font-semibold text-neutral-100">
+                Leave Interview Session?
+              </h3>
+            </div>
+            <p className="text-xs text-neutral-400 leading-relaxed">
+              Leaving the room will disconnect your audio, video, and collaborative code session with
+              your peer.
+            </p>
+            <div className="flex justify-end gap-2 pt-2">
+              <button
+                type="button"
+                onClick={() => setLeaveModalOpen(false)}
+                className="px-3 py-1.5 rounded text-xs font-mono bg-neutral-800 text-neutral-300 hover:bg-neutral-700 transition-colors"
+              >
+                Stay
+              </button>
+              <button
+                type="button"
+                onClick={handleConfirmLeave}
+                className="px-3 py-1.5 rounded text-xs font-mono bg-rose-600 text-white font-semibold hover:bg-rose-500 transition-colors"
+              >
+                Leave Session
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
