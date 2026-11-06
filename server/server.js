@@ -9,6 +9,7 @@ import { Server } from "socket.io";
 import { connectDB } from "./config/db.js";
 import authRoutes from "./routes/authRoutes.js";
 import profileRoutes from "./routes/profileRoutes.js";
+import feedbackRoutes from "./routes/feedbackRoutes.js";
 import { setupSocket } from "./socket/index.js";
 
 const app = express();
@@ -41,6 +42,9 @@ app.use("/api/auth", authRoutes);
 
 // Profile & Preferences Routes
 app.use("/api/profile", profileRoutes);
+
+// Structured Feedback & Evaluation Routes
+app.use("/api/feedback", feedbackRoutes);
 
 // Global Error Handler
 app.use((err, req, res, next) => {

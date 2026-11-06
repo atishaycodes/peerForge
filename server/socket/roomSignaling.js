@@ -5,6 +5,35 @@
 
 // In-memory room store: roomId -> RoomState
 export const activeRooms = new Map();
+let socketIoInstance = null;
+
+export const setSocketIoInstance = (io) => {
+  socketIoInstance = io;
+};
+
+/**
+ * Broadcast real-time unlock event when both peers have submitted feedback
+ */
+export const notifyFeedbackUnlocked = (roomId) => {
+  if (socketIoInstance && roomId) {
+    socketIoInstance.to(roomId).emit("feedback:unlocked", {
+      roomId,
+      unlockedAt: new Date(),
+    });
+  }
+};
+
+/**
+ * Notify room partner that a peer has submitted their evaluation
+ */
+export const notifyPartnerSubmitted = (roomId, reviewerUserId) => {
+  if (socketIoInstance && roomId) {
+    socketIoInstance.to(roomId).emit("feedback:partner-submitted", {
+      roomId,
+      reviewerUserId,
+    });
+  }
+};
 
 // Helper to safely format participant object for transmission
 const formatParticipant = (p) => ({
@@ -20,6 +49,7 @@ const formatParticipant = (p) => ({
  * Register all room and WebRTC signaling listeners for a connected socket
  */
 export const registerRoomHandlers = (io, socket) => {
+  if (io) setSocketIoInstance(io);
   /**
    * Join an interview room
    */
@@ -344,3 +374,4 @@ export const handleUserLeaveRoom = (io, socket, targetRoomId) => {
     }
   }
 };
+
