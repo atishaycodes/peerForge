@@ -9,6 +9,7 @@ import { CodeEditor } from "../components/room/CodeEditor";
 import { ConsoleDrawer } from "../components/room/ConsoleDrawer";
 import { VideoTiles } from "../components/room/VideoTiles";
 import { InterviewTimer } from "../components/room/InterviewTimer";
+import { FeedbackFormModal } from "../components/feedback/FeedbackFormModal";
 import { executeCode } from "../utils/codeExecutor";
 import { PROBLEMS, getProblemsByTrack, getProblemById } from "../data/problems";
 
@@ -65,6 +66,7 @@ export default function InterviewRoom() {
   const [isProblemDrawerCollapsed, setIsProblemDrawerCollapsed] = useState(false);
   const [isConsoleCollapsed, setIsConsoleCollapsed] = useState(false);
   const [leaveModalOpen, setLeaveModalOpen] = useState(false);
+  const [feedbackModalOpen, setFeedbackModalOpen] = useState(false);
 
   // Initialize and Join Room on Mount
   useEffect(() => {
@@ -226,13 +228,18 @@ export default function InterviewRoom() {
     }
   };
 
-  // Clean exit
+  // Clean exit & transition into post-session feedback
   const handleConfirmLeave = () => {
+    setLeaveModalOpen(false);
     leaveCall();
     if (socket && roomId) {
       socket.emit("room:leave", { roomId });
     }
-    navigate("/dashboard");
+    if (peerUser) {
+      setFeedbackModalOpen(true);
+    } else {
+      navigate("/dashboard");
+    }
   };
 
   return (
@@ -384,6 +391,22 @@ export default function InterviewRoom() {
           </div>
         </div>
       )}
+      {/* Post-Session Symmetric Blind Feedback Modal */}
+      <FeedbackFormModal
+        isOpen={feedbackModalOpen}
+        roomId={roomId}
+        candidate={peerUser}
+        track={track}
+        socket={socket}
+        onClose={() => {
+          setFeedbackModalOpen(false);
+          navigate("/dashboard");
+        }}
+        onCompleted={() => {
+          setFeedbackModalOpen(false);
+          navigate("/dashboard");
+        }}
+      />
     </div>
   );
 }
