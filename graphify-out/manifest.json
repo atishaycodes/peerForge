@@ -2406,9 +2406,9 @@
     "semantic_hash": ""
   },
   "server/controllers/authController.js": {
-    "mtime": 1794138630.2625337,
-    "seen": 1794138865.373458,
-    "ast_hash": "eaa3fc46ae92ae50d5e734354bf7468c",
+    "mtime": 1794140120.128286,
+    "seen": 1794140321.655889,
+    "ast_hash": "027d934a0c70ec791b098d7460dad55d",
     "semantic_hash": ""
   },
   "server/middleware/auth.js": {
@@ -2574,8 +2574,8 @@
     "semantic_hash": ""
   },
   "server/socket/index.js": {
-    "mtime": 1794138809.375424,
-    "seen": 1794138865.3735328,
+    "mtime": 1794139112.9743254,
+    "seen": 1794140321.6559088,
     "ast_hash": "0e9c5d9997c7d005e9470d3446ec3291",
     "semantic_hash": ""
   },
@@ -2586,15 +2586,15 @@
     "semantic_hash": ""
   },
   "src/context/SocketContext.jsx": {
-    "mtime": 1794138680.423923,
-    "seen": 1794138865.3736837,
-    "ast_hash": "2895dc8e8f81252bbe35ae5e62bb42fa",
+    "mtime": 1794139883.469055,
+    "seen": 1794140321.6559455,
+    "ast_hash": "0bf66147ce94b5804f51238650d34288",
     "semantic_hash": ""
   },
   "src/pages/InterviewRoom.jsx": {
-    "mtime": 1794138696.4405186,
-    "seen": 1794138865.3737133,
-    "ast_hash": "c7204814d59cb22caf12fa2c5381676b",
+    "mtime": 1794140176.3841543,
+    "seen": 1794140321.6559525,
+    "ast_hash": "f2a15851a745f3c82cea0f9bf8010931",
     "semantic_hash": ""
   },
   "src/pages/Lobby.jsx": {
@@ -2616,9 +2616,9 @@
     "semantic_hash": ""
   },
   "server/socket/roomSignaling.js": {
-    "mtime": 1794136909.6781335,
-    "seen": 1794137145.6665897,
-    "ast_hash": "6a5585b4aeb3cc59539d9b843ae2d7c7",
+    "mtime": 1794139828.0829809,
+    "seen": 1794140321.6559098,
+    "ast_hash": "17c763f2c20f2fd4e8acc733cb0d298a",
     "semantic_hash": ""
   },
   "src/components/room/CodeEditor.jsx": {
@@ -2958,9 +2958,9 @@
     "semantic_hash": ""
   },
   "src/utils/roomUtils.js": {
-    "mtime": 1794137033.296812,
-    "seen": 1794137145.6667867,
-    "ast_hash": "7dad75335ad231e9697422b211371949",
+    "mtime": 1794139849.3785646,
+    "seen": 1794140321.6559584,
+    "ast_hash": "0d7a6be5c4237f2af0a767473115c036",
     "semantic_hash": ""
   },
   "package-lock.json": {

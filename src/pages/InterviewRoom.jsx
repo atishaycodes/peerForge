@@ -75,6 +75,9 @@ export default function InterviewRoom() {
   const [leaveModalOpen, setLeaveModalOpen] = useState(false);
   const [feedbackModalOpen, setFeedbackModalOpen] = useState(false);
 
+  // Normalized current user ID
+  const myUserId = (user?.id || user?._id)?.toString();
+
   // Initialize and Join Room on Mount or when socket connects
   useEffect(() => {
     if (!socket || !cleanRoomId) return;
@@ -98,7 +101,7 @@ export default function InterviewRoom() {
 
           // Find other peer if already in room
           if (response.participants) {
-            const partner = response.participants.find((p) => p.userId !== user?._id?.toString());
+            const partner = response.participants.find((p) => p.userId !== myUserId);
             if (partner) {
               setPeerUser(partner);
               setPeerRole(partner.role);
@@ -142,8 +145,8 @@ export default function InterviewRoom() {
     // Role swap listener
     const handleRoleSwapped = ({ participants }) => {
       if (participants) {
-        const me = participants.find((p) => p.userId === user?._id?.toString());
-        const them = participants.find((p) => p.userId !== user?._id?.toString());
+        const me = participants.find((p) => p.userId === myUserId);
+        const them = participants.find((p) => p.userId !== myUserId);
         if (me) setUserRole(me.role);
         if (them) setPeerRole(them.role);
       }
@@ -168,7 +171,7 @@ export default function InterviewRoom() {
       socket.off("room:role-swapped", handleRoleSwapped);
       socket.off("room:problem-updated", handleProblemUpdated);
     };
-  }, [socket, isConnected, cleanRoomId, track, difficulty, user?._id]);
+  }, [socket, isConnected, cleanRoomId, track, difficulty, myUserId]);
 
   // Code change handler
   const handleCodeChange = useCallback((newCode, shouldSync = true) => {
@@ -190,9 +193,9 @@ export default function InterviewRoom() {
   const handleResetCode = () => {
     const starter = problem.starterCode?.[language] || "";
     setCode(starter);
-    if (socket && roomId) {
+    if (socket && cleanRoomId) {
       socket.emit("room:code-change", {
-        roomId,
+        roomId: cleanRoomId,
         code: starter,
         version: Date.now(),
       });
@@ -208,9 +211,9 @@ export default function InterviewRoom() {
     setConsoleLogs([]);
     setExecutionError(null);
 
-    if (socket && roomId) {
+    if (socket && cleanRoomId) {
       socket.emit("room:problem-change", {
-        roomId,
+        roomId: cleanRoomId,
         problemId: newProb.id,
         starterCode: starter,
       });
@@ -304,7 +307,7 @@ export default function InterviewRoom() {
             <span className="text-neutral-600 text-xs">/</span>
             
             {/* Room Code Badge */}
-            <div className="flex items-center gap-1.5 bg-neutral-900 border border-neutral-800 px-2 py-0.5 rounded-md">
+            <div className="flex items-center gap-1.5 bg-neutral-900 border border-neutral-800 px-2 py-0.5 rounded-md whitespace-nowrap shrink-0">
               <span className="text-[10px] text-neutral-400 font-mono uppercase tracking-wider">Code:</span>
               <span className="text-xs font-mono font-bold text-emerald-400 tracking-wider select-all">
                 {cleanRoomId}
@@ -392,7 +395,7 @@ export default function InterviewRoom() {
               onRunCode={handleRunCode}
               isRunning={isRunning}
               socket={socket}
-              roomId={roomId}
+              roomId={cleanRoomId}
               peerName={peerUser?.name}
             />
           </div>

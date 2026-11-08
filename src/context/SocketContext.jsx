@@ -12,6 +12,7 @@ export function SocketProvider({ children }) {
 
   const socketRef = useRef(null);
   const userRef = useRef(user);
+  const navigateRef = useRef(navigate);
   const [isConnected, setIsConnected] = useState(false);
   const [inQueue, setInQueue] = useState(false);
   const [queueData, setQueueData] = useState(null);
@@ -21,13 +22,18 @@ export function SocketProvider({ children }) {
 
   useEffect(() => {
     userRef.current = user;
-  }, [user]);
+    navigateRef.current = navigate;
+  }, [user, navigate]);
 
-  // Initialize socket instance once
+  // Initialize socket instance once across entire app lifecycle
   useEffect(() => {
-    const socket = io('/', {
+    const origin = typeof window !== 'undefined' ? window.location.origin : '/';
+    const socket = io(origin, {
       withCredentials: true,
-      autoConnect: false,
+      autoConnect: true,
+      reconnection: true,
+      reconnectionAttempts: Infinity,
+      reconnectionDelay: 1000,
       transports: ['websocket', 'polling'],
       auth: (cb) => {
         const token = localStorage.getItem('auth_token');
@@ -35,13 +41,21 @@ export function SocketProvider({ children }) {
         cb({
           token,
           user: currentUser
-            ? { _id: currentUser.id || currentUser._id, name: currentUser.name, email: currentUser.email }
+            ? {
+                _id: currentUser.id || currentUser._id,
+                name: currentUser.name,
+                email: currentUser.email,
+              }
             : null,
         });
       },
     });
 
     socketRef.current = socket;
+
+    if (socket.connected) {
+      setIsConnected(true);
+    }
 
     socket.on('connect', () => {
       setIsConnected(true);
@@ -70,8 +84,9 @@ export function SocketProvider({ children }) {
       setPendingMatch(null);
       setInQueue(false);
       setMatchConfirmed(data);
-      // Navigate to room
-      navigate(`/room/${data.roomId}`);
+      if (navigateRef.current) {
+        navigateRef.current(`/room/${data.roomId}`);
+      }
     });
 
     socket.on('match:cancelled', ({ reason, reQueued }) => {
@@ -90,25 +105,24 @@ export function SocketProvider({ children }) {
     return () => {
       socket.disconnect();
     };
-  }, [navigate]);
+  }, []);
 
-  // Connect or disconnect when auth status changes
+  // Update socket credentials and authenticate whenever user state changes
   useEffect(() => {
     const socket = socketRef.current;
     if (!socket) return;
 
     if (user) {
-      socket.auth = {
+      const authPayload = {
         token: localStorage.getItem('auth_token'),
         user: { _id: user.id || user._id, name: user.name, email: user.email },
       };
+      socket.auth = authPayload;
       if (!socket.connected) {
         socket.connect();
+      } else {
+        socket.emit('user:authenticate', authPayload);
       }
-    } else if (!user && socket.connected) {
-      socket.disconnect();
-      setInQueue(false);
-      setPendingMatch(null);
     }
   }, [user]);
 

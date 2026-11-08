@@ -1,17 +1,17 @@
 # Graph Report - peerForge  (2026-11-08)
 
 ## Corpus Check
-- 488 files · ~435,123 words
+- 488 files · ~435,267 words
 - Verdict: corpus is large enough that graph structure adds value.
 - Unclassified: 5 file(s) not represented in the graph (top: (none) 3, .example 1, .css 1)
 
 ## Summary
-- 3359 nodes · 5248 edges · 384 communities (240 shown, 144 thin omitted)
+- 3359 nodes · 5249 edges · 384 communities (240 shown, 144 thin omitted)
 - Extraction: 90% EXTRACTED · 10% INFERRED · 0% AMBIGUOUS · INFERRED: 533 edges (avg confidence: 0.86)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `8b65363e`
+- Built from commit: `d7006ae1`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -307,12 +307,12 @@
 10. `toPosixPath()` - 33 edges
 
 ## Surprising Connections (you probably didn't know these)
-- `Tasks` --references--> `useAuth()`  [INFERRED]
-  .planning/phases/02-user-profiles-developer-preferences/02-02-PLAN.md → src/context/AuthContext.jsx
 - `Key Changes` --references--> `useSocket()`  [INFERRED]
   .planning/phases/03-matchmaking-engine-socket-signaling/03-02-SUMMARY.md → src/context/SocketContext.jsx
 - `Accomplishments` --references--> `error()`  [INFERRED]
   .planning/phases/04-webrtc-video-audio-collaborative-code-room/04-03-SUMMARY.md → .agent/get-shit-done/bin/lib/core.cjs
+- `Tasks` --references--> `useAuth()`  [INFERRED]
+  .planning/phases/02-user-profiles-developer-preferences/02-02-PLAN.md → src/context/AuthContext.jsx
 - `Objective` --references--> `useWebRTC()`  [INFERRED]
   .planning/phases/04-webrtc-video-audio-collaborative-code-room/04-02-PLAN.md → src/hooks/useWebRTC.js
 - `Accomplishments` --references--> `useWebRTC()`  [INFERRED]
@@ -1148,7 +1148,7 @@ Cohesion: 0.22
 Nodes (8): Code Execution & Output Console, Collaborative Code Editor, Deferred Ideas, Interview Timer & Role Switcher, Phase 4: WebRTC Video/Audio & Collaborative Code Room - Discussion Log, Problem Prompt Loading, WebRTC Media & Permission Handling, Workspace Layout & Video Tiles
 
 ### Community 350 - "roomSignaling.js"
-Cohesion: 0.17
+Cohesion: 0.18
 Nodes (13): Objective, Plan 04-01: WebRTC Signaling Gateway, Room Session State & Editor Dependencies, Tasks, Verification Criteria, Accomplishments, Plan 04-01 Summary: WebRTC Signaling Gateway, Room Session State & Dependencies, Verification, activeRooms (+5 more)
 
 ### Community 351 - "gap-checker.cjs"
@@ -1292,7 +1292,7 @@ Nodes (3): Objective, Plan 04-03: Curated Problem Bank, Monaco Collaborative Edi
 _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `error()` connect `output` to `gsd2-import.cjs`, `state.cjs`, `workstream.cjs`, `gsd-graphify/SKILL.md`, `phase.cjs`, `init.cjs`, `Plan 01-03: Frontend Integration, State Management & Protected Routing`, `profile-output.cjs`, `Plan 04-03 Summary: Curated Problem Bank, Monaco Collaborative Editor, In-Browser Runner & Interview Room Integration`, `output`, `core.cjs`, `InterviewRoom.jsx`, `verify.cjs`, `uat.cjs`, `gsd-tools.cjs`, `learnings.cjs`, `profile-pipeline.cjs`, `gap-checker.cjs`?**
-  _High betweenness centrality (0.034) - this node is a cross-community bridge._
+  _High betweenness centrality (0.026) - this node is a cross-community bridge._
 - **Are the 6 inferred relationships involving `error()` (e.g. with `runCommand()` and `core.cjs`) actually correct?**
   _`error()` has 6 INFERRED edges - model-reasoned connections that need verification._
 - **What connects `ADR-0011`, `ADR-0011`, `ADR-0011` to the rest of the system?**

@@ -7,7 +7,13 @@
 export const activeRooms = new Map();
 let socketIoInstance = null;
 
-export const normalizeRoomId = (id) => (id ? id.toString().trim().toUpperCase() : "");
+export const normalizeRoomId = (id) => {
+  if (!id) return "";
+  try {
+    id = decodeURIComponent(id);
+  } catch (e) {}
+  return id.toString().replace(/\s+/g, "").trim().toUpperCase();
+};
 
 export const setSocketIoInstance = (io) => {
   socketIoInstance = io;
@@ -177,7 +183,7 @@ export const registerRoomHandlers = (io, socket) => {
       if (typeof callback === "function") callback(roomState);
 
       // Notify other peer in the room
-      socket.to(roomId).emit("room:peer-joined", {
+      socket.to(cleanRoomId).emit("room:peer-joined", {
         peer: formatParticipant(participant),
         participants: participantsList,
       });
@@ -191,7 +197,8 @@ export const registerRoomHandlers = (io, socket) => {
    * WebRTC Signaling: SDP Offer
    */
   socket.on("webrtc:offer", ({ roomId, offer, targetSocketId }) => {
-    if (!roomId || !offer) return;
+    const cleanRoomId = normalizeRoomId(roomId || socket.currentRoomId);
+    if (!cleanRoomId || !offer) return;
 
     const payload = {
       offer,
@@ -205,7 +212,7 @@ export const registerRoomHandlers = (io, socket) => {
     if (targetSocketId) {
       io.to(targetSocketId).emit("webrtc:offer", payload);
     } else {
-      socket.to(roomId).emit("webrtc:offer", payload);
+      socket.to(cleanRoomId).emit("webrtc:offer", payload);
     }
   });
 
@@ -213,7 +220,8 @@ export const registerRoomHandlers = (io, socket) => {
    * WebRTC Signaling: SDP Answer
    */
   socket.on("webrtc:answer", ({ roomId, answer, targetSocketId }) => {
-    if (!roomId || !answer) return;
+    const cleanRoomId = normalizeRoomId(roomId || socket.currentRoomId);
+    if (!cleanRoomId || !answer) return;
 
     const payload = {
       answer,
@@ -223,7 +231,7 @@ export const registerRoomHandlers = (io, socket) => {
     if (targetSocketId) {
       io.to(targetSocketId).emit("webrtc:answer", payload);
     } else {
-      socket.to(roomId).emit("webrtc:answer", payload);
+      socket.to(cleanRoomId).emit("webrtc:answer", payload);
     }
   });
 
@@ -231,7 +239,8 @@ export const registerRoomHandlers = (io, socket) => {
    * WebRTC Signaling: ICE Candidate Relay
    */
   socket.on("webrtc:ice-candidate", ({ roomId, candidate, targetSocketId }) => {
-    if (!roomId || !candidate) return;
+    const cleanRoomId = normalizeRoomId(roomId || socket.currentRoomId);
+    if (!cleanRoomId || !candidate) return;
 
     const payload = {
       candidate,
@@ -241,7 +250,7 @@ export const registerRoomHandlers = (io, socket) => {
     if (targetSocketId) {
       io.to(targetSocketId).emit("webrtc:ice-candidate", payload);
     } else {
-      socket.to(roomId).emit("webrtc:ice-candidate", payload);
+      socket.to(cleanRoomId).emit("webrtc:ice-candidate", payload);
     }
   });
 
@@ -249,15 +258,16 @@ export const registerRoomHandlers = (io, socket) => {
    * Code Editor: Text Synchronization
    */
   socket.on("room:code-change", ({ roomId, code, version }) => {
-    if (!roomId) return;
-    const room = activeRooms.get(roomId);
+    const cleanRoomId = normalizeRoomId(roomId || socket.currentRoomId);
+    if (!cleanRoomId) return;
+    const room = activeRooms.get(cleanRoomId);
     if (room) {
       room.code = code;
       room.lastActivity = Date.now();
     }
 
     // Broadcast update to other peer in the room (< 150ms latency)
-    socket.to(roomId).emit("room:code-update", {
+    socket.to(cleanRoomId).emit("room:code-update", {
       code,
       version: version || Date.now(),
       senderSocketId: socket.id,
@@ -268,9 +278,10 @@ export const registerRoomHandlers = (io, socket) => {
    * Code Editor: Cursor Position Broadcast
    */
   socket.on("room:cursor-change", ({ roomId, cursor }) => {
-    if (!roomId || !cursor) return;
+    const cleanRoomId = normalizeRoomId(roomId || socket.currentRoomId);
+    if (!cleanRoomId || !cursor) return;
 
-    socket.to(roomId).emit("room:cursor-update", {
+    socket.to(cleanRoomId).emit("room:cursor-update", {
       cursor,
       user: {
         name: socket.user?.name || "Peer",
@@ -283,14 +294,15 @@ export const registerRoomHandlers = (io, socket) => {
    * Code Editor: Language Selection
    */
   socket.on("room:language-change", ({ roomId, language }) => {
-    if (!roomId || !language) return;
-    const room = activeRooms.get(roomId);
+    const cleanRoomId = normalizeRoomId(roomId || socket.currentRoomId);
+    if (!cleanRoomId || !language) return;
+    const room = activeRooms.get(cleanRoomId);
     if (room) {
       room.language = language;
       room.lastActivity = Date.now();
     }
 
-    socket.to(roomId).emit("room:language-updated", {
+    socket.to(cleanRoomId).emit("room:language-updated", {
       language,
       senderSocketId: socket.id,
     });
@@ -300,8 +312,9 @@ export const registerRoomHandlers = (io, socket) => {
    * Interview Session: Question / Problem Selection
    */
   socket.on("room:problem-change", ({ roomId, problemId, starterCode }) => {
-    if (!roomId || !problemId) return;
-    const room = activeRooms.get(roomId);
+    const cleanRoomId = normalizeRoomId(roomId || socket.currentRoomId);
+    if (!cleanRoomId || !problemId) return;
+    const room = activeRooms.get(cleanRoomId);
     if (room) {
       room.activeProblemId = problemId;
       if (starterCode) {
@@ -311,7 +324,7 @@ export const registerRoomHandlers = (io, socket) => {
     }
 
     // Notify all participants in room of problem change
-    io.to(roomId).emit("room:problem-updated", {
+    io.to(cleanRoomId).emit("room:problem-updated", {
       problemId,
       code: starterCode || room?.code || "",
       senderSocketId: socket.id,
@@ -322,8 +335,9 @@ export const registerRoomHandlers = (io, socket) => {
    * Interview Session: Role Swap (Interviewer <-> Candidate)
    */
   socket.on("room:role-swap", ({ roomId }) => {
-    if (!roomId) return;
-    const room = activeRooms.get(roomId);
+    const cleanRoomId = normalizeRoomId(roomId || socket.currentRoomId);
+    if (!cleanRoomId) return;
+    const room = activeRooms.get(cleanRoomId);
     if (!room) return;
 
     // Swap roles for all participants
@@ -338,7 +352,7 @@ export const registerRoomHandlers = (io, socket) => {
 
     const participantsList = Array.from(room.participants.values()).map(formatParticipant);
 
-    io.to(roomId).emit("room:role-swapped", {
+    io.to(cleanRoomId).emit("room:role-swapped", {
       participants: participantsList,
       phase: 2,
     });
@@ -348,14 +362,15 @@ export const registerRoomHandlers = (io, socket) => {
    * Media Controls: Audio / Video State Broadcast
    */
   socket.on("room:media-status", ({ roomId, audio, video }) => {
-    if (!roomId) return;
-    const room = activeRooms.get(roomId);
+    const cleanRoomId = normalizeRoomId(roomId || socket.currentRoomId);
+    if (!cleanRoomId) return;
+    const room = activeRooms.get(cleanRoomId);
     if (room && room.participants.has(socket.id)) {
       const p = room.participants.get(socket.id);
       if (typeof audio === "boolean") p.media.audio = audio;
       if (typeof video === "boolean") p.media.video = video;
 
-      socket.to(roomId).emit("room:peer-media-status", {
+      socket.to(cleanRoomId).emit("room:peer-media-status", {
         socketId: socket.id,
         media: p.media,
       });
@@ -366,7 +381,8 @@ export const registerRoomHandlers = (io, socket) => {
    * Explicit Leave Room
    */
   socket.on("room:leave", ({ roomId }) => {
-    handleUserLeaveRoom(io, socket, roomId || socket.currentRoomId);
+    const cleanRoomId = normalizeRoomId(roomId || socket.currentRoomId);
+    handleUserLeaveRoom(io, socket, cleanRoomId);
   });
 };
 
@@ -374,24 +390,24 @@ export const registerRoomHandlers = (io, socket) => {
  * Handle cleaning up room state when a user leaves or disconnects
  */
 export const handleUserLeaveRoom = (io, socket, targetRoomId) => {
-  const roomId = targetRoomId || socket.currentRoomId;
-  if (!roomId) return;
+  const cleanRoomId = normalizeRoomId(targetRoomId || socket.currentRoomId);
+  if (!cleanRoomId) return;
 
-  const room = activeRooms.get(roomId);
+  const room = activeRooms.get(cleanRoomId);
   if (!room) return;
 
   if (room.participants.has(socket.id)) {
     const leftParticipant = room.participants.get(socket.id);
     room.participants.delete(socket.id);
-    socket.leave(roomId);
+    socket.leave(cleanRoomId);
     socket.currentRoomId = null;
 
-    console.log(`[Room Left] User ${leftParticipant.user?.name} left ${roomId}`);
+    console.log(`[Room Left] User ${leftParticipant.user?.name} left ${cleanRoomId}`);
 
     const remainingParticipants = Array.from(room.participants.values()).map(formatParticipant);
 
     // Notify other participant
-    socket.to(roomId).emit("room:peer-left", {
+    socket.to(cleanRoomId).emit("room:peer-left", {
       leftSocketId: socket.id,
       leftUserId: leftParticipant.userId,
       remainingParticipants,
@@ -400,10 +416,10 @@ export const handleUserLeaveRoom = (io, socket, targetRoomId) => {
     // If room is empty, schedule memory purge
     if (room.participants.size === 0) {
       setTimeout(() => {
-        const checkRoom = activeRooms.get(roomId);
+        const checkRoom = activeRooms.get(cleanRoomId);
         if (checkRoom && checkRoom.participants.size === 0) {
-          activeRooms.delete(roomId);
-          console.log(`[Room Cleaned] ${roomId} purged from memory`);
+          activeRooms.delete(cleanRoomId);
+          console.log(`[Room Cleaned] ${cleanRoomId} purged from memory`);
         }
       }, 60000); // 1 minute grace period for refresh
     }

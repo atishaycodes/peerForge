@@ -20,6 +20,7 @@ const sendTokenResponse = (user, statusCode, res) => {
     token, // Provided for WebSocket and non-cookie environments
     user: {
       id: user._id,
+      _id: user._id,
       name: user.name,
       email: user.email,
       profile: user.profile,

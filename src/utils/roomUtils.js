@@ -24,10 +24,17 @@ export function generateRandomRoomCode() {
 export function normalizeRoomCode(rawInput) {
   if (!rawInput || typeof rawInput !== 'string') return '';
 
-  let code = rawInput.trim();
+  let code = rawInput;
+  try {
+    code = decodeURIComponent(code);
+  } catch (e) {
+    // ignore
+  }
+
+  code = code.trim();
 
   // If user pasted a full URL or path (e.g. https://domain.com/room/PF-8921)
-  const roomUrlMatch = code.match(/\/room\/([a-zA-Z0-9_-]+)/i);
+  const roomUrlMatch = code.match(/\/room\/([^\s?#]+)/i);
   if (roomUrlMatch && roomUrlMatch[1]) {
     code = roomUrlMatch[1];
   }
@@ -37,6 +44,7 @@ export function normalizeRoomCode(rawInput) {
     .split('?')[0]
     .split('#')[0]
     .replace(/[/'"]/g, '')
+    .replace(/\s+/g, '') // Remove all whitespace
     .trim()
     .toUpperCase();
 
