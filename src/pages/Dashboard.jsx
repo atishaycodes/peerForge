@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   LogOut,
@@ -10,12 +10,55 @@ import {
   Clock,
   ArrowRight,
   Settings,
+  RefreshCw,
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext.jsx';
+import PerformanceSummaryCard from '../components/dashboard/PerformanceSummaryCard.jsx';
+import SessionHistoryTable from '../components/dashboard/SessionHistoryTable.jsx';
+import SessionDetailDrawer from '../components/dashboard/SessionDetailDrawer.jsx';
+import UpcomingSessionsList from '../components/dashboard/UpcomingSessionsList.jsx';
 
 export default function Dashboard() {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
+
+  const [history, setHistory] = useState([]);
+  const [analytics, setAnalytics] = useState(null);
+  const [upcoming, setUpcoming] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [selectedSession, setSelectedSession] = useState(null);
+
+  const fetchData = async () => {
+    setLoading(true);
+    try {
+      const [histRes, anaRes, upcRes] = await Promise.all([
+        fetch('/api/sessions/history', { credentials: 'include' }),
+        fetch('/api/sessions/analytics', { credentials: 'include' }),
+        fetch('/api/sessions/upcoming', { credentials: 'include' }),
+      ]);
+
+      if (histRes.ok) {
+        const histData = await histRes.json();
+        setHistory(histData.sessions || []);
+      }
+      if (anaRes.ok) {
+        const anaData = await anaRes.json();
+        setAnalytics(anaData.analytics || null);
+      }
+      if (upcRes.ok) {
+        const upcData = await upcRes.json();
+        setUpcoming(upcData.upcoming || []);
+      }
+    } catch (err) {
+      console.error('Failed to load dashboard data:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
 
   const handleLogout = async () => {
     await logout();
@@ -48,7 +91,7 @@ export default function Dashboard() {
   return (
     <div className="min-h-screen bg-neutral-950 text-neutral-100 flex flex-col font-sans selection:bg-neutral-800">
       {/* Top Header */}
-      <header className="border-b border-neutral-800/80 bg-neutral-950/80 backdrop-blur-md px-6 py-3.5 flex items-center justify-between sticky top-0 z-50">
+      <header className="border-b border-neutral-800/80 bg-neutral-950/80 backdrop-blur-md px-6 py-3.5 flex items-center justify-between sticky top-0 z-40">
         <div className="flex items-center gap-3">
           <div className="w-7 h-7 rounded-md bg-white text-black font-mono font-semibold flex items-center justify-center text-xs tracking-tight">
             PF
@@ -94,13 +137,21 @@ export default function Dashboard() {
               Developer Workspace
             </h1>
             <p className="text-xs text-neutral-400 mt-0.5">
-              Account status, authentication details, and upcoming mock interview sessions
+              Account status, past interview feedback scorecards, and live matchmaking queue
             </p>
           </div>
           <div className="flex items-center gap-2 self-start sm:self-auto">
+            <button
+              onClick={fetchData}
+              className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md bg-neutral-900 hover:bg-neutral-850 border border-neutral-800 text-[11px] font-mono text-neutral-400 hover:text-neutral-200 cursor-pointer transition-colors"
+              title="Refresh data"
+            >
+              <RefreshCw className="w-3 h-3" />
+              <span>Refresh</span>
+            </button>
             <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-neutral-900 border border-neutral-800 text-[11px] font-mono text-neutral-300">
               <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
-              JWT Session Verified
+              Verified
             </span>
           </div>
         </div>
@@ -143,9 +194,9 @@ export default function Dashboard() {
           </div>
         )}
 
-        {/* Overview Grid */}
+        {/* Top Split: 3 Core Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          {/* Identity & Account Card */}
+          {/* 1. Identity & Account Card */}
           <div className="rounded-xl border border-neutral-800 bg-neutral-900/50 p-5 flex flex-col justify-between">
             <div>
               <div className="flex items-center gap-3 mb-4">
@@ -168,19 +219,7 @@ export default function Dashboard() {
 
               <div className="space-y-2 pt-3 border-t border-neutral-800/80 text-xs">
                 <div className="flex justify-between items-center text-neutral-400">
-                  <span>User ID</span>
-                  <span className="font-mono text-neutral-300 tabular-nums">
-                    {user?.id?.slice(-8) || 'active'}
-                  </span>
-                </div>
-                <div className="flex justify-between items-center text-neutral-400">
-                  <span>Time Zone</span>
-                  <span className="text-neutral-300 font-mono text-[11px] truncate max-w-[140px]">
-                    {timeZone}
-                  </span>
-                </div>
-                <div className="flex justify-between items-start text-neutral-400">
-                  <span>Roles</span>
+                  <span>Target Roles</span>
                   <div className="text-right flex flex-wrap justify-end gap-1 max-w-[150px]">
                     {targetRoles.length > 0 ? (
                       targetRoles.slice(0, 2).map((r) => (
@@ -194,12 +233,13 @@ export default function Dashboard() {
                     ) : (
                       <span className="text-neutral-500 italic">None set</span>
                     )}
-                    {targetRoles.length > 2 && (
-                      <span className="text-[10px] text-neutral-500 font-mono">
-                        +{targetRoles.length - 2}
-                      </span>
-                    )}
                   </div>
+                </div>
+                <div className="flex justify-between items-center text-neutral-400">
+                  <span>Time Zone</span>
+                  <span className="text-neutral-300 font-mono text-[11px] truncate max-w-[140px]">
+                    {timeZone}
+                  </span>
                 </div>
               </div>
             </div>
@@ -217,65 +257,22 @@ export default function Dashboard() {
             </div>
           </div>
 
-          {/* Phase 2: Skills & Tech Stacks Card */}
-          <div className="rounded-xl border border-neutral-800 bg-neutral-900/40 p-5 flex flex-col justify-between">
-            <div>
-              <div className="w-8 h-8 rounded-lg bg-neutral-800/80 border border-neutral-700/50 flex items-center justify-center text-neutral-300 mb-3">
-                <User className="w-4 h-4" />
-              </div>
-              <h3 className="text-sm font-medium text-white mb-1">Developer Profile</h3>
-              <p className="text-xs text-neutral-400 leading-relaxed mb-3">
-                {user?.profile?.bio || 'No bio configured yet.'}
-              </p>
-
-              {skills.length > 0 ? (
-                <div className="flex flex-wrap gap-1">
-                  {skills.slice(0, 6).map((s) => (
-                    <span
-                      key={s}
-                      className="px-2 py-0.5 rounded text-[11px] bg-neutral-900 border border-neutral-800 text-neutral-300 font-mono"
-                    >
-                      {s}
-                    </span>
-                  ))}
-                  {skills.length > 6 && (
-                    <span className="text-[10px] text-neutral-500 font-mono self-center">
-                      +{skills.length - 6} more
-                    </span>
-                  )}
-                </div>
-              ) : (
-                <p className="text-xs text-neutral-500 italic">No skills added yet.</p>
-              )}
-            </div>
-
-            <div className="mt-4 pt-3 border-t border-neutral-800/60 flex items-center justify-between text-xs">
-              <span className="text-neutral-500 font-mono text-[11px]">Phase 2 Ready</span>
-              <button
-                onClick={() => navigate('/profile')}
-                className="text-neutral-300 hover:text-white underline cursor-pointer"
-              >
-                Edit
-              </button>
-            </div>
-          </div>
-
-          {/* Phase 3 Active: Matchmaking Lobby */}
+          {/* 2. Matchmaking Quick Jump Card */}
           <div className="rounded-xl border border-neutral-800 bg-neutral-900/40 p-5 flex flex-col justify-between">
             <div>
               <div className="w-8 h-8 rounded-lg bg-neutral-800/80 border border-neutral-700/50 flex items-center justify-center text-white mb-3">
                 <Users className="w-4 h-4" />
               </div>
-              <h3 className="text-sm font-medium text-white mb-1">Mock Interview Lobby</h3>
+              <h3 className="text-sm font-medium text-white mb-1">Live Matchmaking Lobby</h3>
               <p className="text-xs text-neutral-400 leading-relaxed">
-                Live matchmaking queue for DSA, Frontend Architecture, and Backend System Design.
+                Queue up for DSA, Frontend Architecture, or Backend System Design peer mocks.
               </p>
             </div>
 
             <div className="mt-4 pt-3 border-t border-neutral-800/60 flex items-center justify-between text-xs">
               <span className="text-emerald-400 font-mono text-[11px] flex items-center gap-1">
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                Live Matching
+                Queue Ready
               </span>
               <button
                 onClick={() => navigate('/lobby')}
@@ -286,26 +283,29 @@ export default function Dashboard() {
               </button>
             </div>
           </div>
+
+          {/* 3. Performance & Competency Summary Card */}
+          <PerformanceSummaryCard analytics={analytics} loading={loading} />
         </div>
 
-        {/* Honest Empty State: Recent Sessions */}
-        <section className="rounded-xl border border-neutral-800 bg-neutral-900/20 p-8 flex flex-col items-center justify-center text-center">
-          <div className="w-10 h-10 rounded-lg bg-neutral-800/80 border border-neutral-700/50 flex items-center justify-center text-neutral-400 mb-3">
-            <Calendar className="w-5 h-5" />
-          </div>
-          <h3 className="text-sm font-medium text-white">No interview sessions recorded yet</h3>
-          <p className="text-xs text-neutral-400 max-w-sm mt-1 mb-4 leading-relaxed">
-            Your completed mock interviews, peer feedback rubrics, and performance metrics will appear here after your first session.
-          </p>
-          <button
-            onClick={() => navigate('/lobby')}
-            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-md bg-white hover:bg-neutral-200 text-neutral-950 text-xs font-medium cursor-pointer transition-colors"
-          >
-            <Clock className="w-3.5 h-3.5 text-neutral-800" />
-            <span>Join Lobby to Pair</span>
-          </button>
-        </section>
+        {/* Middle Section: Upcoming Scheduled Slots */}
+        <UpcomingSessionsList upcoming={upcoming} loading={loading} />
+
+        {/* Bottom Section: Past Session History Table */}
+        <SessionHistoryTable
+          sessions={history}
+          loading={loading}
+          onSelectSession={(session) => setSelectedSession(session)}
+        />
       </main>
+
+      {/* Slide-over Scorecard Drawer */}
+      <SessionDetailDrawer
+        isOpen={Boolean(selectedSession)}
+        onClose={() => setSelectedSession(null)}
+        session={selectedSession}
+        currentUser={user}
+      />
     </div>
   );
 }
