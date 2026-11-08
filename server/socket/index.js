@@ -138,14 +138,22 @@ export const setupSocket = (io) => {
       }
     });
 
-    // Generate Direct Shareable Invite Link
+    // Generate Direct Shareable Room Code & Invite Link
     socket.on("invite:create", ({ track, difficulty }, callback) => {
-      const inviteCode = `inv_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`;
-      const roomId = `room_${inviteCode}`;
+      // Clean, memorable 6-character code (e.g. PF-8921 or PF-7K2M9X)
+      // Uses unambiguous characters (avoids 0, O, 1, I)
+      const alphabet = "23456789ABCDEFGHJKLMNPQRSTUVWXYZ";
+      let codeSuffix = "";
+      for (let i = 0; i < 6; i++) {
+        codeSuffix += alphabet.charAt(Math.floor(Math.random() * alphabet.length));
+      }
+      const roomCode = `PF-${codeSuffix}`;
+      const roomId = roomCode;
 
       const response = {
         success: true,
-        inviteCode,
+        roomCode,
+        inviteCode: roomCode,
         roomId,
         track,
         difficulty,

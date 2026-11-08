@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
-import { ArrowLeft, ShieldAlert, Wifi, WifiOff } from "lucide-react";
+import { ArrowLeft, ShieldAlert, Wifi, WifiOff, Copy, Check, Link as LinkIcon, AlertCircle } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 import { useSocket } from "../context/SocketContext";
 import { useWebRTC } from "../hooks/useWebRTC";
@@ -12,6 +12,7 @@ import { InterviewTimer } from "../components/room/InterviewTimer";
 import { FeedbackFormModal } from "../components/feedback/FeedbackFormModal";
 import { executeCode } from "../utils/codeExecutor";
 import { PROBLEMS, getProblemsByTrack, getProblemById } from "../data/problems";
+import { normalizeRoomCode, generateRoomLink } from "../utils/roomUtils";
 
 /**
  * InterviewRoom
@@ -23,6 +24,9 @@ export default function InterviewRoom() {
   const location = useLocation();
   const { user } = useAuth();
   const { socket, isConnected } = useSocket();
+
+  // Normalize room identifier so teammates on different hosts / cases share the exact session
+  const cleanRoomId = useMemo(() => normalizeRoomCode(roomId), [roomId]);
 
   // Route state passes initial track/difficulty from lobby if available
   const initialTrack = location.state?.track || "Data Structures & Algorithms (DSA)";
@@ -41,7 +45,7 @@ export default function InterviewRoom() {
     toggleVideo,
     toggleScreenShare,
     leaveCall,
-  } = useWebRTC(socket, roomId, user);
+  } = useWebRTC(socket, cleanRoomId, user);
 
   // Room & Layout State
   const [track, setTrack] = useState(initialTrack);
@@ -50,6 +54,9 @@ export default function InterviewRoom() {
   const [peerRole, setPeerRole] = useState("interviewer");
   const [peerUser, setPeerUser] = useState(null);
   const [timerState, setTimerState] = useState(null);
+  const [copiedCode, setCopiedCode] = useState(false);
+  const [copiedLink, setCopiedLink] = useState(false);
+  const [joinError, setJoinError] = useState(null);
 
   // Problem & Code State
   const [problem, setProblem] = useState(() => getProblemsByTrack(initialTrack)[0] || PROBLEMS[0]);
@@ -70,42 +77,45 @@ export default function InterviewRoom() {
 
   // Initialize and Join Room on Mount
   useEffect(() => {
-    if (!socket || !roomId) return;
+    if (!socket || !cleanRoomId) return;
 
     socket.emit(
       "room:join",
-      { roomId, track, difficulty },
+      { roomId: cleanRoomId, track, difficulty },
       (response) => {
-        if (response?.success) {
-          setUserRole(response.myRole || "candidate");
-          setPeerRole(response.myRole === "candidate" ? "interviewer" : "candidate");
-          if (response.track) setTrack(response.track);
-          if (response.difficulty) setDifficulty(response.difficulty);
-          if (response.timer) setTimerState(response.timer);
+        if (!response?.success) {
+          setJoinError(response?.message || "Room is unavailable or at maximum capacity (2 peers).");
+          return;
+        }
 
-          // Find other peer if already in room
-          if (response.participants) {
-            const partner = response.participants.find((p) => p.userId !== user?._id?.toString());
-            if (partner) {
-              setPeerUser(partner);
-              setPeerRole(partner.role);
-            }
-          }
+        setUserRole(response.myRole || "candidate");
+        setPeerRole(response.myRole === "candidate" ? "interviewer" : "candidate");
+        if (response.track) setTrack(response.track);
+        if (response.difficulty) setDifficulty(response.difficulty);
+        if (response.timer) setTimerState(response.timer);
 
-          // Restore synced problem if preset
-          if (response.activeProblemId) {
-            const activeProb = getProblemById(response.activeProblemId);
-            setProblem(activeProb);
-            if (response.code) {
-              setCode(response.code);
-            } else {
-              setCode(activeProb.starterCode?.[response.language || "javascript"] || "");
-            }
+        // Find other peer if already in room
+        if (response.participants) {
+          const partner = response.participants.find((p) => p.userId !== user?._id?.toString());
+          if (partner) {
+            setPeerUser(partner);
+            setPeerRole(partner.role);
           }
+        }
 
-          if (response.language) {
-            setLanguage(response.language);
+        // Restore synced problem if preset
+        if (response.activeProblemId) {
+          const activeProb = getProblemById(response.activeProblemId);
+          setProblem(activeProb);
+          if (response.code) {
+            setCode(response.code);
+          } else {
+            setCode(activeProb.starterCode?.[response.language || "javascript"] || "");
           }
+        }
+
+        if (response.language) {
+          setLanguage(response.language);
         }
       }
     );
@@ -148,7 +158,7 @@ export default function InterviewRoom() {
       socket.off("room:role-swapped", handleRoleSwapped);
       socket.off("room:problem-updated", handleProblemUpdated);
     };
-  }, [socket, roomId, track, difficulty, user?._id]);
+  }, [socket, cleanRoomId, track, difficulty, user?._id]);
 
   // Code change handler
   const handleCodeChange = useCallback((newCode, shouldSync = true) => {
@@ -223,8 +233,31 @@ export default function InterviewRoom() {
 
   // Role swap trigger
   const handleSwapRoles = () => {
-    if (socket && roomId) {
-      socket.emit("room:role-swap", { roomId });
+    if (socket && cleanRoomId) {
+      socket.emit("room:role-swap", { roomId: cleanRoomId });
+    }
+  };
+
+  const handleCopyRoomCode = async () => {
+    if (!cleanRoomId) return;
+    try {
+      await navigator.clipboard.writeText(cleanRoomId);
+      setCopiedCode(true);
+      setTimeout(() => setCopiedCode(false), 2500);
+    } catch (e) {
+      console.error("Failed to copy code", e);
+    }
+  };
+
+  const handleCopyRoomLink = async () => {
+    if (!cleanRoomId) return;
+    try {
+      const link = generateRoomLink(cleanRoomId);
+      await navigator.clipboard.writeText(link);
+      setCopiedLink(true);
+      setTimeout(() => setCopiedLink(false), 2500);
+    } catch (e) {
+      console.error("Failed to copy link", e);
     }
   };
 
@@ -232,8 +265,8 @@ export default function InterviewRoom() {
   const handleConfirmLeave = () => {
     setLeaveModalOpen(false);
     leaveCall();
-    if (socket && roomId) {
-      socket.emit("room:leave", { roomId });
+    if (socket && cleanRoomId) {
+      socket.emit("room:leave", { roomId: cleanRoomId });
     }
     if (peerUser) {
       setFeedbackModalOpen(true);
@@ -246,12 +279,12 @@ export default function InterviewRoom() {
     <div className="h-screen w-screen bg-neutral-950 text-neutral-100 flex flex-col font-sans overflow-hidden select-none">
       {/* Top Navigation Bar */}
       <header className="h-12 border-b border-neutral-800 bg-neutral-950/90 backdrop-blur px-4 flex items-center justify-between z-40 shrink-0">
-        {/* Left: Branding & Room ID */}
+        {/* Left: Branding & Code Badge */}
         <div className="flex items-center gap-3">
           <button
             type="button"
             onClick={() => setLeaveModalOpen(true)}
-            className="p-1.5 rounded text-neutral-400 hover:text-neutral-100 hover:bg-neutral-900 border border-neutral-800 transition-colors"
+            className="p-1.5 rounded text-neutral-400 hover:text-neutral-100 hover:bg-neutral-900 border border-neutral-800 transition-colors cursor-pointer"
             title="Leave Session"
           >
             <ArrowLeft className="w-4 h-4" />
@@ -259,11 +292,40 @@ export default function InterviewRoom() {
           <div className="flex items-center gap-2">
             <span className="font-semibold text-xs tracking-tight text-neutral-100">PeerForge</span>
             <span className="text-neutral-600 text-xs">/</span>
-            <span className="text-xs text-neutral-400 font-mono hidden md:inline">
-              Room: {roomId?.substring(0, 16)}
-            </span>
+            
+            {/* Room Code Badge */}
+            <div className="flex items-center gap-1.5 bg-neutral-900 border border-neutral-800 px-2 py-0.5 rounded-md">
+              <span className="text-[10px] text-neutral-400 font-mono uppercase tracking-wider">Code:</span>
+              <span className="text-xs font-mono font-bold text-emerald-400 tracking-wider select-all">
+                {cleanRoomId}
+              </span>
+              <button
+                type="button"
+                onClick={handleCopyRoomCode}
+                title="Copy Room Code for teammate"
+                className="ml-1 p-0.5 rounded text-neutral-400 hover:text-white transition-colors cursor-pointer"
+              >
+                {copiedCode ? (
+                  <Check className="w-3.5 h-3.5 text-emerald-400" />
+                ) : (
+                  <Copy className="w-3.5 h-3.5" />
+                )}
+              </button>
+              <button
+                type="button"
+                onClick={handleCopyRoomLink}
+                title="Copy direct invite URL"
+                className="p-0.5 rounded text-neutral-400 hover:text-white transition-colors cursor-pointer"
+              >
+                {copiedLink ? (
+                  <Check className="w-3.5 h-3.5 text-emerald-400" />
+                ) : (
+                  <LinkIcon className="w-3.5 h-3.5" />
+                )}
+              </button>
+            </div>
           </div>
-          <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-neutral-900 border border-neutral-800 text-neutral-400 hidden lg:inline">
+          <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-neutral-900 border border-neutral-800 text-neutral-400 hidden xl:inline">
             {track}
           </span>
         </div>
@@ -391,10 +453,34 @@ export default function InterviewRoom() {
           </div>
         </div>
       )}
+      {/* Join Error Modal (e.g. room full or capacity exceeded) */}
+      {joinError && (
+        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="max-w-md w-full bg-neutral-900 border border-neutral-800 rounded-xl p-6 space-y-4 shadow-2xl">
+            <div className="flex items-center gap-3 text-amber-400">
+              <ShieldAlert className="w-5 h-5 shrink-0" />
+              <h3 className="text-sm font-semibold text-white">Room Notice</h3>
+            </div>
+            <p className="text-xs text-neutral-300 leading-relaxed">
+              {joinError}
+            </p>
+            <div className="pt-2">
+              <button
+                type="button"
+                onClick={() => navigate("/lobby")}
+                className="w-full py-2.5 px-4 rounded-md bg-white hover:bg-neutral-200 text-neutral-950 text-xs font-semibold cursor-pointer transition-colors"
+              >
+                Return to Matchmaking Lobby
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Post-Session Symmetric Blind Feedback Modal */}
       <FeedbackFormModal
         isOpen={feedbackModalOpen}
-        roomId={roomId}
+        roomId={cleanRoomId}
         candidate={peerUser}
         track={track}
         socket={socket}

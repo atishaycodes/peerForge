@@ -10,12 +10,16 @@ import {
   Code2,
   Layers,
   Server,
-  Sparkles,
+  KeyRound,
+  ArrowRight,
+  ExternalLink,
+  AlertCircle,
 } from 'lucide-react';
 import { useSocket } from '@/context/SocketContext';
 import { useAuth } from '@/context/AuthContext';
 import DashboardLayout from '@/components/layout/DashboardLayout';
 import MatchAcceptModal from '@/components/lobby/MatchAcceptModal';
+import { normalizeRoomCode, isValidRoomCode, generateRoomLink } from '@/utils/roomUtils';
 
 const TRACKS = [
   {
@@ -57,9 +61,15 @@ export default function Lobby() {
 
   const [selectedTrack, setSelectedTrack] = useState(TRACKS[0].id);
   const [selectedDifficulty, setSelectedDifficulty] = useState('Mid-Level');
-  const [directLink, setDirectLink] = useState('');
-  const [copied, setCopied] = useState(false);
-  const [isGeneratingLink, setIsGeneratingLink] = useState(false);
+  
+  // Code-based private session state
+  const [inputRoomCode, setInputRoomCode] = useState('');
+  const [inputCodeError, setInputCodeError] = useState('');
+  const [createdRoomCode, setCreatedRoomCode] = useState('');
+  const [createdRoomLink, setCreatedRoomLink] = useState('');
+  const [copiedCode, setCopiedCode] = useState(false);
+  const [copiedLink, setCopiedLink] = useState(false);
+  const [isGenerating, setIsGenerating] = useState(false);
 
   const formatTimer = (seconds) => {
     const mins = Math.floor(seconds / 60);
@@ -78,24 +88,64 @@ export default function Lobby() {
     leaveQueue();
   };
 
-  const handleGenerateDirectLink = async () => {
+  // Generate a clean 6-character room code & link
+  const handleGeneratePrivateRoom = async () => {
     try {
-      setIsGeneratingLink(true);
+      setIsGenerating(true);
       const res = await createDirectInvite({
         track: selectedTrack,
         difficulty: selectedDifficulty,
       });
 
-      const fullUrl = `${window.location.origin}/room/${res.roomId}`;
-      setDirectLink(fullUrl);
-      await navigator.clipboard.writeText(fullUrl);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 3000);
+      const code = res.roomCode || res.roomId;
+      const link = generateRoomLink(code);
+      setCreatedRoomCode(code);
+      setCreatedRoomLink(link);
     } catch (err) {
-      console.error('Failed to generate invite:', err);
+      console.error('Failed to generate private room code:', err);
     } finally {
-      setIsGeneratingLink(false);
+      setIsGenerating(false);
     }
+  };
+
+  const handleCopyCode = async () => {
+    if (!createdRoomCode) return;
+    try {
+      await navigator.clipboard.writeText(createdRoomCode);
+      setCopiedCode(true);
+      setTimeout(() => setCopiedCode(false), 2500);
+    } catch (e) {
+      console.error('Failed to copy room code:', e);
+    }
+  };
+
+  const handleCopyLink = async () => {
+    if (!createdRoomLink) return;
+    try {
+      await navigator.clipboard.writeText(createdRoomLink);
+      setCopiedLink(true);
+      setTimeout(() => setCopiedLink(false), 2500);
+    } catch (e) {
+      console.error('Failed to copy room link:', e);
+    }
+  };
+
+  const handleJoinWithCode = (e) => {
+    if (e) e.preventDefault();
+    setInputCodeError('');
+
+    const cleanCode = normalizeRoomCode(inputRoomCode);
+    if (!cleanCode || !isValidRoomCode(cleanCode)) {
+      setInputCodeError('Please enter a valid room code (e.g. PF-8921 or 6-digit code)');
+      return;
+    }
+
+    navigate(`/room/${encodeURIComponent(cleanCode)}`, {
+      state: {
+        track: selectedTrack,
+        difficulty: selectedDifficulty,
+      },
+    });
   };
 
   return (
@@ -256,44 +306,170 @@ export default function Lobby() {
           )}
         </section>
 
-        {/* Direct Session Invite Panel */}
-        <section className="p-5 rounded-xl border border-neutral-800/80 bg-neutral-900/20 space-y-3">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-            <div>
-              <h3 className="text-xs font-semibold text-white flex items-center gap-1.5">
-                <LinkIcon className="w-3.5 h-3.5 text-neutral-400" />
-                Practice Privately with a Colleague
-              </h3>
-              <p className="text-[11px] text-neutral-400 mt-0.5">
-                Generate a direct room link for {selectedTrack} ({selectedDifficulty}) to share directly.
-              </p>
+        {/* Private Teammate Practice & Code-Based Matchmaking */}
+        <section className="space-y-3">
+          <label className="block text-xs font-semibold text-neutral-400 uppercase tracking-wider font-mono">
+            3. Practice Privately with a Teammate
+          </label>
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+            {/* Action 1: Join with Room Code */}
+            <div className="p-5 rounded-xl border border-neutral-800/80 bg-neutral-900/30 flex flex-col justify-between space-y-4">
+              <div className="space-y-1.5">
+                <div className="flex items-center gap-2">
+                  <div className="w-7 h-7 rounded-md bg-neutral-800/80 border border-neutral-700/60 flex items-center justify-center text-neutral-300">
+                    <KeyRound className="w-3.5 h-3.5" />
+                  </div>
+                  <h3 className="text-xs font-semibold text-white">Join via Room Code</h3>
+                </div>
+                <p className="text-[11px] text-neutral-400 leading-relaxed">
+                  Have a room code or link from a colleague? Enter it here to jump straight into their interview workspace.
+                </p>
+              </div>
+
+              <form onSubmit={handleJoinWithCode} className="space-y-2">
+                <div className="flex items-center gap-2">
+                  <div className="relative flex-1">
+                    <input
+                      type="text"
+                      value={inputRoomCode}
+                      onChange={(e) => {
+                        setInputRoomCode(e.target.value);
+                        if (inputCodeError) setInputCodeError('');
+                      }}
+                      placeholder="e.g. PF-8921 or paste link"
+                      className="w-full px-3 py-2 text-xs font-mono rounded-md bg-neutral-950 border border-neutral-800 text-white placeholder:text-neutral-600 focus:outline-none focus:border-neutral-600 transition-colors uppercase"
+                    />
+                  </div>
+                  <button
+                    type="submit"
+                    disabled={!inputRoomCode.trim()}
+                    className="px-4 py-2 rounded-md bg-white hover:bg-neutral-200 disabled:opacity-40 text-neutral-950 text-xs font-semibold cursor-pointer transition-all shrink-0 flex items-center gap-1.5 active:scale-[0.99]"
+                  >
+                    <span>Join Room</span>
+                    <ArrowRight className="w-3.5 h-3.5" />
+                  </button>
+                </div>
+
+                {inputCodeError && (
+                  <div className="flex items-center gap-1.5 text-[11px] text-rose-400">
+                    <AlertCircle className="w-3 h-3 shrink-0" />
+                    <span>{inputCodeError}</span>
+                  </div>
+                )}
+              </form>
             </div>
 
-            <button
-              type="button"
-              onClick={handleGenerateDirectLink}
-              disabled={isGeneratingLink}
-              className="px-3.5 py-1.5 rounded-md bg-neutral-900 hover:bg-neutral-800 border border-neutral-800 text-xs font-medium text-neutral-300 hover:text-white transition-colors cursor-pointer flex items-center gap-1.5 self-start sm:self-auto shrink-0"
-            >
-              {copied ? (
-                <>
-                  <Check className="w-3.5 h-3.5 text-emerald-400" />
-                  <span className="text-emerald-400">Link Copied!</span>
-                </>
+            {/* Action 2: Create Private Room & Share Code */}
+            <div className="p-5 rounded-xl border border-neutral-800/80 bg-neutral-900/30 flex flex-col justify-between space-y-4">
+              <div className="space-y-1.5">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <div className="w-7 h-7 rounded-md bg-neutral-800/80 border border-neutral-700/60 flex items-center justify-center text-neutral-300">
+                      <LinkIcon className="w-3.5 h-3.5" />
+                    </div>
+                    <h3 className="text-xs font-semibold text-white">Create Private Session</h3>
+                  </div>
+
+                  {!createdRoomCode && (
+                    <button
+                      type="button"
+                      onClick={handleGeneratePrivateRoom}
+                      disabled={isGenerating}
+                      className="px-3 py-1.5 rounded-md bg-neutral-800 hover:bg-neutral-700 border border-neutral-700 text-xs font-medium text-white transition-colors cursor-pointer flex items-center gap-1.5 shrink-0"
+                    >
+                      {isGenerating ? 'Generating...' : 'Generate Code & Link'}
+                    </button>
+                  )}
+                </div>
+
+                <p className="text-[11px] text-neutral-400 leading-relaxed">
+                  Generate a memorable room code configured for <span className="text-neutral-200 font-medium">{selectedTrack}</span>.
+                </p>
+              </div>
+
+              {createdRoomCode ? (
+                <div className="space-y-2.5 pt-1">
+                  {/* Code Card with 1-click copy */}
+                  <div className="p-3 rounded-lg bg-neutral-950 border border-neutral-800 flex items-center justify-between gap-3">
+                    <div>
+                      <div className="text-[10px] text-neutral-400 font-mono uppercase tracking-wider">
+                        Room Code
+                      </div>
+                      <div className="text-base font-bold font-mono text-emerald-400 tracking-wider">
+                        {createdRoomCode}
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-2">
+                      <button
+                        type="button"
+                        onClick={handleCopyCode}
+                        className="px-2.5 py-1.5 rounded bg-neutral-800 hover:bg-neutral-700 text-neutral-200 hover:text-white text-xs font-medium transition-colors cursor-pointer flex items-center gap-1.5 border border-neutral-700"
+                        title="Copy code to share on chat"
+                      >
+                        {copiedCode ? (
+                          <>
+                            <Check className="w-3.5 h-3.5 text-emerald-400" />
+                            <span className="text-emerald-400 text-xs">Copied</span>
+                          </>
+                        ) : (
+                          <>
+                            <Copy className="w-3.5 h-3.5 text-neutral-400" />
+                            <span>Copy Code</span>
+                          </>
+                        )}
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={handleCopyLink}
+                        className="px-2.5 py-1.5 rounded bg-neutral-900 hover:bg-neutral-800 text-neutral-300 hover:text-white text-xs font-medium transition-colors cursor-pointer flex items-center gap-1.5 border border-neutral-800"
+                        title="Copy direct invite URL"
+                      >
+                        {copiedLink ? (
+                          <>
+                            <Check className="w-3.5 h-3.5 text-emerald-400" />
+                            <span className="text-emerald-400 text-xs">Link Copied</span>
+                          </>
+                        ) : (
+                          <>
+                            <LinkIcon className="w-3.5 h-3.5 text-neutral-400" />
+                            <span>Link</span>
+                          </>
+                        )}
+                      </button>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center justify-between gap-2 pt-0.5">
+                    <span className="text-[11px] text-neutral-400 font-mono truncate">
+                      Share with teammate &amp; click enter:
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() =>
+                        navigate(`/room/${encodeURIComponent(createdRoomCode)}`, {
+                          state: {
+                            track: selectedTrack,
+                            difficulty: selectedDifficulty,
+                          },
+                        })
+                      }
+                      className="px-3 py-1.5 rounded bg-white hover:bg-neutral-200 text-neutral-950 font-semibold text-xs transition-colors cursor-pointer flex items-center gap-1.5 shrink-0"
+                    >
+                      <span>Enter Room Now</span>
+                      <ExternalLink className="w-3 h-3 text-neutral-900" />
+                    </button>
+                  </div>
+                </div>
               ) : (
-                <>
-                  <Copy className="w-3.5 h-3.5 text-neutral-400" />
-                  <span>Generate Direct Link</span>
-                </>
+                <div className="text-[11px] text-neutral-500 font-mono">
+                  No active private code generated yet. Click above to create one.
+                </div>
               )}
-            </button>
-          </div>
-
-          {directLink && (
-            <div className="p-2.5 rounded-md bg-neutral-950 border border-neutral-800/80 font-mono text-xs text-neutral-300 select-all truncate">
-              {directLink}
             </div>
-          )}
+          </div>
         </section>
       </div>
     </DashboardLayout>

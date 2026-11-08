@@ -15,6 +15,7 @@ import DashboardLayout from '@/components/layout/DashboardLayout';
 import ProfileCompletionCard from '@/components/dashboard/ProfileCompletionCard';
 import SessionDetailDrawer from '@/components/dashboard/SessionDetailDrawer';
 import MatchAcceptModal from '@/components/lobby/MatchAcceptModal';
+import { normalizeRoomCode, isValidRoomCode } from '@/utils/roomUtils';
 
 export default function Dashboard() {
   const { user } = useAuth();
@@ -27,6 +28,19 @@ export default function Dashboard() {
   const [loading, setLoading] = useState(true);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [selectedSession, setSelectedSession] = useState(null);
+  const [quickCode, setQuickCode] = useState('');
+  const [quickCodeError, setQuickCodeError] = useState('');
+
+  const handleQuickJoin = (e) => {
+    if (e) e.preventDefault();
+    setQuickCodeError('');
+    const cleanCode = normalizeRoomCode(quickCode);
+    if (!cleanCode || !isValidRoomCode(cleanCode)) {
+      setQuickCodeError('Invalid room code (e.g. PF-8921)');
+      return;
+    }
+    navigate(`/room/${encodeURIComponent(cleanCode)}`);
+  };
 
   const fetchData = async (isManualRefresh = false) => {
     if (isManualRefresh) setIsRefreshing(true);
@@ -313,6 +327,35 @@ export default function Dashboard() {
                 <span>{inQueue ? 'Open Matchmaking Lobby' : 'Join Matchmaking Queue'}</span>
                 <ArrowRight className="w-3 h-3 text-neutral-400" />
               </button>
+
+              {/* Quick Join via Room Code */}
+              <div className="pt-2 border-t border-neutral-800/80 space-y-1.5">
+                <span className="block text-[11px] font-mono text-neutral-400">
+                  Have a colleague's room code?
+                </span>
+                <form onSubmit={handleQuickJoin} className="flex items-center gap-1.5">
+                  <input
+                    type="text"
+                    value={quickCode}
+                    onChange={(e) => {
+                      setQuickCode(e.target.value);
+                      if (quickCodeError) setQuickCodeError('');
+                    }}
+                    placeholder="e.g. PF-8921"
+                    className="flex-1 px-2.5 py-1.5 rounded bg-neutral-950 border border-neutral-800 text-xs font-mono text-white placeholder:text-neutral-600 focus:outline-none focus:border-neutral-600 transition-colors uppercase"
+                  />
+                  <button
+                    type="submit"
+                    disabled={!quickCode.trim()}
+                    className="px-3 py-1.5 rounded bg-neutral-800 hover:bg-neutral-700 disabled:opacity-40 text-xs font-medium text-white transition-colors cursor-pointer shrink-0"
+                  >
+                    Join
+                  </button>
+                </form>
+                {quickCodeError && (
+                  <span className="text-[10px] text-rose-400 block">{quickCodeError}</span>
+                )}
+              </div>
             </div>
 
             {/* Real Skill Competencies (Only renders metrics when verified evaluations exist) */}

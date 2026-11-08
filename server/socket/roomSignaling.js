@@ -7,6 +7,8 @@
 export const activeRooms = new Map();
 let socketIoInstance = null;
 
+export const normalizeRoomId = (id) => (id ? id.toString().trim().toUpperCase() : "");
+
 export const setSocketIoInstance = (io) => {
   socketIoInstance = io;
 };
@@ -51,22 +53,54 @@ const formatParticipant = (p) => ({
 export const registerRoomHandlers = (io, socket) => {
   if (io) setSocketIoInstance(io);
   /**
+   * Check room status by code
+   */
+  socket.on("room:check", ({ roomId }, callback) => {
+    if (!roomId) {
+      if (typeof callback === "function") callback({ exists: false, message: "Room Code required" });
+      return;
+    }
+    const cleanRoomId = normalizeRoomId(roomId);
+    const room = activeRooms.get(cleanRoomId);
+    if (typeof callback === "function") {
+      if (room) {
+        callback({
+          exists: true,
+          roomId: cleanRoomId,
+          track: room.track,
+          difficulty: room.difficulty,
+          participantCount: room.participants.size,
+          isFull: room.participants.size >= 2,
+        });
+      } else {
+        callback({
+          exists: false,
+          roomId: cleanRoomId,
+          participantCount: 0,
+          isFull: false,
+        });
+      }
+    }
+  });
+
+  /**
    * Join an interview room
    */
   socket.on("room:join", ({ roomId, track, difficulty }, callback) => {
     try {
       if (!roomId) {
-        const err = { success: false, message: "Room ID is required" };
+        const err = { success: false, message: "Room ID or Code is required" };
         if (typeof callback === "function") callback(err);
         return;
       }
 
-      let room = activeRooms.get(roomId);
+      const cleanRoomId = normalizeRoomId(roomId);
+      let room = activeRooms.get(cleanRoomId);
 
       // Initialize room if it does not exist
       if (!room) {
         room = {
-          roomId,
+          roomId: cleanRoomId,
           track: track || "Data Structures & Algorithms (DSA)",
           difficulty: difficulty || "Mid-Level",
           participants: new Map(),
@@ -81,7 +115,7 @@ export const registerRoomHandlers = (io, socket) => {
           },
           lastActivity: Date.now(),
         };
-        activeRooms.set(roomId, room);
+        activeRooms.set(cleanRoomId, room);
       }
 
       // Check room capacity (SEC-02: max 2 participants)
@@ -117,17 +151,18 @@ export const registerRoomHandlers = (io, socket) => {
 
       room.participants.set(socket.id, participant);
       room.lastActivity = Date.now();
-      socket.join(roomId);
-      socket.currentRoomId = roomId;
+      socket.join(cleanRoomId);
+      socket.currentRoomId = cleanRoomId;
 
-      console.log(`[Room Joined] User ${socket.user?.name} (${role}) joined ${roomId}`);
+      console.log(`[Room Joined] User ${socket.user?.name} (${role}) joined ${cleanRoomId}`);
 
       const participantsList = Array.from(room.participants.values()).map(formatParticipant);
 
       // Send initial room snapshot to the joining user
       const roomState = {
         success: true,
-        roomId,
+        roomId: cleanRoomId,
+        roomCode: cleanRoomId,
         track: room.track,
         difficulty: room.difficulty,
         myRole: role,
