@@ -51,3 +51,4 @@ Phase 6 delivers the final developer workspace experience and end-to-end milesto
 ## <deferred>
 - Complex radar charts and D3 analytics (deferred to Milestone 2; pure CSS/SVG meters fulfill DASH-02 cleanly).
 - Calendar sync (Google Calendar / iCal integration) for scheduled slots (deferred to Milestone 2).
+
