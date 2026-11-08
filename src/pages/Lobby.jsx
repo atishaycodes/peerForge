@@ -1,23 +1,20 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
-  ArrowLeft,
   Search,
   X,
   Play,
   Copy,
   Check,
-  Clock,
-  Sparkles,
   Link as LinkIcon,
   Code2,
   Layers,
   Server,
-  Zap,
 } from 'lucide-react';
-import { useSocket } from '../context/SocketContext';
-import { useAuth } from '../context/AuthContext';
-import MatchAcceptModal from '../components/lobby/MatchAcceptModal';
+import { useSocket } from '@/context/SocketContext';
+import { useAuth } from '@/context/AuthContext';
+import DashboardLayout from '@/components/layout/DashboardLayout';
+import MatchAcceptModal from '@/components/lobby/MatchAcceptModal';
 
 const TRACKS = [
   {
@@ -57,9 +54,7 @@ export default function Lobby() {
     createDirectInvite,
   } = useSocket();
 
-  const [selectedTrack, setSelectedTrack] = useState(
-    TRACKS[0].id
-  );
+  const [selectedTrack, setSelectedTrack] = useState(TRACKS[0].id);
   const [selectedDifficulty, setSelectedDifficulty] = useState('Mid-Level');
   const [directLink, setDirectLink] = useState('');
   const [copied, setCopied] = useState(false);
@@ -103,42 +98,11 @@ export default function Lobby() {
   };
 
   return (
-    <div className="min-h-screen bg-neutral-950 text-neutral-100 flex flex-col font-sans selection:bg-neutral-800">
+    <DashboardLayout title="Matchmaking Lobby">
       {/* Match Acceptance Modal when peer found */}
       <MatchAcceptModal />
 
-      {/* Top Navigation */}
-      <header className="border-b border-neutral-800/80 bg-neutral-950/80 backdrop-blur-md px-6 py-3.5 flex items-center justify-between sticky top-0 z-50">
-        <div className="flex items-center gap-3">
-          <button
-            type="button"
-            onClick={() => navigate('/dashboard')}
-            className="p-1 rounded-md text-neutral-400 hover:text-white hover:bg-neutral-900 transition-colors cursor-pointer"
-            title="Back to Dashboard"
-          >
-            <ArrowLeft className="w-4 h-4" />
-          </button>
-          <span className="font-medium text-sm tracking-tight text-white">PeerForge</span>
-          <span className="text-neutral-600 text-xs">/</span>
-          <span className="text-xs text-neutral-400 font-normal">Matchmaking Lobby</span>
-        </div>
-
-        <div className="flex items-center gap-3">
-          <div className="flex items-center gap-2 px-2.5 py-1 rounded-md bg-neutral-900 border border-neutral-800 text-xs text-neutral-300">
-            <span
-              className={`w-1.5 h-1.5 rounded-full ${
-                inQueue ? 'bg-amber-400 animate-pulse' : 'bg-emerald-500'
-              }`}
-            />
-            <span className="font-mono text-neutral-400 text-[11px] hidden sm:inline">
-              {inQueue ? 'Searching in Queue' : 'Ready'}
-            </span>
-          </div>
-        </div>
-      </header>
-
-      {/* Main Container */}
-      <main className="flex-1 max-w-4xl w-full mx-auto p-6 sm:p-8 flex flex-col gap-6">
+      <div className="max-w-4xl w-full mx-auto space-y-6">
         {/* Page Context Header */}
         <div className="pb-2 border-b border-neutral-900">
           <h1 className="text-xl font-semibold tracking-tight text-white">
@@ -187,7 +151,7 @@ export default function Lobby() {
 
         {/* Track Selection Section */}
         <section className="space-y-3">
-          <label className="block text-xs font-medium text-neutral-400">
+          <label className="block text-xs font-semibold text-neutral-400 uppercase tracking-wider font-mono">
             1. Select Interview Track
           </label>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
@@ -234,7 +198,7 @@ export default function Lobby() {
 
         {/* Difficulty Selection Section */}
         <section className="space-y-3">
-          <label className="block text-xs font-medium text-neutral-400">
+          <label className="block text-xs font-semibold text-neutral-400 uppercase tracking-wider font-mono">
             2. Select Difficulty Tier
           </label>
           <div className="flex flex-wrap gap-2">
@@ -330,8 +294,7 @@ export default function Lobby() {
             </div>
           )}
         </section>
-      </main>
-    </div>
+      </div>
+    </DashboardLayout>
   );
 }
-

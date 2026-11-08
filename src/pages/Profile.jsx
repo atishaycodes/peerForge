@@ -1,18 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
-  ArrowLeft,
   CheckCircle2,
   AlertCircle,
   Loader2,
   User,
   ShieldCheck,
-  Sparkles,
+  Save,
 } from 'lucide-react';
-import { useAuth } from '../context/AuthContext.jsx';
-import SkillTagInput from '../components/profile/SkillTagInput.jsx';
-import TimezoneSelect from '../components/profile/TimezoneSelect.jsx';
-import AvailabilityToggle from '../components/profile/AvailabilityToggle.jsx';
+import { useAuth } from '@/context/AuthContext';
+import DashboardLayout from '@/components/layout/DashboardLayout';
+import SkillTagInput from '@/components/profile/SkillTagInput';
+import TimezoneSelect from '@/components/profile/TimezoneSelect';
+import AvailabilityToggle from '@/components/profile/AvailabilityToggle';
 
 const TARGET_ROLE_OPTIONS = [
   'Frontend',
@@ -107,33 +107,9 @@ export default function Profile() {
   };
 
   return (
-    <div className="min-h-screen bg-neutral-950 text-neutral-100 flex flex-col font-sans selection:bg-neutral-800">
-      {/* Top Header */}
-      <header className="border-b border-neutral-800/80 bg-neutral-950/80 backdrop-blur-md px-6 py-3.5 flex items-center justify-between sticky top-0 z-50">
-        <div className="flex items-center gap-3">
-          <button
-            type="button"
-            onClick={() => navigate('/dashboard')}
-            className="p-1 rounded-md text-neutral-400 hover:text-white hover:bg-neutral-900 transition-colors cursor-pointer"
-            title="Back to Dashboard"
-          >
-            <ArrowLeft className="w-4 h-4" />
-          </button>
-          <span className="font-medium text-sm tracking-tight text-white">PeerForge</span>
-          <span className="text-neutral-600 text-xs">/</span>
-          <span className="text-xs text-neutral-400 font-normal">Profile Preferences</span>
-        </div>
-
-        <div className="flex items-center gap-2">
-          <span className="text-xs font-mono text-neutral-400 hidden sm:inline">
-            {user?.email}
-          </span>
-        </div>
-      </header>
-
-      {/* Main Container */}
-      <main className="flex-1 max-w-3xl w-full mx-auto p-6 sm:p-8 flex flex-col gap-6">
-        {/* Page Context Header */}
+    <DashboardLayout title="Developer Profile & Preferences">
+      <div className="max-w-4xl w-full mx-auto space-y-6">
+        {/* Page Header */}
         <div className="pb-2 border-b border-neutral-900">
           <h1 className="text-xl font-semibold tracking-tight text-white">
             Developer Profile &amp; Preferences
@@ -143,32 +119,30 @@ export default function Profile() {
           </p>
         </div>
 
-        {/* Feedback Notifications */}
+        {/* Notifications */}
         {successMessage && (
-          <div className="p-3 rounded-md bg-emerald-950/40 border border-emerald-800/80 text-emerald-400 text-xs flex items-center gap-2 animate-in fade-in">
+          <div className="p-3 rounded-lg bg-emerald-950/40 border border-emerald-800/80 text-emerald-400 text-xs flex items-center gap-2 animate-in fade-in">
             <CheckCircle2 className="w-4 h-4 shrink-0" />
             <span>{successMessage}</span>
           </div>
         )}
 
         {errorMessage && (
-          <div className="p-3 rounded-md bg-red-950/40 border border-red-800/80 text-red-400 text-xs flex items-center gap-2 animate-in fade-in">
+          <div className="p-3 rounded-lg bg-red-950/40 border border-red-800/80 text-red-400 text-xs flex items-center gap-2 animate-in fade-in">
             <AlertCircle className="w-4 h-4 shrink-0" />
             <span>{errorMessage}</span>
           </div>
         )}
 
-        {/* Profile Form */}
         <form onSubmit={handleSubmit} className="space-y-6">
-          {/* Section 1: Identity & Avatar */}
+          {/* Identity & Avatar Section */}
           <section className="p-5 rounded-xl border border-neutral-800 bg-neutral-900/40 space-y-4">
-            <h2 className="text-sm font-medium text-white flex items-center gap-2">
+            <h2 className="text-sm font-semibold text-white flex items-center gap-2">
               <User className="w-4 h-4 text-neutral-400" />
-              Identity
+              <span>Identity &amp; Bio</span>
             </h2>
 
             <div className="flex items-start gap-4">
-              {/* Avatar Preview */}
               <div className="w-14 h-14 rounded-lg bg-neutral-800 border border-neutral-700/80 flex items-center justify-center overflow-hidden shrink-0">
                 {formData.avatarUrl && !avatarLoadError ? (
                   <img
@@ -198,19 +172,18 @@ export default function Profile() {
                   placeholder="https://github.com/your-username.png"
                   className="w-full px-3 py-1.5 rounded-md bg-neutral-900 border border-neutral-800 text-xs text-neutral-200 placeholder:text-neutral-500 focus:outline-none focus:border-neutral-700 focus:ring-1 focus:ring-neutral-700 transition-colors"
                 />
-                <p className="text-[11px] text-neutral-500">
-                  Leave blank to use your generated initials badge. Supports GitHub or Gravatar image URLs.
+                <p className="text-[11px] text-neutral-400">
+                  Supports GitHub or Gravatar image URLs. Default is your initials badge.
                 </p>
               </div>
             </div>
 
-            {/* Bio Field with character counter */}
             <div className="space-y-1.5 pt-2 border-t border-neutral-800/60">
               <div className="flex items-center justify-between">
                 <label className="block text-xs font-medium text-neutral-400">
                   Short Bio
                 </label>
-                <span className="text-[11px] font-mono text-neutral-500 tabular-nums">
+                <span className="text-[11px] font-mono text-neutral-400 tabular-nums">
                   {formData.bio.length} / 300
                 </span>
               </div>
@@ -220,15 +193,15 @@ export default function Profile() {
                 value={formData.bio}
                 onChange={(e) => setFormData({ ...formData, bio: e.target.value })}
                 placeholder="Software engineer interested in backend architecture and distributed systems..."
-                className="w-full px-3 py-2 rounded-md bg-neutral-900 border border-neutral-800 text-xs text-neutral-200 placeholder:text-neutral-500 focus:outline-none focus:border-neutral-700 focus:ring-1 focus:ring-neutral-700 transition-colors resize-none"
+                className="w-full px-3 py-2 rounded-md bg-neutral-900 border border-neutral-800 text-xs text-neutral-200 placeholder:text-neutral-400 focus:outline-none focus:border-neutral-700 focus:ring-1 focus:ring-neutral-700 transition-colors resize-none"
               />
             </div>
           </section>
 
-          {/* Section 2: Target Roles */}
+          {/* Target Roles */}
           <section className="p-5 rounded-xl border border-neutral-800 bg-neutral-900/40 space-y-3">
             <div>
-              <h2 className="text-sm font-medium text-white mb-0.5">
+              <h2 className="text-sm font-semibold text-white mb-0.5">
                 Target Interview Roles
               </h2>
               <p className="text-[11px] text-neutral-400">
@@ -257,14 +230,14 @@ export default function Profile() {
             </div>
           </section>
 
-          {/* Section 3: Technical Skills */}
+          {/* Primary Skills */}
           <section className="p-5 rounded-xl border border-neutral-800 bg-neutral-900/40 space-y-3">
             <div>
-              <h2 className="text-sm font-medium text-white mb-0.5">
+              <h2 className="text-sm font-semibold text-white mb-0.5">
                 Primary Tech Stack &amp; Skills
               </h2>
               <p className="text-[11px] text-neutral-400">
-                Languages, frameworks, and topics you want to interview on or be interviewed with
+                Languages, frameworks, and topics you want to interview on or practice
               </p>
             </div>
 
@@ -274,10 +247,10 @@ export default function Profile() {
             />
           </section>
 
-          {/* Section 4: Timezone & Availability */}
+          {/* Availability & Timezone */}
           <section className="p-5 rounded-xl border border-neutral-800 bg-neutral-900/40 space-y-4">
             <div>
-              <h2 className="text-sm font-medium text-white mb-0.5">
+              <h2 className="text-sm font-semibold text-white mb-0.5">
                 Availability &amp; Timezone
               </h2>
               <p className="text-[11px] text-neutral-400">
@@ -319,13 +292,15 @@ export default function Profile() {
                   <span>Saving changes...</span>
                 </>
               ) : (
-                <span>Save Profile</span>
+                <>
+                  <Save className="w-3.5 h-3.5" />
+                  <span>Save Profile</span>
+                </>
               )}
             </button>
           </div>
         </form>
-      </main>
-    </div>
+      </div>
+    </DashboardLayout>
   );
 }
-
