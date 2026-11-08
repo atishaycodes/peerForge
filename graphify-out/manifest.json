@@ -558,9 +558,9 @@
     "semantic_hash": ""
   },
   "vite.config.js": {
-    "mtime": 1793994121.519676,
-    "seen": 1793994421.1868286,
-    "ast_hash": "e2c859b658b2f804cf0fd93ee4b3374e",
+    "mtime": 1794137916.2395127,
+    "seen": 1794137976.1208847,
+    "ast_hash": "082c8e3d9aa82f91dd5f3cf1ae9c0a99",
     "semantic_hash": ""
   },
   ".agent/get-shit-done/contexts/dev.md": {
@@ -2430,9 +2430,9 @@
     "semantic_hash": ""
   },
   "server/server.js": {
-    "mtime": 1794137116.2656355,
-    "seen": 1794137145.6665726,
-    "ast_hash": "c42f8329c2adcd61577a6f6e47cf791d",
+    "mtime": 1794137937.302656,
+    "seen": 1794137976.1208255,
+    "ast_hash": "d6e439bcced81f8ee025be25ddb04fd0",
     "semantic_hash": ""
   },
   "src/components/ProtectedRoute.jsx": {
@@ -2586,8 +2586,8 @@
     "semantic_hash": ""
   },
   "src/context/SocketContext.jsx": {
-    "mtime": 1794137070.2744322,
-    "seen": 1794137145.666734,
+    "mtime": 1794137196.9432561,
+    "seen": 1794137976.120869,
     "ast_hash": "0eff9794f355fbcc95308ad99acffa5a",
     "semantic_hash": ""
   },
@@ -2598,8 +2598,8 @@
     "semantic_hash": ""
   },
   "src/pages/Lobby.jsx": {
-    "mtime": 1794137111.2786727,
-    "seen": 1794137145.666773,
+    "mtime": 1794137197.0508032,
+    "seen": 1794137976.1208792,
     "ast_hash": "8a400fcf3b132558210fd9ff4dd94c66",
     "semantic_hash": ""
   },
