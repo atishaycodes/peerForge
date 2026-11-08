@@ -1,26 +1,24 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
-  User,
-  ShieldCheck,
-  CheckCircle2,
-  Calendar,
-  Clock,
+  Users,
+  Video,
+  ChevronRight,
+  Lock,
   ArrowRight,
-  Settings,
+  Sparkles,
+  Award,
 } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
+import { useSocket } from '@/context/SocketContext';
 import DashboardLayout from '@/components/layout/DashboardLayout';
 import ProfileCompletionCard from '@/components/dashboard/ProfileCompletionCard';
-import MatchmakingQuickCard from '@/components/dashboard/MatchmakingQuickCard';
-import PerformanceSummaryCard from '@/components/dashboard/PerformanceSummaryCard';
-import SessionHistoryTable from '@/components/dashboard/SessionHistoryTable';
 import SessionDetailDrawer from '@/components/dashboard/SessionDetailDrawer';
-import UpcomingSessionsList from '@/components/dashboard/UpcomingSessionsList';
 import MatchAcceptModal from '@/components/lobby/MatchAcceptModal';
 
 export default function Dashboard() {
   const { user } = useAuth();
+  const { inQueue, elapsedSeconds } = useSocket();
   const navigate = useNavigate();
 
   const [history, setHistory] = useState([]);
@@ -75,115 +73,315 @@ export default function Dashboard() {
       .substring(0, 2);
   };
 
-  const targetRoles = user?.profile?.targetRoles || [];
-  const skills = user?.profile?.skills || [];
-  const timeZone = user?.profile?.timeZone || 'UTC';
-  const isSearching = user?.profile?.availability?.isSearching ?? true;
+  const totalSessions = analytics?.totalSessions || 0;
+  const overallAverage = analytics?.overallAverage || 0;
+  const competencies = analytics?.competencies || {};
+
+  const competencyList = [
+    { label: 'Code Correctness', score: competencies.codeCorrectness || 0 },
+    { label: 'Problem Solving', score: competencies.problemSolving || 0 },
+    { label: 'Communication', score: competencies.communication || 0 },
+    { label: 'System Architecture', score: competencies.architecture || 0 },
+  ];
 
   return (
     <DashboardLayout
-      title="Developer Workspace"
+      title="Overview"
       onRefresh={() => fetchData(true)}
       isRefreshing={isRefreshing}
     >
-      {/* Global Match Notification Modal */}
+      {/* Global Socket Notification Modal */}
       <MatchAcceptModal />
 
-      {/* Profile Setup / Completion Banner */}
-      <ProfileCompletionCard user={user} />
-
-      {/* Top 3 Column Overview: Identity, Live Matchmaking, Skill Competencies */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        {/* 1. Developer Identity Card */}
-        <div className="rounded-xl border border-neutral-800 bg-neutral-900/40 p-5 flex flex-col justify-between">
+      <div className="space-y-6">
+        {/* Welcome & Context Header */}
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-2 border-b border-neutral-900">
           <div>
-            <div className="flex items-center gap-3 mb-4">
-              <div className="w-10 h-10 rounded-lg bg-neutral-800 border border-neutral-700/80 flex items-center justify-center text-white text-sm font-semibold font-mono overflow-hidden shrink-0">
-                {user?.profile?.avatarUrl ? (
-                  <img
-                    src={user.profile.avatarUrl}
-                    alt={user?.name}
-                    className="w-full h-full object-cover"
-                  />
-                ) : (
-                  getInitials(user?.name)
-                )}
-              </div>
-              <div className="overflow-hidden">
-                <h2 className="text-sm font-semibold text-white truncate">{user?.name}</h2>
-                <p className="text-xs text-neutral-400 font-mono truncate">{user?.email}</p>
-              </div>
-            </div>
-
-            <div className="space-y-2 pt-3 border-t border-neutral-800/80 text-xs">
-              <div className="flex justify-between items-center text-neutral-400">
-                <span>Target Roles</span>
-                <div className="text-right flex flex-wrap justify-end gap-1 max-w-[150px]">
-                  {targetRoles.length > 0 ? (
-                    targetRoles.slice(0, 2).map((r) => (
-                      <span
-                        key={r}
-                        className="px-1.5 py-0.5 rounded text-[10px] bg-neutral-800 text-neutral-300 font-mono"
-                      >
-                        {r}
-                      </span>
-                    ))
-                  ) : (
-                    <span className="text-neutral-500 italic">None set</span>
-                  )}
-                  {targetRoles.length > 2 && (
-                    <span className="text-[10px] text-neutral-500 font-mono">
-                      +{targetRoles.length - 2}
-                    </span>
-                  )}
-                </div>
-              </div>
-
-              <div className="flex justify-between items-center text-neutral-400">
-                <span>Time Zone</span>
-                <span className="text-neutral-300 font-mono text-[11px] truncate max-w-[140px]">
-                  {timeZone}
-                </span>
-              </div>
-
-              <div className="flex justify-between items-center text-neutral-400">
-                <span>Primary Skills</span>
-                <span className="text-neutral-300 font-mono text-[11px] truncate max-w-[140px]">
-                  {skills.length > 0 ? skills.slice(0, 3).join(', ') : 'None added'}
-                </span>
-              </div>
-            </div>
+            <h1 className="text-xl font-semibold tracking-tight text-white">
+              Welcome back, {user?.name?.split(' ')[0] || 'Developer'}
+            </h1>
+            <p className="text-xs text-neutral-400 mt-0.5">
+              Here is what is happening with your technical mock interviews and practice sessions
+            </p>
           </div>
 
-          <div className="mt-4 pt-3 border-t border-neutral-800/60 flex items-center justify-between text-xs text-neutral-400">
-            <span>Availability Status</span>
-            <span
-              className={`font-medium inline-flex items-center gap-1 ${
-                isSearching ? 'text-emerald-400' : 'text-neutral-500'
-              }`}
+          <div className="flex items-center gap-2.5 self-start sm:self-auto">
+            <button
+              onClick={() => navigate('/lobby')}
+              className="px-3.5 py-1.5 rounded-md bg-white hover:bg-neutral-200 text-neutral-950 text-xs font-semibold cursor-pointer transition-colors flex items-center gap-1.5 shadow-sm active:scale-[0.99]"
             >
-              <CheckCircle2 className="w-3 h-3" />
-              {isSearching ? 'Match Active' : 'Away'}
-            </span>
+              <Users className="w-3.5 h-3.5 text-neutral-900" />
+              <span>{inQueue ? 'View Active Queue' : 'Start Matchmaking'}</span>
+            </button>
           </div>
         </div>
 
-        {/* 2. Interactive Matchmaking Quick Card */}
-        <MatchmakingQuickCard />
+        {/* Profile Completion Callout (Only renders when essentials are missing) */}
+        <ProfileCompletionCard user={user} />
 
-        {/* 3. Skill Competencies & Performance Summary */}
-        <PerformanceSummaryCard analytics={analytics} loading={loading} />
+        {/* Primary Activity Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* Left Column (Span 2): Active/Upcoming Sessions & Recent Interview Activity */}
+          <div className="lg:col-span-2 space-y-6">
+            {/* 1. Upcoming & Active Interviews */}
+            <section className="space-y-3">
+              <div className="flex items-center justify-between">
+                <h2 className="text-xs font-semibold text-neutral-400 uppercase tracking-wider font-mono">
+                  Upcoming &amp; Active Interviews
+                </h2>
+                {upcoming.length > 0 && (
+                  <span className="text-[11px] font-mono text-neutral-400">
+                    {upcoming.length} scheduled
+                  </span>
+                )}
+              </div>
+
+              {loading ? (
+                <div className="rounded-xl border border-neutral-800 bg-neutral-900/20 p-5 animate-pulse h-20" />
+              ) : upcoming.length === 0 ? (
+                <div className="rounded-xl border border-neutral-800/80 bg-neutral-900/20 p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
+                  <div>
+                    <p className="font-medium text-neutral-200">No upcoming interviews</p>
+                    <p className="text-neutral-400 mt-0.5 text-[11px]">
+                      Your scheduled sessions will appear here when you connect with another developer.
+                    </p>
+                  </div>
+                  <button
+                    onClick={() => navigate('/lobby')}
+                    className="text-xs text-white hover:underline font-medium cursor-pointer self-start sm:self-auto shrink-0"
+                  >
+                    Enter Matchmaking &rarr;
+                  </button>
+                </div>
+              ) : (
+                <div className="space-y-2">
+                  {upcoming.map((slot) => (
+                    <div
+                      key={slot._id || slot.roomId}
+                      className="rounded-xl border border-neutral-800 bg-neutral-900/40 p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3"
+                    >
+                      <div className="flex items-center gap-3">
+                        <div className="w-9 h-9 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 flex items-center justify-center shrink-0">
+                          <Video className="w-4 h-4" />
+                        </div>
+                        <div>
+                          <div className="flex items-center gap-2">
+                            <span className="text-xs font-semibold text-white">
+                              {slot.track || 'Practice Interview'}
+                            </span>
+                            <span className="text-[10px] font-mono px-1.5 py-0.2 rounded bg-neutral-800 text-neutral-400">
+                              {slot.difficulty || 'Mid-Level'}
+                            </span>
+                          </div>
+                          <p className="text-[11px] text-neutral-400 mt-0.5">
+                            Partner: {slot.peer?.name || 'Assigned Peer'} &bull; Room active
+                          </p>
+                        </div>
+                      </div>
+
+                      <button
+                        onClick={() => navigate(`/room/${slot.roomId}`)}
+                        className="px-3.5 py-1.5 rounded-md bg-white hover:bg-neutral-200 text-neutral-950 text-xs font-semibold transition-colors cursor-pointer flex items-center justify-center gap-1.5 self-start sm:self-auto shadow-sm active:scale-[0.99]"
+                      >
+                        <Video className="w-3.5 h-3.5" />
+                        <span>Launch Room</span>
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </section>
+
+            {/* 2. Recent Interview Activity */}
+            <section className="space-y-3">
+              <div className="flex items-center justify-between">
+                <h2 className="text-xs font-semibold text-neutral-400 uppercase tracking-wider font-mono">
+                  Recent Interview Activity
+                </h2>
+                {history.length > 0 && (
+                  <button
+                    onClick={() => navigate('/interviews')}
+                    className="text-xs text-neutral-400 hover:text-white transition-colors cursor-pointer"
+                  >
+                    View all &rarr;
+                  </button>
+                )}
+              </div>
+
+              {loading ? (
+                <div className="rounded-xl border border-neutral-800 bg-neutral-900/20 p-6 space-y-2 animate-pulse">
+                  <div className="h-8 bg-neutral-800/40 rounded" />
+                  <div className="h-8 bg-neutral-800/40 rounded" />
+                </div>
+              ) : history.length === 0 ? (
+                <div className="rounded-xl border border-neutral-800/80 bg-neutral-900/20 p-5 text-xs text-neutral-400">
+                  <p className="font-medium text-neutral-200">No interview history recorded</p>
+                  <p className="text-neutral-400 mt-0.5 text-[11px]">
+                    Once you complete a mock interview, your session logs and peer evaluation scorecards will be saved here.
+                  </p>
+                </div>
+              ) : (
+                <div className="rounded-xl border border-neutral-800 bg-neutral-900/30 overflow-hidden font-sans">
+                  <div className="divide-y divide-neutral-800/60">
+                    {history.slice(0, 4).map((session) => {
+                      const peer = session.peer;
+                      const feedback = session.feedback;
+                      const isRevealed = feedback?.isRevealed;
+                      const formattedDate = session.createdAt
+                        ? new Date(session.createdAt).toLocaleDateString('en-US', {
+                            month: 'short',
+                            day: 'numeric',
+                          })
+                        : 'Recent';
+
+                      return (
+                        <div
+                          key={session._id || session.roomId}
+                          onClick={() => setSelectedSession(session)}
+                          className="p-3.5 px-4 flex items-center justify-between hover:bg-neutral-900/70 transition-colors cursor-pointer group text-xs"
+                        >
+                          <div className="flex items-center gap-3">
+                            <div className="w-7 h-7 rounded-md bg-neutral-800 border border-neutral-700 text-white text-[10px] font-mono font-semibold flex items-center justify-center shrink-0">
+                              {getInitials(peer?.name)}
+                            </div>
+                            <div>
+                              <div className="font-medium text-white group-hover:text-neutral-200">
+                                {session.track}
+                              </div>
+                              <div className="text-[11px] text-neutral-400">
+                                with {peer?.name || 'Anonymous Peer'} &bull; {formattedDate}
+                              </div>
+                            </div>
+                          </div>
+
+                          <div className="flex items-center gap-3">
+                            {isRevealed && feedback?.compositeScore ? (
+                              <span className="font-mono text-xs px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-semibold">
+                                {feedback.compositeScore} / 5.0
+                              </span>
+                            ) : feedback ? (
+                              <span className="inline-flex items-center gap-1 font-mono text-[10px] px-2 py-0.5 rounded bg-amber-500/10 text-amber-400 border border-amber-500/20">
+                                <Lock className="w-3 h-3" />
+                                <span>Awaiting Reveal</span>
+                              </span>
+                            ) : (
+                              <span className="text-[11px] text-neutral-500 font-mono">
+                                Incomplete
+                              </span>
+                            )}
+                            <ChevronRight className="w-3.5 h-3.5 text-neutral-500 group-hover:text-white transition-colors" />
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+            </section>
+          </div>
+
+          {/* Right Column: Matchmaking Status & Real Verified Competency Breakdown */}
+          <div className="space-y-6">
+            {/* Matchmaking Quick Jump */}
+            <div className="rounded-xl border border-neutral-800 bg-neutral-900/40 p-5 space-y-3 font-sans">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-semibold text-neutral-400 uppercase tracking-wider font-mono">
+                  Matchmaking Queue
+                </span>
+                <span
+                  className={`inline-flex items-center gap-1.5 text-xs font-medium ${
+                    inQueue ? 'text-amber-400' : 'text-emerald-400'
+                  }`}
+                >
+                  <span
+                    className={`w-1.5 h-1.5 rounded-full ${
+                      inQueue ? 'bg-amber-400 animate-pulse' : 'bg-emerald-500'
+                    }`}
+                  />
+                  {inQueue ? 'Searching...' : 'Ready to Pair'}
+                </span>
+              </div>
+
+              <p className="text-xs text-neutral-400 leading-relaxed">
+                Connect with an active engineer for a structured 60-minute interview with live WebRTC and synced Monaco editor.
+              </p>
+
+              <button
+                onClick={() => navigate('/lobby')}
+                className="w-full py-2 px-3 rounded-md bg-neutral-900 hover:bg-neutral-850 text-white font-medium text-xs border border-neutral-800 hover:border-neutral-700 transition-colors cursor-pointer flex items-center justify-center gap-1.5"
+              >
+                <span>{inQueue ? 'Open Matchmaking Lobby' : 'Join Matchmaking Queue'}</span>
+                <ArrowRight className="w-3 h-3 text-neutral-400" />
+              </button>
+            </div>
+
+            {/* Real Skill Competencies (Only renders metrics when verified evaluations exist) */}
+            {totalSessions > 0 ? (
+              <div className="rounded-xl border border-neutral-800 bg-neutral-900/40 p-5 space-y-3 font-sans">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-semibold text-neutral-400 uppercase tracking-wider font-mono">
+                    Evaluation Competencies
+                  </span>
+                  <span className="text-xs font-mono text-white font-semibold">
+                    {overallAverage.toFixed(1)} / 5.0
+                  </span>
+                </div>
+
+                <p className="text-xs text-neutral-400">
+                  Aggregated average across {totalSessions} completed peer evaluation{totalSessions === 1 ? '' : 's'}.
+                </p>
+
+                <div className="space-y-2.5 pt-1">
+                  {competencyList.map((item) => {
+                    const percentage = (item.score / 5) * 100;
+                    return (
+                      <div key={item.label} className="space-y-1">
+                        <div className="flex justify-between items-center text-xs">
+                          <span className="text-neutral-400">{item.label}</span>
+                          <span className="font-mono text-white text-[11px] font-medium">
+                            {item.score.toFixed(1)}
+                          </span>
+                        </div>
+                        <div className="w-full h-1.5 rounded-full bg-neutral-800 overflow-hidden">
+                          <div
+                            className="h-full bg-white rounded-full transition-all duration-300"
+                            style={{ width: `${percentage}%` }}
+                          />
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            ) : null}
+
+            {/* Developer Focus Snapshot */}
+            <div className="rounded-xl border border-neutral-800/80 bg-neutral-900/30 p-4 space-y-2.5 text-xs">
+              <span className="text-xs font-semibold text-neutral-400 uppercase tracking-wider font-mono block">
+                Your Focus
+              </span>
+
+              <div className="space-y-1.5 text-neutral-300">
+                <div className="flex justify-between">
+                  <span className="text-neutral-400">Target Roles</span>
+                  <span className="font-medium text-white truncate max-w-[140px] text-right">
+                    {user?.profile?.targetRoles?.length > 0
+                      ? user.profile.targetRoles.join(', ')
+                      : 'Not set'}
+                  </span>
+                </div>
+
+                <div className="flex justify-between">
+                  <span className="text-neutral-400">Timezone</span>
+                  <span className="font-medium text-white truncate max-w-[140px] text-right">
+                    {user?.profile?.timeZone || 'UTC'}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
-
-      {/* Middle: Upcoming and Active Interview Sessions */}
-      <UpcomingSessionsList upcoming={upcoming} loading={loading} />
-
-      {/* Bottom: Past Interview History Table */}
-      <SessionHistoryTable
-        sessions={history}
-        loading={loading}
-        onSelectSession={(session) => setSelectedSession(session)}
-      />
 
       {/* Slide-over Scorecard Drawer */}
       <SessionDetailDrawer

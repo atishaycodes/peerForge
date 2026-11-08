@@ -8,6 +8,7 @@ import LoginForm from '@/components/LoginForm';
 import Dashboard from '@/pages/Dashboard';
 import Profile from '@/pages/Profile';
 import Lobby from '@/pages/Lobby';
+import Interviews from '@/pages/Interviews';
 import InterviewRoom from '@/pages/InterviewRoom';
 
 function LoginPage() {
@@ -80,6 +81,14 @@ export default function App() {
               element={
                 <ProtectedRoute>
                   <Lobby />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/interviews"
+              element={
+                <ProtectedRoute>
+                  <Interviews />
                 </ProtectedRoute>
               }
             />
