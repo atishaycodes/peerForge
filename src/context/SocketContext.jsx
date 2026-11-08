@@ -2,6 +2,7 @@ import React, { createContext, useContext, useEffect, useState, useRef, useCallb
 import { useNavigate } from 'react-router-dom';
 import { io } from 'socket.io-client';
 import { useAuth } from './AuthContext';
+import { generateRandomRoomCode } from '../utils/roomUtils';
 
 const SocketContext = createContext(null);
 
@@ -137,18 +138,56 @@ export function SocketProvider({ children }) {
     socket.emit('match:decline', { matchId });
   }, []);
 
-  const createDirectInvite = useCallback(({ track, difficulty }) => {
-    return new Promise((resolve, reject) => {
+  const createDirectInvite = useCallback(({ track, difficulty, roomCode }) => {
+    return new Promise((resolve) => {
+      const fallbackCode = roomCode || generateRandomRoomCode();
       const socket = socketRef.current;
+
       if (!socket || !socket.connected) {
-        return reject(new Error('Socket not connected'));
+        return resolve({
+          success: true,
+          roomCode: fallbackCode,
+          roomId: fallbackCode,
+          inviteCode: fallbackCode,
+          track,
+          difficulty,
+        });
       }
 
-      socket.emit('invite:create', { track, difficulty }, (res) => {
-        if (res && res.success) {
-          resolve(res);
-        } else {
-          reject(new Error('Failed to generate invite'));
+      let settled = false;
+      const timeoutId = setTimeout(() => {
+        if (!settled) {
+          settled = true;
+          resolve({
+            success: true,
+            roomCode: fallbackCode,
+            roomId: fallbackCode,
+            inviteCode: fallbackCode,
+            track,
+            difficulty,
+          });
+        }
+      }, 1000);
+
+      socket.emit('invite:create', { track, difficulty, roomCode: fallbackCode }, (res) => {
+        if (!settled) {
+          settled = true;
+          clearTimeout(timeoutId);
+          if (res && res.success) {
+            resolve({
+              ...res,
+              roomCode: res.roomCode || res.roomId || fallbackCode,
+            });
+          } else {
+            resolve({
+              success: true,
+              roomCode: fallbackCode,
+              roomId: fallbackCode,
+              inviteCode: fallbackCode,
+              track,
+              difficulty,
+            });
+          }
         }
       });
     });

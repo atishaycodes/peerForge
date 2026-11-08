@@ -2430,8 +2430,8 @@
     "semantic_hash": ""
   },
   "server/server.js": {
-    "mtime": 1794130541.257174,
-    "seen": 1794130744.062698,
+    "mtime": 1794137116.2656355,
+    "seen": 1794137145.6665726,
     "ast_hash": "c42f8329c2adcd61577a6f6e47cf791d",
     "semantic_hash": ""
   },
@@ -2574,8 +2574,8 @@
     "semantic_hash": ""
   },
   "server/socket/index.js": {
-    "mtime": 1794136543.7392437,
-    "seen": 1794136831.503979,
+    "mtime": 1794136909.5038342,
+    "seen": 1794137145.6665852,
     "ast_hash": "b20749403627c893241adf29d6224355",
     "semantic_hash": ""
   },
@@ -2586,21 +2586,21 @@
     "semantic_hash": ""
   },
   "src/context/SocketContext.jsx": {
-    "mtime": 1793994689.1133502,
-    "seen": 1793995848.279887,
-    "ast_hash": "38568cd04a1d0495768641cc4291d4c5",
+    "mtime": 1794137070.2744322,
+    "seen": 1794137145.666734,
+    "ast_hash": "0eff9794f355fbcc95308ad99acffa5a",
     "semantic_hash": ""
   },
   "src/pages/InterviewRoom.jsx": {
-    "mtime": 1794136753.4069927,
-    "seen": 1794136831.5041542,
+    "mtime": 1794136909.83847,
+    "seen": 1794137145.6667628,
     "ast_hash": "a7801dd7ed70bd43e45f359ecb66ad75",
     "semantic_hash": ""
   },
   "src/pages/Lobby.jsx": {
-    "mtime": 1794136650.5088842,
-    "seen": 1794136831.5041625,
-    "ast_hash": "d11d53c9d6730527c0be6a96f1994af6",
+    "mtime": 1794137111.2786727,
+    "seen": 1794137145.666773,
+    "ast_hash": "8a400fcf3b132558210fd9ff4dd94c66",
     "semantic_hash": ""
   },
   ".planning/phases/03-matchmaking-engine-socket-signaling/03-01-SUMMARY.md": {
@@ -2616,8 +2616,8 @@
     "semantic_hash": ""
   },
   "server/socket/roomSignaling.js": {
-    "mtime": 1794136578.9929886,
-    "seen": 1794136831.5039856,
+    "mtime": 1794136909.6781335,
+    "seen": 1794137145.6665897,
     "ast_hash": "6a5585b4aeb3cc59539d9b843ae2d7c7",
     "semantic_hash": ""
   },
@@ -2958,9 +2958,9 @@
     "semantic_hash": ""
   },
   "src/utils/roomUtils.js": {
-    "mtime": 1794136534.236202,
-    "seen": 1794136831.5041761,
-    "ast_hash": "f15e85e6bca5774247e56ae17be932bb",
+    "mtime": 1794137033.296812,
+    "seen": 1794137145.6667867,
+    "ast_hash": "7dad75335ad231e9697422b211371949",
     "semantic_hash": ""
   },
   "package-lock.json": {

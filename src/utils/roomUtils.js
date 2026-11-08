@@ -4,6 +4,19 @@
  */
 
 /**
+ * Generates an instantaneous clean, memorable 6-character room code (e.g. PF-7K2M9X).
+ * Uses non-ambiguous uppercase characters (avoids 0, O, 1, I).
+ */
+export function generateRandomRoomCode() {
+  const chars = "23456789ABCDEFGHJKLMNPQRSTUVWXYZ";
+  let suffix = "";
+  for (let i = 0; i < 6; i++) {
+    suffix += chars.charAt(Math.floor(Math.random() * chars.length));
+  }
+  return `PF-${suffix}`;
+}
+
+/**
  * Normalizes user-entered room codes or URLs into a clean, canonical uppercase Room Code.
  * Handles full URLs (http://.../room/PF-8921), case insensitivity (pf-8921),
  * bare alphanumeric codes (8921 -> PF-8921), and query params.
@@ -53,3 +66,4 @@ export function generateRoomLink(roomCode) {
   const origin = typeof window !== 'undefined' && window.location ? window.location.origin : '';
   return `${origin}/room/${encodeURIComponent(cleanCode)}`;
 }
+
