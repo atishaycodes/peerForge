@@ -8,7 +8,7 @@ import {
   handleDecline,
   cleanupSocketMatches,
 } from "../services/matchmakingService.js";
-import { registerRoomHandlers, handleUserLeaveRoom } from "./roomSignaling.js";
+import { registerRoomHandlers, handleUserLeaveRoom, activeRooms, formatParticipant } from "./roomSignaling.js";
 
 // Helper to parse cookie string from handshake headers
 const parseCookie = (cookieHeader) => {
@@ -98,7 +98,36 @@ export const setupSocket = (io) => {
 
   // Socket Connection Handling
   io.on("connection", (socket) => {
-    console.log(`[Socket Connected] User: ${socket.user.name} (${socket.id})`);
+    console.log(`[Socket Connected] User: ${socket.user?.name || "Developer"} (${socket.id})`);
+
+    // Handle post-connect authentication credential update
+    socket.on("user:authenticate", (authPayload) => {
+      if (authPayload?.user) {
+        const u = authPayload.user;
+        const newUserId = u._id || u.id || socket.user?._id;
+        socket.user = {
+          ...socket.user,
+          _id: newUserId,
+          name: u.name || socket.user?.name || "Developer",
+          email: u.email || socket.user?.email || "",
+          profile: u.profile || socket.user?.profile || {},
+        };
+
+        // If socket is currently in an active room, update participant and notify peers
+        if (socket.currentRoomId) {
+          const room = activeRooms.get(socket.currentRoomId);
+          if (room && room.participants.has(socket.id)) {
+            const p = room.participants.get(socket.id);
+            p.user = socket.user;
+            p.userId = (newUserId || socket.id).toString();
+            const participantsList = Array.from(room.participants.values()).map(formatParticipant);
+            io.to(socket.currentRoomId).emit("room:participants-updated", {
+              participants: participantsList,
+            });
+          }
+        }
+      }
+    });
 
     // Join Matchmaking Queue
     socket.on("queue:join", ({ track, difficulty }) => {

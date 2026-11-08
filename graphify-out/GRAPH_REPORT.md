@@ -1,17 +1,17 @@
 # Graph Report - peerForge  (2026-11-08)
 
 ## Corpus Check
-- 488 files · ~435,267 words
+- 488 files · ~435,980 words
 - Verdict: corpus is large enough that graph structure adds value.
 - Unclassified: 5 file(s) not represented in the graph (top: (none) 3, .example 1, .css 1)
 
 ## Summary
-- 3359 nodes · 5249 edges · 384 communities (240 shown, 144 thin omitted)
-- Extraction: 90% EXTRACTED · 10% INFERRED · 0% AMBIGUOUS · INFERRED: 533 edges (avg confidence: 0.86)
+- 3359 nodes · 5251 edges · 382 communities (238 shown, 144 thin omitted)
+- Extraction: 90% EXTRACTED · 10% INFERRED · 0% AMBIGUOUS · INFERRED: 534 edges (avg confidence: 0.86)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `d7006ae1`
+- Built from commit: `61b7bcce`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -55,7 +55,7 @@
 - Testing Patterns Template
 - Architecture Research Template
 - Phase 01: Backend Foundation & Authentication - Context
-- Phase 02 Plan 01: Profile Backend API & Schema Extension Summary
+- User.js
 - drift.cjs
 - installer-migration-report.cjs
 - 000-first-time-baseline.cjs
@@ -259,7 +259,7 @@
 - VideoTiles.jsx
 - index.js
 - Phase 4: WebRTC Video/Audio & Collaborative Code Room - Discussion Log
-- roomSignaling.js
+- Plan 04-01 Summary: WebRTC Signaling Gateway, Room Session State & Dependencies
 - gap-checker.cjs
 - settings-advanced.md
 - react
@@ -270,12 +270,10 @@
 - dependencies
 - lucide-react
 - Plan 04-03 Summary: Curated Problem Bank, Monaco Collaborative Editor, In-Browser Runner & Interview Room Integration
-- scripts
 - routeValidateCommand
 - Implementation Decisions
 - Test Results
 - Plan 03-01: Socket.IO Server Infrastructure & In-Memory Matchmaking Queue
-- Phase 02 Plan 02: Profile Screen, Tag Input & Dashboard Onboarding Banner Summary
 - active-workstream-store.cjs
 - gsd-read-injection-scanner.js
 - Phase 5: Structured Feedback & Evaluation Engine - Discussion Log
@@ -307,21 +305,21 @@
 10. `toPosixPath()` - 33 edges
 
 ## Surprising Connections (you probably didn't know these)
-- `Key Changes` --references--> `useSocket()`  [INFERRED]
-  .planning/phases/03-matchmaking-engine-socket-signaling/03-02-SUMMARY.md → src/context/SocketContext.jsx
-- `Accomplishments` --references--> `error()`  [INFERRED]
-  .planning/phases/04-webrtc-video-audio-collaborative-code-room/04-03-SUMMARY.md → .agent/get-shit-done/bin/lib/core.cjs
-- `Tasks` --references--> `useAuth()`  [INFERRED]
-  .planning/phases/02-user-profiles-developer-preferences/02-02-PLAN.md → src/context/AuthContext.jsx
+- `Accomplishments` --references--> `handleUserLeaveRoom()`  [INFERRED]
+  .planning/phases/04-webrtc-video-audio-collaborative-code-room/04-01-SUMMARY.md → server/socket/roomSignaling.js
 - `Objective` --references--> `useWebRTC()`  [INFERRED]
   .planning/phases/04-webrtc-video-audio-collaborative-code-room/04-02-PLAN.md → src/hooks/useWebRTC.js
 - `Accomplishments` --references--> `useWebRTC()`  [INFERRED]
   .planning/phases/04-webrtc-video-audio-collaborative-code-room/04-02-SUMMARY.md → src/hooks/useWebRTC.js
+- `Accomplishments` --references--> `error()`  [INFERRED]
+  .planning/phases/04-webrtc-video-audio-collaborative-code-room/04-03-SUMMARY.md → .agent/get-shit-done/bin/lib/core.cjs
+- `Tasks` --references--> `useAuth()`  [INFERRED]
+  .planning/phases/02-user-profiles-developer-preferences/02-02-PLAN.md → src/context/AuthContext.jsx
 
 ## Import Cycles
 - None detected.
 
-## Communities (384 total, 144 thin omitted)
+## Communities (382 total, 144 thin omitted)
 
 ### Community 0 - "shell-command-projection.cjs"
 Cohesion: 0.06
@@ -372,8 +370,8 @@ Cohesion: 0.04
 Nodes (44): Anti-Patterns to Avoid, Anti-Patterns to Avoid, Architecture Patterns, Architecture Patterns, Basic R3F + Rapier Setup, Code Examples, Code Examples, [Common Operation 1] (+36 more)
 
 ### Community 12 - "package.json"
-Cohesion: 0.09
-Nodes (25): bugs, url, tailwindcss-animate@^1.0.7, description, devDependencies, autoprefixer@^10.6.2, concurrently@^10.0.6, nodemon@^3.1.14 (+17 more)
+Cohesion: 0.08
+Nodes (29): bugs, url, description, devDependencies, autoprefixer@^10.6.2, concurrently@^10.0.6, nodemon@^3.1.14, postcss@^8.5.32 (+21 more)
 
 ### Community 13 - "plan-phase.md"
 Cohesion: 0.05
@@ -479,9 +477,9 @@ Nodes (16): Anti-Pattern 1: [Name], Anti-Pattern 2: [Name], Anti-Patterns, Archi
 Cohesion: 0.12
 Nodes (16): Canonical References, Deferred Ideas, Established Patterns, Existing Code Insights, Existing Codebase References, Implementation Decisions, JWT & Session Storage Strategy, Phase 01: Backend Foundation & Authentication - Context (+8 more)
 
-### Community 39 - "Phase 02 Plan 01: Profile Backend API & Schema Extension Summary"
-Cohesion: 0.40
-Nodes (4): Deviations from Plan, Next Steps, Phase 02 Plan 01: Profile Backend API & Schema Extension Summary, Verification
+### Community 39 - "User.js"
+Cohesion: 0.12
+Nodes (16): Deviations from Plan, Key Changes, Next Steps, Phase 02 Plan 01: Profile Backend API & Schema Extension Summary, Verification, Deviations from Plan, Key Changes, Next Steps (+8 more)
 
 ### Community 40 - "drift.cjs"
 Cohesion: 0.18
@@ -1097,7 +1095,7 @@ Nodes (13): 1. Workspace Layout & Video Tiles, 2. Collaborative Code Editor Expe
 
 ### Community 337 - "server.js"
 Cohesion: 0.13
-Nodes (12): cookie-parser@^1.4.7, cors@^2.8.6, dotenv@^18.0.9, socket.io@^4.8.4, cookie-parser, cors, dotenv, socket.io (+4 more)
+Nodes (12): cookie-parser@^1.4.7, dotenv@^18.0.9, express@^5.3.0, socket.io@^4.8.4, cookie-parser, dotenv, express, socket.io (+4 more)
 
 ### Community 338 - "Phase 03: Matchmaking Engine & Socket.IO Signaling - Discussion Log"
 Cohesion: 0.25
@@ -1120,8 +1118,8 @@ Cohesion: 0.13
 Nodes (18): extractField(), fs, main(), parseMultiwordArg(), parseNamedArgs(), path, runCommand(), walkDir() (+10 more)
 
 ### Community 343 - "auth"
-Cohesion: 0.09
-Nodes (26): Must Haves (Goal-Backward Verification), Objective, Plan 02-01: Profile Backend API & Schema Extension, Tasks, Verification Criteria, Key Changes, Key Changes, Objective (+18 more)
+Cohesion: 0.13
+Nodes (17): Must Haves (Goal-Backward Verification), Objective, Plan 02-01: Profile Backend API & Schema Extension, Tasks, Verification Criteria, Objective, Plan 06-01: Session History & Analytics Backend REST Endpoints, Tasks (+9 more)
 
 ### Community 344 - "Plan 03-02: Client Socket Integration & Matchmaking Lobby UI"
 Cohesion: 0.33
@@ -1136,20 +1134,20 @@ Cohesion: 0.20
 Nodes (15): createSessionScopedPointerAdapter(), createSharedPointerAdapter(), crypto, fs, getControllingTtyToken(), getSessionScopedWorkstreamFile(), getWorkstreamSessionKey(), _heldPlanningLocks (+7 more)
 
 ### Community 347 - "VideoTiles.jsx"
-Cohesion: 0.29
+Cohesion: 0.27
 Nodes (7): Objective, Plan 04-02: WebRTC Audio/Video Hook, Media Controls & Quiet Video Tiles, Tasks, Verification Criteria, MediaControls(), VideoStreamTile(), VideoTiles()
 
 ### Community 348 - "index.js"
-Cohesion: 0.40
-Nodes (12): Tasks, Key Changes, addToQueue(), cleanupSocketMatches(), findMatch(), handleAccept(), handleDecline(), pendingMatches (+4 more)
+Cohesion: 0.19
+Nodes (22): Tasks, Key Changes, Objective, Plan 04-01: WebRTC Signaling Gateway, Room Session State & Editor Dependencies, Tasks, Verification Criteria, addToQueue(), cleanupSocketMatches() (+14 more)
 
 ### Community 349 - "Phase 4: WebRTC Video/Audio & Collaborative Code Room - Discussion Log"
 Cohesion: 0.22
 Nodes (8): Code Execution & Output Console, Collaborative Code Editor, Deferred Ideas, Interview Timer & Role Switcher, Phase 4: WebRTC Video/Audio & Collaborative Code Room - Discussion Log, Problem Prompt Loading, WebRTC Media & Permission Handling, Workspace Layout & Video Tiles
 
-### Community 350 - "roomSignaling.js"
-Cohesion: 0.18
-Nodes (13): Objective, Plan 04-01: WebRTC Signaling Gateway, Room Session State & Editor Dependencies, Tasks, Verification Criteria, Accomplishments, Plan 04-01 Summary: WebRTC Signaling Gateway, Room Session State & Dependencies, Verification, activeRooms (+5 more)
+### Community 350 - "Plan 04-01 Summary: WebRTC Signaling Gateway, Room Session State & Dependencies"
+Cohesion: 0.50
+Nodes (3): Accomplishments, Plan 04-01 Summary: WebRTC Signaling Gateway, Room Session State & Dependencies, Verification
 
 ### Community 351 - "gap-checker.cjs"
 Cohesion: 0.27
@@ -1180,8 +1178,8 @@ Cohesion: 0.33
 Nodes (5): Must Haves (Goal-Backward Verification), Objective, Plan 01-03: Frontend Integration, State Management & Protected Routing, Tasks, Verification Criteria
 
 ### Community 358 - "dependencies"
-Cohesion: 0.09
-Nodes (26): dependencies, bcryptjs@^3.0.3, class-variance-authority@^0.7.1, clsx@^2.1.1, express@^5.3.0, jsonwebtoken@^9.0.3, lucide-react@^1.68.0, @monaco-editor/react@^4.7.0 (+18 more)
+Cohesion: 0.07
+Nodes (29): dependencies, bcryptjs@^3.0.3, class-variance-authority@^0.7.1, clsx@^2.1.1, cors@^2.8.6, jsonwebtoken@^9.0.3, lucide-react@^1.68.0, @monaco-editor/react@^4.7.0 (+21 more)
 
 ### Community 359 - "lucide-react"
 Cohesion: 0.13
@@ -1190,10 +1188,6 @@ Nodes (17): react-router-dom, DashboardLayout(), SettingsModal(), Sidebar(), Top
 ### Community 360 - "Plan 04-03 Summary: Curated Problem Bank, Monaco Collaborative Editor, In-Browser Runner & Interview Room Integration"
 Cohesion: 0.50
 Nodes (3): Accomplishments, Plan 04-03 Summary: Curated Problem Bank, Monaco Collaborative Editor, In-Browser Runner & Interview Room Integration, Verification
-
-### Community 361 - "scripts"
-Cohesion: 0.33
-Nodes (6): scripts, build, client, dev, preview, server
 
 ### Community 362 - "routeValidateCommand"
 Cohesion: 0.83
@@ -1210,10 +1204,6 @@ Nodes (10): 1. Cold Start Smoke Test, 2. 3-Column Quiet IDE Workspace Layout, 3.
 ### Community 365 - "Plan 03-01: Socket.IO Server Infrastructure & In-Memory Matchmaking Queue"
 Cohesion: 0.40
 Nodes (4): Must Haves (Goal-Backward Verification), Objective, Plan 03-01: Socket.IO Server Infrastructure & In-Memory Matchmaking Queue, Verification Criteria
-
-### Community 366 - "Phase 02 Plan 02: Profile Screen, Tag Input & Dashboard Onboarding Banner Summary"
-Cohesion: 0.40
-Nodes (4): Deviations from Plan, Next Steps, Phase 02 Plan 02: Profile Screen, Tag Input & Dashboard Onboarding Banner Summary, Verification
 
 ### Community 367 - "active-workstream-store.cjs"
 Cohesion: 0.39
@@ -1285,14 +1275,14 @@ Nodes (3): Objective, Plan 04-03: Curated Problem Bank, Monaco Collaborative Edi
 
 ## Knowledge Gaps
 - **3 isolated node(s):** `ADR-0011`, `ADR-0011`, `ADR-0011`
-  These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 2064 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
+  These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 2063 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
 - **144 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `error()` connect `output` to `gsd2-import.cjs`, `state.cjs`, `workstream.cjs`, `gsd-graphify/SKILL.md`, `phase.cjs`, `init.cjs`, `Plan 01-03: Frontend Integration, State Management & Protected Routing`, `profile-output.cjs`, `Plan 04-03 Summary: Curated Problem Bank, Monaco Collaborative Editor, In-Browser Runner & Interview Room Integration`, `output`, `core.cjs`, `InterviewRoom.jsx`, `verify.cjs`, `uat.cjs`, `gsd-tools.cjs`, `learnings.cjs`, `profile-pipeline.cjs`, `gap-checker.cjs`?**
-  _High betweenness centrality (0.026) - this node is a cross-community bridge._
+  _High betweenness centrality (0.036) - this node is a cross-community bridge._
 - **Are the 6 inferred relationships involving `error()` (e.g. with `runCommand()` and `core.cjs`) actually correct?**
   _`error()` has 6 INFERRED edges - model-reasoned connections that need verification._
 - **What connects `ADR-0011`, `ADR-0011`, `ADR-0011` to the rest of the system?**

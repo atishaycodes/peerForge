@@ -44,7 +44,7 @@ export const notifyPartnerSubmitted = (roomId, reviewerUserId) => {
 };
 
 // Helper to safely format participant object for transmission
-const formatParticipant = (p) => ({
+export const formatParticipant = (p) => ({
   socketId: p.socketId,
   userId: p.userId,
   name: p.user?.name || "Developer",
@@ -92,7 +92,7 @@ export const registerRoomHandlers = (io, socket) => {
   /**
    * Join an interview room
    */
-  socket.on("room:join", ({ roomId, track, difficulty }, callback) => {
+  socket.on("room:join", ({ roomId, track, difficulty, user: clientUser }, callback) => {
     try {
       if (!roomId) {
         const err = { success: false, message: "Room ID or Code is required" };
@@ -102,6 +102,20 @@ export const registerRoomHandlers = (io, socket) => {
 
       const cleanRoomId = normalizeRoomId(roomId);
       let room = activeRooms.get(cleanRoomId);
+
+      // If client supplied user information, update socket.user
+      if (clientUser && clientUser.name) {
+        socket.user = {
+          ...socket.user,
+          _id: clientUser.id || clientUser._id || socket.user?._id,
+          name: clientUser.name,
+          email: clientUser.email || socket.user?.email || "",
+          profile: {
+            ...socket.user?.profile,
+            avatarUrl: clientUser.avatarUrl || socket.user?.profile?.avatarUrl,
+          },
+        };
+      }
 
       // Initialize room if it does not exist
       if (!room) {
@@ -124,8 +138,22 @@ export const registerRoomHandlers = (io, socket) => {
         activeRooms.set(cleanRoomId, room);
       }
 
-      // Check room capacity (SEC-02: max 2 participants)
-      const isExistingParticipant = room.participants.has(socket.id);
+      // Check if user already exists in room (by socket.id OR by userId)
+      const myUserId = (socket.user?._id || socket.id).toString();
+      let existingSocketId = null;
+      for (const [sId, p] of room.participants.entries()) {
+        if (sId === socket.id || (p.userId && p.userId === myUserId)) {
+          existingSocketId = sId;
+          break;
+        }
+      }
+
+      if (existingSocketId && existingSocketId !== socket.id) {
+        // User reconnected or refreshed; safely replace their old socket
+        room.participants.delete(existingSocketId);
+      }
+
+      const isExistingParticipant = Boolean(existingSocketId);
       if (!isExistingParticipant && room.participants.size >= 2) {
         const fullErr = { success: false, message: "Room is at maximum capacity (2 peers)" };
         socket.emit("room:full", fullErr);
@@ -133,15 +161,13 @@ export const registerRoomHandlers = (io, socket) => {
         return;
       }
 
-      // Determine participant role (first is candidate, second is interviewer)
+      // Determine participant role (strictly complementary)
       let role = "candidate";
-      if (!isExistingParticipant) {
-        if (room.participants.size === 1) {
-          const firstParticipant = Array.from(room.participants.values())[0];
-          role = firstParticipant.role === "candidate" ? "interviewer" : "candidate";
-        }
-      } else {
-        role = room.participants.get(socket.id).role;
+      if (room.participants.size === 1) {
+        const existingParticipant = Array.from(room.participants.values())[0];
+        role = existingParticipant.role === "candidate" ? "interviewer" : "candidate";
+      } else if (existingSocketId && room.participants.has(existingSocketId)) {
+        role = room.participants.get(existingSocketId).role;
       }
 
       const participant = {
@@ -209,7 +235,7 @@ export const registerRoomHandlers = (io, socket) => {
       },
     };
 
-    if (targetSocketId) {
+    if (targetSocketId && io.sockets?.sockets?.has(targetSocketId)) {
       io.to(targetSocketId).emit("webrtc:offer", payload);
     } else {
       socket.to(cleanRoomId).emit("webrtc:offer", payload);
@@ -228,7 +254,7 @@ export const registerRoomHandlers = (io, socket) => {
       senderSocketId: socket.id,
     };
 
-    if (targetSocketId) {
+    if (targetSocketId && io.sockets?.sockets?.has(targetSocketId)) {
       io.to(targetSocketId).emit("webrtc:answer", payload);
     } else {
       socket.to(cleanRoomId).emit("webrtc:answer", payload);
@@ -247,7 +273,7 @@ export const registerRoomHandlers = (io, socket) => {
       senderSocketId: socket.id,
     };
 
-    if (targetSocketId) {
+    if (targetSocketId && io.sockets?.sockets?.has(targetSocketId)) {
       io.to(targetSocketId).emit("webrtc:ice-candidate", payload);
     } else {
       socket.to(cleanRoomId).emit("webrtc:ice-candidate", payload);

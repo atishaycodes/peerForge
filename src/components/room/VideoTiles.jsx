@@ -18,8 +18,15 @@ const VideoStreamTile = ({
   const videoRef = useRef(null);
 
   useEffect(() => {
-    if (videoRef.current && stream) {
-      videoRef.current.srcObject = stream;
+    const videoEl = videoRef.current;
+    if (videoEl && stream) {
+      if (videoEl.srcObject !== stream) {
+        videoEl.srcObject = stream;
+      }
+      videoEl.play().catch((err) => {
+        // Autoplay may need user gesture; suppress expected warning
+        console.warn("[VideoStreamTile] Video play notice:", err.message);
+      });
     }
   }, [stream]);
 
@@ -35,21 +42,21 @@ const VideoStreamTile = ({
     : "P";
 
   const hasVideoTrack = stream && stream.getVideoTracks().some((t) => t.enabled && t.readyState === "live");
-  const showVideo = !isVideoOff && hasVideoTrack;
+  const showVideo = !isVideoOff && Boolean(hasVideoTrack);
 
   return (
     <div className="relative bg-neutral-950 border border-neutral-800 rounded-lg overflow-hidden flex flex-col items-center justify-center aspect-video w-full group">
-      {/* Active Video Stream */}
-      {showVideo ? (
-        <video
-          ref={videoRef}
-          autoPlay
-          playsInline
-          muted={isLocal} // Always mute local video playback to prevent audio feedback
-          className="w-full h-full object-cover"
-        />
-      ) : (
-        /* Monogram Avatar Fallback */
+      {/* Active Video Stream Element (kept mounted to preserve WebRTC srcObject binding) */}
+      <video
+        ref={videoRef}
+        autoPlay
+        playsInline
+        muted={isLocal} // Always mute local video playback to prevent feedback
+        className={`w-full h-full object-cover ${showVideo ? "block" : "hidden"}`}
+      />
+
+      {/* Monogram Avatar Fallback when video track is off/inactive */}
+      {!showVideo && (
         <div className="flex flex-col items-center justify-center p-4 text-center">
           <div className="w-12 h-12 rounded-full bg-neutral-900 border border-neutral-800 flex items-center justify-center text-neutral-300 font-mono text-sm font-medium mb-2 shadow-inner">
             {initials}

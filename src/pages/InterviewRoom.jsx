@@ -86,7 +86,16 @@ export default function InterviewRoom() {
       console.log(`[InterviewRoom] Joining room: ${cleanRoomId}`);
       socket.emit(
         "room:join",
-        { roomId: cleanRoomId, track, difficulty },
+        {
+          roomId: cleanRoomId,
+          track,
+          difficulty,
+          user: {
+            id: myUserId,
+            name: user?.name,
+            avatarUrl: user?.profile?.avatarUrl,
+          },
+        },
         (response) => {
           if (!response?.success) {
             setJoinError(response?.message || "Room is unavailable or at maximum capacity (2 peers).");
@@ -134,8 +143,20 @@ export default function InterviewRoom() {
 
     // Listeners for peer lifecycle
     const handlePeerJoined = ({ peer, participants }) => {
-      setPeerUser(peer);
-      if (peer.role) setPeerRole(peer.role);
+      if (peer) {
+        setPeerUser(peer);
+        if (peer.role) setPeerRole(peer.role);
+      }
+    };
+
+    const handleParticipantsUpdated = ({ participants }) => {
+      if (participants) {
+        const partner = participants.find((p) => p.userId !== myUserId);
+        if (partner) {
+          setPeerUser(partner);
+          if (partner.role) setPeerRole(partner.role);
+        }
+      }
     };
 
     const handlePeerLeft = () => {
@@ -160,6 +181,7 @@ export default function InterviewRoom() {
     };
 
     socket.on("room:peer-joined", handlePeerJoined);
+    socket.on("room:participants-updated", handleParticipantsUpdated);
     socket.on("room:peer-left", handlePeerLeft);
     socket.on("room:role-swapped", handleRoleSwapped);
     socket.on("room:problem-updated", handleProblemUpdated);
@@ -167,6 +189,7 @@ export default function InterviewRoom() {
     return () => {
       socket.off("connect", joinSessionRoom);
       socket.off("room:peer-joined", handlePeerJoined);
+      socket.off("room:participants-updated", handleParticipantsUpdated);
       socket.off("room:peer-left", handlePeerLeft);
       socket.off("room:role-swapped", handleRoleSwapped);
       socket.off("room:problem-updated", handleProblemUpdated);

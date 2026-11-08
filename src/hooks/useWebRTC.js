@@ -39,79 +39,169 @@ export const useWebRTC = (socket, roomId, user) => {
       // Add local media tracks to peer connection
       if (localStreamRef.current) {
         localStreamRef.current.getTracks().forEach((track) => {
-          pc.addTrack(track, localStreamRef.current);
+          try {
+            pc.addTrack(track, localStreamRef.current);
+          } catch (e) {
+            console.warn("[WebRTC] Initial addTrack notice:", e.message);
+          }
         });
       }
 
-      // Handle remote incoming tracks
+      // Handle remote incoming tracks with stream fallback
       pc.ontrack = (event) => {
         console.log("[WebRTC] Received remote track:", event.track.kind);
         if (event.streams && event.streams[0]) {
           setRemoteStream(event.streams[0]);
+        } else {
+          setRemoteStream((prev) => {
+            const stream = prev || new MediaStream();
+            if (!stream.getTracks().some((t) => t.id === event.track.id)) {
+              stream.addTrack(event.track);
+            }
+            return new MediaStream(stream.getTracks());
+          });
         }
       };
 
       // Handle ICE candidates generated locally
       pc.onicecandidate = (event) => {
         if (event.candidate && socket) {
+          const candidateData = event.candidate.toJSON ? event.candidate.toJSON() : event.candidate;
           socket.emit("webrtc:ice-candidate", {
             roomId,
-            candidate: event.candidate,
+            candidate: candidateData,
             targetSocketId,
           });
         }
       };
 
-      // Handle connection state changes
-      pc.onconnectionstatechange = () => {
-        const state = pc.connectionState;
-        console.log("[WebRTC] Connection state:", state);
-        if (state === "connected") {
+      // Handle connection and ICE state changes comprehensively
+      const handleStateChange = () => {
+        const connState = pc.connectionState;
+        const iceState = pc.iceConnectionState;
+        console.log(`[WebRTC State] Connection: ${connState}, ICE: ${iceState}`);
+
+        if (connState === "connected" || iceState === "connected" || iceState === "completed") {
           setConnectionStatus("connected");
-        } else if (state === "connecting") {
+        } else if (connState === "connecting" || iceState === "checking") {
           setConnectionStatus("connecting");
-        } else if (state === "failed" || state === "closed") {
+        } else if (connState === "failed" || iceState === "failed") {
           setConnectionStatus("failed");
-        } else if (state === "disconnected") {
+        } else if (connState === "disconnected" || iceState === "disconnected") {
           setConnectionStatus("disconnected");
         }
       };
+
+      pc.onconnectionstatechange = handleStateChange;
+      pc.oniceconnectionstatechange = handleStateChange;
 
       return pc;
     },
     [roomId, socket]
   );
 
-  // Initialize Local Media Stream
+  // Initialize Local Media Stream (with graceful canvas fallback if camera in use)
   useEffect(() => {
     let isMounted = true;
 
     const initMedia = async () => {
+      let stream = null;
+      let hasRealVideo = false;
+
+      // 1. Try real camera + microphone
       try {
-        if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-          throw new Error("Media devices not supported in this environment");
-        }
-
-        const stream = await navigator.mediaDevices.getUserMedia({
-          video: { width: { ideal: 640 }, height: { ideal: 360 } },
-          audio: true,
-        });
-
-        if (isMounted) {
-          localStreamRef.current = stream;
-          setLocalStream(stream);
-          setPermissionError(null);
+        if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+          stream = await navigator.mediaDevices.getUserMedia({
+            video: { width: { ideal: 640 }, height: { ideal: 360 } },
+            audio: true,
+          });
+          hasRealVideo = true;
         }
       } catch (err) {
-        console.warn("[WebRTC] Media stream access notice:", err.message);
-        if (isMounted) {
-          setPermissionError(
-            err.name === "NotAllowedError"
-              ? "Camera/Microphone permission denied"
-              : "No media input devices found"
-          );
-          setIsMuted(true);
-          setIsVideoOff(true);
+        console.warn("[WebRTC] Real webcam notice (may be in use by another tab):", err.message);
+
+        // 2. Try microphone only
+        try {
+          if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+            stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+          }
+        } catch (audioErr) {
+          console.warn("[WebRTC] Microphone notice:", audioErr.message);
+        }
+
+        // 3. Generate interactive canvas video fallback so WebRTC video pipeline works flawlessly
+        try {
+          const canvas = document.createElement("canvas");
+          canvas.width = 640;
+          canvas.height = 360;
+          const ctx = canvas.getContext("2d");
+          const displayName = user?.name || "Developer";
+          const initials = displayName
+            .split(" ")
+            .map((n) => n[0])
+            .join("")
+            .toUpperCase()
+            .slice(0, 2);
+
+          let frame = 0;
+          const renderPlaceholder = () => {
+            frame++;
+            ctx.fillStyle = "#09090b";
+            ctx.fillRect(0, 0, 640, 360);
+
+            // Subtle pulsing circle
+            const pulse = Math.sin(frame * 0.05) * 4;
+            ctx.fillStyle = "#18181b";
+            ctx.beginPath();
+            ctx.arc(320, 160, 64 + pulse, 0, Math.PI * 2);
+            ctx.fill();
+
+            ctx.strokeStyle = "#27272a";
+            ctx.lineWidth = 2;
+            ctx.stroke();
+
+            // Initials
+            ctx.fillStyle = "#f4f4f5";
+            ctx.font = "bold 38px monospace";
+            ctx.textAlign = "center";
+            ctx.textBaseline = "middle";
+            ctx.fillText(initials, 320, 160);
+
+            // Display Name
+            ctx.fillStyle = "#a1a1aa";
+            ctx.font = "14px sans-serif";
+            ctx.fillText(displayName, 320, 250);
+
+            ctx.fillStyle = "#71717a";
+            ctx.font = "11px sans-serif";
+            ctx.fillText("(Virtual Camera • Standby)", 320, 272);
+          };
+
+          renderPlaceholder();
+          const timerId = setInterval(renderPlaceholder, 1000);
+
+          const canvasStream = canvas.captureStream(15);
+          const canvasVideoTrack = canvasStream.getVideoTracks()[0];
+
+          if (stream) {
+            stream.addTrack(canvasVideoTrack);
+          } else {
+            stream = canvasStream;
+          }
+
+          // Clean up canvas interval on unmount
+          if (!isMounted) clearInterval(timerId);
+        } catch (canvasErr) {
+          console.warn("[WebRTC] Canvas fallback error:", canvasErr);
+        }
+      }
+
+      if (isMounted && stream) {
+        localStreamRef.current = stream;
+        setLocalStream(stream);
+        setPermissionError(null);
+        if (!hasRealVideo) {
+          setIsVideoOff(false);
         }
       }
     };
@@ -124,7 +214,31 @@ export const useWebRTC = (socket, roomId, user) => {
         localStreamRef.current.getTracks().forEach((t) => t.stop());
       }
     };
-  }, []);
+  }, [user?.name]);
+
+  // Synchronize localStream tracks into RTCPeerConnection whenever localStream changes
+  useEffect(() => {
+    const pc = peerConnectionRef.current;
+    if (!pc || !localStream) return;
+
+    const currentSenders = pc.getSenders();
+    localStream.getTracks().forEach((track) => {
+      const sender = currentSenders.find(
+        (s) => s.track && s.track.kind === track.kind
+      );
+      if (sender) {
+        sender.replaceTrack(track).catch((err) => {
+          console.warn("[WebRTC] replaceTrack warning:", err.message);
+        });
+      } else {
+        try {
+          pc.addTrack(track, localStream);
+        } catch (err) {
+          console.warn("[WebRTC] addTrack warning:", err.message);
+        }
+      }
+    });
+  }, [localStream]);
 
   // Socket WebRTC Signaling Handlers
   useEffect(() => {
@@ -164,7 +278,11 @@ export const useWebRTC = (socket, roomId, user) => {
         // Process queued ICE candidates now that remote description is set
         while (iceCandidatesQueueRef.current.length > 0) {
           const candidate = iceCandidatesQueueRef.current.shift();
-          await pc.addIceCandidate(new RTCIceCandidate(candidate));
+          try {
+            await pc.addIceCandidate(new RTCIceCandidate(candidate));
+          } catch (candErr) {
+            console.warn("[WebRTC] Queued ICE candidate notice:", candErr.message);
+          }
         }
 
         const answer = await pc.createAnswer();
@@ -192,7 +310,11 @@ export const useWebRTC = (socket, roomId, user) => {
           // Process queued ICE candidates
           while (iceCandidatesQueueRef.current.length > 0) {
             const candidate = iceCandidatesQueueRef.current.shift();
-            await peerConnectionRef.current.addIceCandidate(new RTCIceCandidate(candidate));
+            try {
+              await peerConnectionRef.current.addIceCandidate(new RTCIceCandidate(candidate));
+            } catch (candErr) {
+              console.warn("[WebRTC] Queued ICE candidate notice on answer:", candErr.message);
+            }
           }
         }
       } catch (err) {
@@ -202,18 +324,20 @@ export const useWebRTC = (socket, roomId, user) => {
 
     // Received remote ICE candidate
     const handleIceCandidate = async ({ candidate }) => {
+      if (!candidate || !candidate.candidate) return;
       try {
+        const iceCandidate = new RTCIceCandidate(candidate);
         if (
           peerConnectionRef.current &&
           peerConnectionRef.current.remoteDescription &&
           peerConnectionRef.current.remoteDescription.type
         ) {
-          await peerConnectionRef.current.addIceCandidate(new RTCIceCandidate(candidate));
+          await peerConnectionRef.current.addIceCandidate(iceCandidate);
         } else {
           iceCandidatesQueueRef.current.push(candidate);
         }
       } catch (err) {
-        console.error("[WebRTC] Error adding ICE candidate:", err);
+        console.warn("[WebRTC] Error adding ICE candidate:", err.message);
       }
     };
 
