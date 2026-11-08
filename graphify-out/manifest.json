@@ -558,8 +558,8 @@
     "semantic_hash": ""
   },
   "vite.config.js": {
-    "mtime": 1794137916.2395127,
-    "seen": 1794137976.1208847,
+    "mtime": 1794137997.9219937,
+    "seen": 1794138865.3737469,
     "ast_hash": "082c8e3d9aa82f91dd5f3cf1ae9c0a99",
     "semantic_hash": ""
   },
@@ -2406,9 +2406,9 @@
     "semantic_hash": ""
   },
   "server/controllers/authController.js": {
-    "mtime": 1793987023.3904965,
-    "seen": 1793987297.452491,
-    "ast_hash": "ed22b0cea5ed0fbf3b0241ac1831f61b",
+    "mtime": 1794138630.2625337,
+    "seen": 1794138865.373458,
+    "ast_hash": "eaa3fc46ae92ae50d5e734354bf7468c",
     "semantic_hash": ""
   },
   "server/middleware/auth.js": {
@@ -2430,8 +2430,8 @@
     "semantic_hash": ""
   },
   "server/server.js": {
-    "mtime": 1794137937.302656,
-    "seen": 1794137976.1208255,
+    "mtime": 1794138761.1154997,
+    "seen": 1794138865.3735223,
     "ast_hash": "d6e439bcced81f8ee025be25ddb04fd0",
     "semantic_hash": ""
   },
@@ -2442,9 +2442,9 @@
     "semantic_hash": ""
   },
   "src/context/AuthContext.jsx": {
-    "mtime": 1793989253.5916173,
-    "seen": 1793989620.6699288,
-    "ast_hash": "6f60ef90f7ec9ea0762d287fe08ec5f5",
+    "mtime": 1794138657.414654,
+    "seen": 1794138865.3736792,
+    "ast_hash": "77aa09a9e7f5f81ebe62bbdcee8add38",
     "semantic_hash": ""
   },
   "src/pages/Dashboard.jsx": {
@@ -2574,9 +2574,9 @@
     "semantic_hash": ""
   },
   "server/socket/index.js": {
-    "mtime": 1794136909.5038342,
-    "seen": 1794137145.6665852,
-    "ast_hash": "b20749403627c893241adf29d6224355",
+    "mtime": 1794138809.375424,
+    "seen": 1794138865.3735328,
+    "ast_hash": "0e9c5d9997c7d005e9470d3446ec3291",
     "semantic_hash": ""
   },
   "src/components/lobby/MatchAcceptModal.jsx": {
@@ -2586,15 +2586,15 @@
     "semantic_hash": ""
   },
   "src/context/SocketContext.jsx": {
-    "mtime": 1794137196.9432561,
-    "seen": 1794137976.120869,
-    "ast_hash": "0eff9794f355fbcc95308ad99acffa5a",
+    "mtime": 1794138680.423923,
+    "seen": 1794138865.3736837,
+    "ast_hash": "2895dc8e8f81252bbe35ae5e62bb42fa",
     "semantic_hash": ""
   },
   "src/pages/InterviewRoom.jsx": {
-    "mtime": 1794136909.83847,
-    "seen": 1794137145.6667628,
-    "ast_hash": "a7801dd7ed70bd43e45f359ecb66ad75",
+    "mtime": 1794138696.4405186,
+    "seen": 1794138865.3737133,
+    "ast_hash": "c7204814d59cb22caf12fa2c5381676b",
     "semantic_hash": ""
   },
   "src/pages/Lobby.jsx": {

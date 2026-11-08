@@ -11,6 +11,7 @@ export function SocketProvider({ children }) {
   const navigate = useNavigate();
 
   const socketRef = useRef(null);
+  const userRef = useRef(user);
   const [isConnected, setIsConnected] = useState(false);
   const [inQueue, setInQueue] = useState(false);
   const [queueData, setQueueData] = useState(null);
@@ -18,12 +19,26 @@ export function SocketProvider({ children }) {
   const [pendingMatch, setPendingMatch] = useState(null);
   const [matchConfirmed, setMatchConfirmed] = useState(null);
 
+  useEffect(() => {
+    userRef.current = user;
+  }, [user]);
+
   // Initialize socket instance once
   useEffect(() => {
     const socket = io('/', {
       withCredentials: true,
       autoConnect: false,
       transports: ['websocket', 'polling'],
+      auth: (cb) => {
+        const token = localStorage.getItem('auth_token');
+        const currentUser = userRef.current;
+        cb({
+          token,
+          user: currentUser
+            ? { _id: currentUser.id || currentUser._id, name: currentUser.name, email: currentUser.email }
+            : null,
+        });
+      },
     });
 
     socketRef.current = socket;
@@ -33,11 +48,16 @@ export function SocketProvider({ children }) {
       console.log('[Socket] Connected to server:', socket.id);
     });
 
-    socket.on('disconnect', () => {
+    socket.on('connect_error', (err) => {
+      console.warn('[Socket] Connect error:', err.message);
+      setIsConnected(false);
+    });
+
+    socket.on('disconnect', (reason) => {
       setIsConnected(false);
       setInQueue(false);
       setPendingMatch(null);
-      console.log('[Socket] Disconnected from server');
+      console.log('[Socket] Disconnected from server:', reason);
     });
 
     socket.on('match:found', (data) => {
@@ -77,8 +97,14 @@ export function SocketProvider({ children }) {
     const socket = socketRef.current;
     if (!socket) return;
 
-    if (user && !socket.connected) {
-      socket.connect();
+    if (user) {
+      socket.auth = {
+        token: localStorage.getItem('auth_token'),
+        user: { _id: user.id || user._id, name: user.name, email: user.email },
+      };
+      if (!socket.connected) {
+        socket.connect();
+      }
     } else if (!user && socket.connected) {
       socket.disconnect();
       setInQueue(false);

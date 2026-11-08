@@ -20,12 +20,17 @@ export function AuthProvider({ children }) {
 
       if (res.ok) {
         const data = await res.json();
+        if (data.token) {
+          localStorage.setItem("auth_token", data.token);
+        }
         setUser(data.user);
       } else {
+        localStorage.removeItem("auth_token");
         setUser(null);
       }
     } catch (err) {
       console.error("[Auth] Session check failed:", err);
+      localStorage.removeItem("auth_token");
       setUser(null);
     } finally {
       setLoading(false);
@@ -52,6 +57,9 @@ export function AuthProvider({ children }) {
         throw new Error(data.message || "Failed to log in");
       }
 
+      if (data.token) {
+        localStorage.setItem("auth_token", data.token);
+      }
       setUser(data.user);
       return { success: true, user: data.user };
     } catch (err) {
@@ -76,6 +84,9 @@ export function AuthProvider({ children }) {
         throw new Error(data.message || "Failed to create account");
       }
 
+      if (data.token) {
+        localStorage.setItem("auth_token", data.token);
+      }
       setUser(data.user);
       return { success: true, user: data.user };
     } catch (err) {
@@ -95,6 +106,7 @@ export function AuthProvider({ children }) {
     } catch (err) {
       console.error("[Auth] Logout failed:", err);
     } finally {
+      localStorage.removeItem("auth_token");
       setUser(null);
       setError(null);
     }

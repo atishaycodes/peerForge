@@ -17,6 +17,7 @@ const sendTokenResponse = (user, statusCode, res) => {
 
   res.status(statusCode).cookie("auth_token", token, cookieOptions).json({
     success: true,
+    token, // Provided for WebSocket and non-cookie environments
     user: {
       id: user._id,
       name: user.name,
@@ -135,8 +136,12 @@ export const logout = async (req, res) => {
 // @desc    Get currently authenticated user
 // @route   GET /api/auth/me
 export const getCurrentUser = async (req, res) => {
+  const secret = process.env.JWT_SECRET || "peerforge_development_secret_key_123456789";
+  const token = jwt.sign({ id: req.user._id }, secret, { expiresIn: "7d" });
+
   res.status(200).json({
     success: true,
+    token,
     user: req.user,
   });
 };

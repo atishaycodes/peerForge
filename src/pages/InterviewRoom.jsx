@@ -75,50 +75,59 @@ export default function InterviewRoom() {
   const [leaveModalOpen, setLeaveModalOpen] = useState(false);
   const [feedbackModalOpen, setFeedbackModalOpen] = useState(false);
 
-  // Initialize and Join Room on Mount
+  // Initialize and Join Room on Mount or when socket connects
   useEffect(() => {
     if (!socket || !cleanRoomId) return;
 
-    socket.emit(
-      "room:join",
-      { roomId: cleanRoomId, track, difficulty },
-      (response) => {
-        if (!response?.success) {
-          setJoinError(response?.message || "Room is unavailable or at maximum capacity (2 peers).");
-          return;
-        }
+    const joinSessionRoom = () => {
+      console.log(`[InterviewRoom] Joining room: ${cleanRoomId}`);
+      socket.emit(
+        "room:join",
+        { roomId: cleanRoomId, track, difficulty },
+        (response) => {
+          if (!response?.success) {
+            setJoinError(response?.message || "Room is unavailable or at maximum capacity (2 peers).");
+            return;
+          }
 
-        setUserRole(response.myRole || "candidate");
-        setPeerRole(response.myRole === "candidate" ? "interviewer" : "candidate");
-        if (response.track) setTrack(response.track);
-        if (response.difficulty) setDifficulty(response.difficulty);
-        if (response.timer) setTimerState(response.timer);
+          setUserRole(response.myRole || "candidate");
+          setPeerRole(response.myRole === "candidate" ? "interviewer" : "candidate");
+          if (response.track) setTrack(response.track);
+          if (response.difficulty) setDifficulty(response.difficulty);
+          if (response.timer) setTimerState(response.timer);
 
-        // Find other peer if already in room
-        if (response.participants) {
-          const partner = response.participants.find((p) => p.userId !== user?._id?.toString());
-          if (partner) {
-            setPeerUser(partner);
-            setPeerRole(partner.role);
+          // Find other peer if already in room
+          if (response.participants) {
+            const partner = response.participants.find((p) => p.userId !== user?._id?.toString());
+            if (partner) {
+              setPeerUser(partner);
+              setPeerRole(partner.role);
+            }
+          }
+
+          // Restore synced problem if preset
+          if (response.activeProblemId) {
+            const activeProb = getProblemById(response.activeProblemId);
+            setProblem(activeProb);
+            if (response.code) {
+              setCode(response.code);
+            } else {
+              setCode(activeProb.starterCode?.[response.language || "javascript"] || "");
+            }
+          }
+
+          if (response.language) {
+            setLanguage(response.language);
           }
         }
+      );
+    };
 
-        // Restore synced problem if preset
-        if (response.activeProblemId) {
-          const activeProb = getProblemById(response.activeProblemId);
-          setProblem(activeProb);
-          if (response.code) {
-            setCode(response.code);
-          } else {
-            setCode(activeProb.starterCode?.[response.language || "javascript"] || "");
-          }
-        }
+    if (socket.connected) {
+      joinSessionRoom();
+    }
 
-        if (response.language) {
-          setLanguage(response.language);
-        }
-      }
-    );
+    socket.on("connect", joinSessionRoom);
 
     // Listeners for peer lifecycle
     const handlePeerJoined = ({ peer, participants }) => {
@@ -153,12 +162,13 @@ export default function InterviewRoom() {
     socket.on("room:problem-updated", handleProblemUpdated);
 
     return () => {
+      socket.off("connect", joinSessionRoom);
       socket.off("room:peer-joined", handlePeerJoined);
       socket.off("room:peer-left", handlePeerLeft);
       socket.off("room:role-swapped", handleRoleSwapped);
       socket.off("room:problem-updated", handleProblemUpdated);
     };
-  }, [socket, cleanRoomId, track, difficulty, user?._id]);
+  }, [socket, isConnected, cleanRoomId, track, difficulty, user?._id]);
 
   // Code change handler
   const handleCodeChange = useCallback((newCode, shouldSync = true) => {
