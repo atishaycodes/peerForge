@@ -18,18 +18,45 @@ const VideoStreamTile = ({
 }) => {
   const videoRef = useRef(null);
   const audioRef = useRef(null);
+  const [hasLiveVideo, setHasLiveVideo] = useState(false);
 
   useEffect(() => {
     const videoEl = videoRef.current;
-    if (videoEl && stream) {
+    if (!videoEl || !stream) {
+      setHasLiveVideo(false);
+      return;
+    }
+
+    videoEl.srcObject = stream;
+    videoEl.play().catch((err) => {
+      console.warn("[VideoStreamTile] Video play notice:", err.message);
+    });
+
+    const updateVideoTrackStatus = () => {
+      const vTracks = stream.getVideoTracks();
+      const isLive = vTracks.some((t) => t.enabled && t.readyState === "live");
+      setHasLiveVideo(isLive);
+    };
+
+    updateVideoTrackStatus();
+
+    const handleTrackEvent = () => {
+      updateVideoTrackStatus();
       if (videoEl.srcObject !== stream) {
         videoEl.srcObject = stream;
       }
-      videoEl.play().catch((err) => {
-        // Autoplay may need user gesture; suppress expected warning
-        console.warn("[VideoStreamTile] Video play notice:", err.message);
-      });
-    }
+      videoEl.play().catch(() => {});
+    };
+
+    stream.addEventListener("addtrack", handleTrackEvent);
+    stream.addEventListener("removetrack", handleTrackEvent);
+    const interval = setInterval(updateVideoTrackStatus, 1000);
+
+    return () => {
+      stream.removeEventListener("addtrack", handleTrackEvent);
+      stream.removeEventListener("removetrack", handleTrackEvent);
+      clearInterval(interval);
+    };
   }, [stream]);
 
   // Dedicated audio element for remote stream to guarantee audio output regardless of video visibility
@@ -56,8 +83,7 @@ const VideoStreamTile = ({
     ? "ME"
     : "P";
 
-  const hasVideoTrack = stream && stream.getVideoTracks().some((t) => t.enabled && t.readyState === "live");
-  const showVideo = !isVideoOff && Boolean(hasVideoTrack);
+  const showVideo = !isVideoOff && hasLiveVideo;
 
   return (
     <div className="relative bg-neutral-950 border border-neutral-800 rounded-lg overflow-hidden flex flex-col items-center justify-center aspect-video w-full group">

@@ -51,18 +51,17 @@ export const useWebRTC = (socket, roomId, user) => {
 
       // Handle remote incoming tracks with stream fallback
       pc.ontrack = (event) => {
-        console.log("[WebRTC] Received remote track:", event.track.kind);
-        if (event.streams && event.streams[0]) {
-          setRemoteStream(event.streams[0]);
-        } else {
-          setRemoteStream((prev) => {
-            const stream = prev || new MediaStream();
-            if (!stream.getTracks().some((t) => t.id === event.track.id)) {
-              stream.addTrack(event.track);
-            }
-            return new MediaStream(stream.getTracks());
-          });
-        }
+        console.log("[WebRTC] Received remote track:", event.track.kind, event.track.id);
+        const incomingStream = event.streams && event.streams[0] ? event.streams[0] : null;
+
+        setRemoteStream((prev) => {
+          const baseStream = incomingStream || prev || new MediaStream();
+          if (!baseStream.getTracks().some((t) => t.id === event.track.id)) {
+            baseStream.addTrack(event.track);
+          }
+          // Always return a fresh MediaStream instance with all current tracks to guarantee React re-renders!
+          return new MediaStream(baseStream.getTracks());
+        });
       };
 
       // Handle ICE candidates generated locally
@@ -224,6 +223,7 @@ export const useWebRTC = (socket, roomId, user) => {
     const pc = peerConnectionRef.current;
     if (!pc || !localStream) return;
 
+    let needsRenegotiation = false;
     const currentSenders = pc.getSenders();
     localStream.getTracks().forEach((track) => {
       const sender = currentSenders.find(
@@ -236,12 +236,31 @@ export const useWebRTC = (socket, roomId, user) => {
       } else {
         try {
           pc.addTrack(track, localStream);
+          needsRenegotiation = true;
         } catch (err) {
           console.warn("[WebRTC] addTrack warning:", err.message);
         }
       }
     });
-  }, [localStream]);
+
+    // If new tracks were added and peer connection is in a stable state, renegotiate
+    if (needsRenegotiation && socket && roomId && pc.signalingState === "stable") {
+      const renegotiate = async () => {
+        try {
+          console.log("[WebRTC] New track added, initiating renegotiation offer...");
+          const offer = await pc.createOffer();
+          await pc.setLocalDescription(offer);
+          socket.emit("webrtc:offer", {
+            roomId,
+            offer,
+          });
+        } catch (e) {
+          console.warn("[WebRTC] Renegotiation offer notice:", e.message);
+        }
+      };
+      renegotiate();
+    }
+  }, [localStream, socket, roomId]);
 
   // Socket WebRTC Signaling Handlers
   useEffect(() => {
