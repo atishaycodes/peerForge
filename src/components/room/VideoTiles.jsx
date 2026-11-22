@@ -11,11 +11,13 @@ const VideoStreamTile = ({
   isVideoOff,
   isMuted,
   isLocal,
+  isScreenSharing,
   user,
   role,
   connectionStatus,
 }) => {
   const videoRef = useRef(null);
+  const audioRef = useRef(null);
 
   useEffect(() => {
     const videoEl = videoRef.current;
@@ -29,6 +31,19 @@ const VideoStreamTile = ({
       });
     }
   }, [stream]);
+
+  // Dedicated audio element for remote stream to guarantee audio output regardless of video visibility
+  useEffect(() => {
+    const audioEl = audioRef.current;
+    if (!isLocal && audioEl && stream) {
+      if (audioEl.srcObject !== stream) {
+        audioEl.srcObject = stream;
+      }
+      audioEl.play().catch((err) => {
+        console.warn("[VideoStreamTile] Remote audio play notice:", err.message);
+      });
+    }
+  }, [isLocal, stream]);
 
   const initials = user?.name
     ? user.name
@@ -55,6 +70,11 @@ const VideoStreamTile = ({
         className={`w-full h-full object-cover ${showVideo ? "block" : "hidden"}`}
       />
 
+      {/* Dedicated Remote Audio Player */}
+      {!isLocal && (
+        <audio ref={audioRef} autoPlay playsInline />
+      )}
+
       {/* Monogram Avatar Fallback when video track is off/inactive */}
       {!showVideo && (
         <div className="flex flex-col items-center justify-center p-4 text-center">
@@ -78,6 +98,12 @@ const VideoStreamTile = ({
         >
           {role || (isLocal ? "Candidate" : "Peer")}
         </span>
+
+        {isScreenSharing && (
+          <span className="px-1.5 py-0.5 rounded text-[10px] font-mono bg-emerald-950/60 text-emerald-300 border border-emerald-800/60 animate-pulse">
+            Screen
+          </span>
+        )}
 
         {!isLocal && (
           <span
@@ -154,6 +180,7 @@ export const VideoTiles = ({
           isVideoOff={!peerMediaStatus.video}
           isMuted={!peerMediaStatus.audio}
           isLocal={false}
+          isScreenSharing={Boolean(peerMediaStatus.screenSharing)}
           user={peerUser}
           role={peerRole}
           connectionStatus={connectionStatus}
@@ -167,6 +194,7 @@ export const VideoTiles = ({
           isVideoOff={isVideoOff}
           isMuted={isMuted}
           isLocal={true}
+          isScreenSharing={isScreenSharing}
           user={user}
           role={userRole}
           connectionStatus="connected"
