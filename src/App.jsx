@@ -5,6 +5,7 @@ import { SocketProvider } from '@/context/SocketContext';
 import ProtectedRoute from '@/components/ProtectedRoute';
 import { AsciiArt } from '@/components/AsciiArt';
 import LoginForm from '@/components/LoginForm';
+import Landing from '@/pages/Landing';
 import Dashboard from '@/pages/Dashboard';
 import Profile from '@/pages/Profile';
 import Lobby from '@/pages/Lobby';
@@ -100,8 +101,8 @@ export default function App() {
                 </ProtectedRoute>
               }
             />
-            <Route path="/" element={<Navigate to="/dashboard" replace />} />
-            <Route path="*" element={<Navigate to="/dashboard" replace />} />
+            <Route path="/" element={<Landing />} />
+            <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </SocketProvider>
       </AuthProvider>
