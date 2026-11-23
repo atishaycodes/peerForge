@@ -19,23 +19,41 @@ const ICE_SERVERS = {
 };
 
 
-// Helper to match an outgoing track with a WebRTC sender or pre-allocated transceiver
-const findSenderForTrack = (pc, track) => {
-  if (!pc || !track) return null;
-  // 1. Sender already holding a track of this kind
-  let sender = pc.getSenders().find((s) => s.track && s.track.kind === track.kind);
-  if (sender) return sender;
+// Robust track attachment ensuring RTCRtpSenders and SSRCs are properly allocated
+const attachTracksToPeer = (pc, stream) => {
+  if (!pc || !stream) return;
+  const currentSenders = pc.getSenders();
+  stream.getTracks().forEach((track) => {
+    // Explicitly make sure track is enabled
+    track.enabled = true;
+    const existingSender = currentSenders.find(
+      (s) => s.track && s.track.kind === track.kind
+    );
+    if (existingSender) {
+      existingSender.replaceTrack(track).catch((err) => {
+        console.warn("[WebRTC] replaceTrack warning:", err.message);
+      });
+    } else {
+      try {
+        pc.addTrack(track, stream);
+      } catch (err) {
+        console.warn("[WebRTC] addTrack warning:", err.message);
+      }
+    }
+  });
 
-  // 2. Pre-allocated transceiver matching this kind
-  const transceiver = pc.getTransceivers().find(
-    (t) =>
-      (t.receiver?.track?.kind === track.kind) ||
-      (t.sender && (!t.sender.track || t.sender.track.kind === track.kind))
-  );
-  if (transceiver && transceiver.sender) return transceiver.sender;
-
-  // 3. Fallback to any available sender
-  return pc.getSenders().find((s) => !s.track) || null;
+  // Ensure transceivers exist so peer can receive both audio and video
+  try {
+    const transceivers = pc.getTransceivers();
+    if (!transceivers.some((t) => t.receiver?.track?.kind === "audio")) {
+      pc.addTransceiver("audio", { direction: "sendrecv" });
+    }
+    if (!transceivers.some((t) => t.receiver?.track?.kind === "video")) {
+      pc.addTransceiver("video", { direction: "sendrecv" });
+    }
+  } catch (e) {
+    console.warn("[WebRTC] Transceiver setup warning:", e.message);
+  }
 };
 
 export const useWebRTC = (socket, roomId, user) => {
@@ -65,28 +83,16 @@ export const useWebRTC = (socket, roomId, user) => {
       const pc = new RTCPeerConnection(ICE_SERVERS);
       peerConnectionRef.current = pc;
 
-      // Pre-allocate bidirectional transceivers so audio and video channels are negotiated immediately in both directions
-      try {
-        pc.addTransceiver("audio", { direction: "sendrecv" });
-        pc.addTransceiver("video", { direction: "sendrecv" });
-      } catch (e) {
-        console.warn("[WebRTC] addTransceiver fallback:", e.message);
-      }
-
-      // Attach local media tracks to peer connection
+      // Attach any already-initialized local tracks
       if (localStreamRef.current) {
-        localStreamRef.current.getTracks().forEach((track) => {
-          const sender = findSenderForTrack(pc, track);
-          if (sender) {
-            sender.replaceTrack(track).catch(() => {});
-          } else {
-            try {
-              pc.addTrack(track, localStreamRef.current);
-            } catch (e) {
-              console.warn("[WebRTC] Initial addTrack notice:", e.message);
-            }
-          }
-        });
+        attachTracksToPeer(pc, localStreamRef.current);
+      } else {
+        try {
+          pc.addTransceiver("audio", { direction: "sendrecv" });
+          pc.addTransceiver("video", { direction: "sendrecv" });
+        } catch (e) {
+          console.warn("[WebRTC] addTransceiver fallback:", e.message);
+        }
       }
 
       // Handle remote incoming tracks with stream fallback
@@ -273,42 +279,8 @@ export const useWebRTC = (socket, roomId, user) => {
     const pc = peerConnectionRef.current;
     if (!pc || !localStream) return;
 
-    let needsRenegotiation = false;
-    const currentSenders = pc.getSenders();
-    localStream.getTracks().forEach((track) => {
-      const sender = findSenderForTrack(pc, track);
-      if (sender) {
-        sender.replaceTrack(track).catch((err) => {
-          console.warn("[WebRTC] replaceTrack warning:", err.message);
-        });
-      } else {
-        try {
-          pc.addTrack(track, localStream);
-          needsRenegotiation = true;
-        } catch (err) {
-          console.warn("[WebRTC] addTrack warning:", err.message);
-        }
-      }
-    });
-
-    // If new tracks were added and peer connection is in a stable state, renegotiate
-    if (needsRenegotiation && socket && roomId && pc.signalingState === "stable") {
-      const renegotiate = async () => {
-        try {
-          console.log("[WebRTC] New track added, initiating renegotiation offer...");
-          const offer = await pc.createOffer();
-          await pc.setLocalDescription(offer);
-          socket.emit("webrtc:offer", {
-            roomId,
-            offer,
-          });
-        } catch (e) {
-          console.warn("[WebRTC] Renegotiation offer notice:", e.message);
-        }
-      };
-      renegotiate();
-    }
-  }, [localStream, socket, roomId]);
+    attachTracksToPeer(pc, localStream);
+  }, [localStream]);
 
   // Socket WebRTC Signaling Handlers
   useEffect(() => {
@@ -324,14 +296,7 @@ export const useWebRTC = (socket, roomId, user) => {
 
         // Make sure all local tracks are attached before creating offer
         if (localStreamRef.current) {
-          localStreamRef.current.getTracks().forEach((track) => {
-            const sender = findSenderForTrack(pc, track);
-            if (sender) {
-              sender.replaceTrack(track).catch(() => {});
-            } else {
-              try { pc.addTrack(track, localStreamRef.current); } catch (e) {}
-            }
-          });
+          attachTracksToPeer(pc, localStreamRef.current);
         }
 
         const offer = await pc.createOffer({
@@ -372,14 +337,7 @@ export const useWebRTC = (socket, roomId, user) => {
 
         // Attach local tracks before answering so bidirectional audio/video is established
         if (localStreamRef.current) {
-          localStreamRef.current.getTracks().forEach((track) => {
-            const sender = findSenderForTrack(pc, track);
-            if (sender) {
-              sender.replaceTrack(track).catch(() => {});
-            } else {
-              try { pc.addTrack(track, localStreamRef.current); } catch (e) {}
-            }
-          });
+          attachTracksToPeer(pc, localStreamRef.current);
         }
 
         const answer = await pc.createAnswer({

@@ -1,5 +1,5 @@
 import React, { useRef, useEffect, useState } from "react";
-import { Mic, MicOff, User, Wifi, WifiOff } from "lucide-react";
+import { Mic, MicOff, User, Wifi, WifiOff, Volume2, VolumeX } from "lucide-react";
 import MediaControls from "./MediaControls";
 
 /**
@@ -19,6 +19,7 @@ const VideoStreamTile = ({
   const videoRef = useRef(null);
   const audioRef = useRef(null);
   const [hasLiveVideo, setHasLiveVideo] = useState(false);
+  const [isAudioBlocked, setIsAudioBlocked] = useState(false);
 
   useEffect(() => {
     const videoEl = videoRef.current;
@@ -59,28 +60,49 @@ const VideoStreamTile = ({
     };
   }, [stream]);
 
-  // Dedicated audio element for remote stream with autoplay unlock listener
+  // Dedicated audio player for remote stream with mobile touch unlock
   useEffect(() => {
     const audioEl = audioRef.current;
-    if (!isLocal && audioEl && stream) {
-      if (audioEl.srcObject !== stream) {
-        audioEl.srcObject = stream;
-      }
-      
-      const playPromise = audioEl.play();
-      if (playPromise !== undefined) {
-        playPromise.catch((err) => {
-          console.warn("[VideoStreamTile] Remote audio play blocked by policy, will unlock on interaction:", err.message);
-          const unlock = () => {
-            audioEl.play().catch(() => {});
-            window.removeEventListener("click", unlock);
-            window.removeEventListener("keydown", unlock);
-          };
-          window.addEventListener("click", unlock, { once: true });
-          window.addEventListener("keydown", unlock, { once: true });
+    if (isLocal || !audioEl || !stream) return;
+
+    if (audioEl.srcObject !== stream) {
+      audioEl.srcObject = stream;
+    }
+    audioEl.muted = false;
+    audioEl.volume = 1.0;
+
+    const playAudio = () => {
+      const p = audioEl.play();
+      if (p !== undefined) {
+        p.then(() => {
+          setIsAudioBlocked(false);
+        }).catch((err) => {
+          console.warn("[VideoStreamTile] Remote audio play blocked by browser policy:", err.message);
+          setIsAudioBlocked(true);
         });
       }
-    }
+    };
+
+    playAudio();
+
+    // Comprehensive unlock listeners for mobile touch & desktop click
+    const unlockEvents = ["touchstart", "touchend", "click", "keydown", "pointerdown"];
+    const handleUnlock = () => {
+      audioEl.play()
+        .then(() => setIsAudioBlocked(false))
+        .catch(() => {});
+      unlockEvents.forEach((evt) => window.removeEventListener(evt, handleUnlock, true));
+    };
+
+    unlockEvents.forEach((evt) =>
+      window.addEventListener(evt, handleUnlock, { once: true, capture: true })
+    );
+
+    return () => {
+      unlockEvents.forEach((evt) =>
+        window.removeEventListener(evt, handleUnlock, true)
+      );
+    };
   }, [isLocal, stream]);
 
   const initials = user?.name
@@ -98,15 +120,12 @@ const VideoStreamTile = ({
 
   return (
     <div className="relative bg-neutral-950 border border-neutral-800 rounded-lg overflow-hidden flex flex-col items-center justify-center aspect-video w-full group">
-      {/* Active Video Stream Element:
-          - muted={isLocal}: NEVER mute remote video (remote audio plays through native video engine)
-          - opacity-0 absolute when camera off preserves audio playback across mobile & desktop
-      */}
+      {/* Active Video Stream Element: Always muted so mobile & desktop engines never block video playback */}
       <video
         ref={videoRef}
         autoPlay
         playsInline
-        muted={isLocal}
+        muted={true}
         className={`w-full h-full object-cover transition-opacity duration-150 ${
           showVideo ? "opacity-100" : "opacity-0 absolute inset-0 pointer-events-none"
         }`}
@@ -115,6 +134,22 @@ const VideoStreamTile = ({
       {/* Dedicated Remote Audio Player */}
       {!isLocal && (
         <audio ref={audioRef} autoPlay playsInline />
+      )}
+
+      {/* Audio Autoplay Block Notice Banner for mobile browsers */}
+      {isAudioBlocked && !isLocal && (
+        <button
+          type="button"
+          onClick={() => {
+            if (audioRef.current) {
+              audioRef.current.play().then(() => setIsAudioBlocked(false)).catch(() => {});
+            }
+          }}
+          className="absolute inset-x-2 top-8 z-30 bg-amber-500 hover:bg-amber-400 text-neutral-950 font-medium text-xs px-2.5 py-1.5 rounded shadow-lg flex items-center justify-center gap-1.5 animate-bounce cursor-pointer transition-transform active:scale-95"
+        >
+          <Volume2 className="w-3.5 h-3.5 shrink-0" />
+          <span>Tap here to enable sound</span>
+        </button>
       )}
 
       {/* Monogram Avatar Fallback when video track is off/inactive */}
