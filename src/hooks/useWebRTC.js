@@ -19,6 +19,25 @@ const ICE_SERVERS = {
 };
 
 
+// Helper to match an outgoing track with a WebRTC sender or pre-allocated transceiver
+const findSenderForTrack = (pc, track) => {
+  if (!pc || !track) return null;
+  // 1. Sender already holding a track of this kind
+  let sender = pc.getSenders().find((s) => s.track && s.track.kind === track.kind);
+  if (sender) return sender;
+
+  // 2. Pre-allocated transceiver matching this kind
+  const transceiver = pc.getTransceivers().find(
+    (t) =>
+      (t.receiver?.track?.kind === track.kind) ||
+      (t.sender && (!t.sender.track || t.sender.track.kind === track.kind))
+  );
+  if (transceiver && transceiver.sender) return transceiver.sender;
+
+  // 3. Fallback to any available sender
+  return pc.getSenders().find((s) => !s.track) || null;
+};
+
 export const useWebRTC = (socket, roomId, user) => {
   const [localStream, setLocalStream] = useState(null);
   const [remoteStream, setRemoteStream] = useState(null);
@@ -54,10 +73,10 @@ export const useWebRTC = (socket, roomId, user) => {
         console.warn("[WebRTC] addTransceiver fallback:", e.message);
       }
 
-      // Add local media tracks to peer connection
+      // Attach local media tracks to peer connection
       if (localStreamRef.current) {
         localStreamRef.current.getTracks().forEach((track) => {
-          const sender = pc.getSenders().find((s) => s.track?.kind === track.kind);
+          const sender = findSenderForTrack(pc, track);
           if (sender) {
             sender.replaceTrack(track).catch(() => {});
           } else {
@@ -257,9 +276,7 @@ export const useWebRTC = (socket, roomId, user) => {
     let needsRenegotiation = false;
     const currentSenders = pc.getSenders();
     localStream.getTracks().forEach((track) => {
-      const sender = currentSenders.find(
-        (s) => s.track && s.track.kind === track.kind
-      );
+      const sender = findSenderForTrack(pc, track);
       if (sender) {
         sender.replaceTrack(track).catch((err) => {
           console.warn("[WebRTC] replaceTrack warning:", err.message);
@@ -308,7 +325,7 @@ export const useWebRTC = (socket, roomId, user) => {
         // Make sure all local tracks are attached before creating offer
         if (localStreamRef.current) {
           localStreamRef.current.getTracks().forEach((track) => {
-            const sender = pc.getSenders().find((s) => s.track?.kind === track.kind);
+            const sender = findSenderForTrack(pc, track);
             if (sender) {
               sender.replaceTrack(track).catch(() => {});
             } else {
@@ -356,7 +373,7 @@ export const useWebRTC = (socket, roomId, user) => {
         // Attach local tracks before answering so bidirectional audio/video is established
         if (localStreamRef.current) {
           localStreamRef.current.getTracks().forEach((track) => {
-            const sender = pc.getSenders().find((s) => s.track?.kind === track.kind);
+            const sender = findSenderForTrack(pc, track);
             if (sender) {
               sender.replaceTrack(track).catch(() => {});
             } else {

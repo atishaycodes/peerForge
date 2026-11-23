@@ -98,13 +98,18 @@ const VideoStreamTile = ({
 
   return (
     <div className="relative bg-neutral-950 border border-neutral-800 rounded-lg overflow-hidden flex flex-col items-center justify-center aspect-video w-full group">
-      {/* Active Video Stream Element (always muted so display/hide toggles never kill audio) */}
+      {/* Active Video Stream Element:
+          - muted={isLocal}: NEVER mute remote video (remote audio plays through native video engine)
+          - opacity-0 absolute when camera off preserves audio playback across mobile & desktop
+      */}
       <video
         ref={videoRef}
         autoPlay
         playsInline
-        muted={true}
-        className={`w-full h-full object-cover ${showVideo ? "block" : "hidden"}`}
+        muted={isLocal}
+        className={`w-full h-full object-cover transition-opacity duration-150 ${
+          showVideo ? "opacity-100" : "opacity-0 absolute inset-0 pointer-events-none"
+        }`}
       />
 
       {/* Dedicated Remote Audio Player */}
@@ -114,7 +119,7 @@ const VideoStreamTile = ({
 
       {/* Monogram Avatar Fallback when video track is off/inactive */}
       {!showVideo && (
-        <div className="flex flex-col items-center justify-center p-4 text-center">
+        <div className="flex flex-col items-center justify-center p-4 text-center z-10 pointer-events-none">
           <div className="w-12 h-12 rounded-full bg-neutral-900 border border-neutral-800 flex items-center justify-center text-neutral-300 font-mono text-sm font-medium mb-2 shadow-inner">
             {initials}
           </div>
