@@ -1,17 +1,17 @@
 # Graph Report - peerForge  (2026-11-23)
 
 ## Corpus Check
-- 492 files · ~441,721 words
+- 493 files · ~441,933 words
 - Verdict: corpus is large enough that graph structure adds value.
 - Unclassified: 5 file(s) not represented in the graph (top: (none) 3, .example 1, .css 1)
 
 ## Summary
-- 3390 nodes · 5298 edges · 382 communities (237 shown, 145 thin omitted)
+- 3396 nodes · 5307 edges · 381 communities (235 shown, 146 thin omitted)
 - Extraction: 90% EXTRACTED · 10% INFERRED · 0% AMBIGUOUS · INFERRED: 535 edges (avg confidence: 0.86)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `2da2b612`
+- Built from commit: `929259ff`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -26,7 +26,7 @@
 - ref_path
 - profile-output.cjs
 - installer-migrations.cjs
-- verify.cjs
+- Plan 05-02: Interactive Rubric Form, Live Blind Waiting Room & Unlocked Scorecard UI
 - Research Template
 - scripts
 - plan-phase.md
@@ -67,7 +67,7 @@
 - InterviewRoom.jsx
 - Common Bug Patterns
 - Model Profiles
-- extractFrontmatter
+- uat.cjs
 - gsd-tools.cjs
 - Phase Prompt Template
 - validate-phase.md
@@ -255,7 +255,7 @@
 - auth
 - Plan 03-02: Client Socket Integration & Matchmaking Lobby UI
 - Phase 02: User Profiles & Developer Preferences - Discussion Log
-- model-catalog.cjs
+- ErrorBoundary
 - VideoTiles.jsx
 - index.js
 - Phase 4: WebRTC Video/Audio & Collaborative Code Room - Discussion Log
@@ -290,7 +290,6 @@
 - Plan 06-02 Summary: Split Workspace Dashboard Redesign
 - Interviews.jsx
 - Plan 04-02 Summary: WebRTC Audio/Video Hook, Media Controls & Quiet Video Tiles
-- Plan 04-03: Curated Problem Bank, Monaco Collaborative Editor, In-Browser Runner & Interview Room Integration
 
 ## God Nodes (most connected - your core abstractions)
 1. `output()` - 144 edges
@@ -300,38 +299,38 @@
 5. `planningDir()` - 58 edges
 6. `platformReadSync()` - 57 edges
 7. `planningPaths()` - 49 edges
-8. `react` - 41 edges
+8. `react` - 42 edges
 9. `extractFrontmatter()` - 36 edges
 10. `toPosixPath()` - 33 edges
 
 ## Surprising Connections (you probably didn't know these)
-- `Key Changes` --references--> `useSocket()`  [INFERRED]
-  .planning/phases/03-matchmaking-engine-socket-signaling/03-02-SUMMARY.md → src/context/SocketContext.jsx
 - `Accomplishments` --references--> `error()`  [INFERRED]
   .planning/phases/04-webrtc-video-audio-collaborative-code-room/04-03-SUMMARY.md → .agent/get-shit-done/bin/lib/core.cjs
 - `Accomplishments` --references--> `handleUserLeaveRoom()`  [INFERRED]
   .planning/phases/04-webrtc-video-audio-collaborative-code-room/04-01-SUMMARY.md → server/socket/roomSignaling.js
 - `Tasks` --references--> `useAuth()`  [INFERRED]
   .planning/phases/02-user-profiles-developer-preferences/02-02-PLAN.md → src/context/AuthContext.jsx
+- `Key Changes` --references--> `useSocket()`  [INFERRED]
+  .planning/phases/03-matchmaking-engine-socket-signaling/03-02-SUMMARY.md → src/context/SocketContext.jsx
 - `5. Problem #11: Strangers in Your Room (Address Guessing)` --references--> `generateRandomRoomCode()`  [INFERRED]
   README.md → src/utils/roomUtils.js
 
 ## Import Cycles
 - None detected.
 
-## Communities (382 total, 145 thin omitted)
+## Communities (381 total, 146 thin omitted)
 
 ### Community 0 - "shell-command-projection.cjs"
 Cohesion: 0.06
 Nodes (54): CHECK_REASON, checkLatestVersion(), main(), applyBudget(), buildAdjacencyMap(), checkGraphifyInstalled(), checkGraphifyVersion(), countCommitsBetween() (+46 more)
 
 ### Community 1 - "gsd2-import.cjs"
-Cohesion: 0.08
-Nodes (39): candidateNames(), findInNodeModules(), findInPath(), fs, isExecutableFile(), path, requireFallowBinary(), resolveFallowBinary() (+31 more)
+Cohesion: 0.06
+Nodes (54): candidateNames(), findInNodeModules(), findInPath(), fs, isExecutableFile(), path, requireFallowBinary(), resolveFallowBinary() (+46 more)
 
 ### Community 2 - "state.cjs"
 Cohesion: 0.08
-Nodes (49): getMilestonePhaseFilter(), isDirInMilestone(), reconstructFrontmatter(), cmdMilestoneComplete(), fs, isNestedPlanFile(), isNestedSummaryFile(), isRootPlanFile() (+41 more)
+Nodes (45): getMilestonePhaseFilter(), isDirInMilestone(), reconstructFrontmatter(), cmdMilestoneComplete(), cmdPhasesClear(), fs, path, planningPaths() (+37 more)
 
 ### Community 3 - "output"
 Cohesion: 0.07
@@ -342,12 +341,12 @@ Cohesion: 0.06
 Nodes (49): allClusteredSkills(), ADR-0011, CLUSTERS, ADR-0011, CLEANUP_SIGNALS, cleanupStagedSkills(), computeClosure(), ensureExitCleanup() (+41 more)
 
 ### Community 5 - "phase.cjs"
-Cohesion: 0.10
-Nodes (46): cmdStats(), comparePhaseNum(), escapeRegex(), extractCurrentMilestone(), getArchivedPhaseDirs(), normalizePhaseName(), phaseMarkdownRegexSource(), phaseMarkdownRegexSourceExact() (+38 more)
+Cohesion: 0.11
+Nodes (44): comparePhaseNum(), escapeRegex(), extractCurrentMilestone(), normalizePhaseName(), phaseMarkdownRegexSource(), phaseMarkdownRegexSourceExact(), phaseTokenMatches(), readSubdirectories() (+36 more)
 
 ### Community 6 - "init.cjs"
-Cohesion: 0.15
-Nodes (50): cmdCommit(), cmdListTodos(), cmdProgressRender(), cmdResolveModel(), cmdScaffold(), cmdTodoMatchPhase(), determinePhaseStatus(), fs (+42 more)
+Cohesion: 0.16
+Nodes (44): cmdCommit(), cmdListTodos(), cmdTodoMatchPhase(), findPhaseInternal(), generateSlugInternal(), getMilestoneInfo(), getRoadmapPhaseInternal(), gitWorktreeInfoInternal() (+36 more)
 
 ### Community 7 - "ref_path"
 Cohesion: 0.14
@@ -361,9 +360,9 @@ Nodes (27): buildSection(), CLAUDE_INSTRUCTIONS, CLAUDE_MD_FALLBACKS, CLAUDE_MD_
 Cohesion: 0.09
 Nodes (45): actionSource(), path, recordSource(), requireActionEvidence(), requireNonEmptyString(), requireStringArray(), validateInstallerMigrationActions(), validateInstallerMigrationRecord() (+37 more)
 
-### Community 10 - "verify.cjs"
-Cohesion: 0.13
-Nodes (19): CANONICAL_EXACT, CANONICAL_PATTERNS, isCanonicalPlanningFile(), parseMustHavesBlock(), cmdValidateConsistency(), cmdValidateHealth(), cmdVerifyArtifacts(), cmdVerifyCodebaseDrift() (+11 more)
+### Community 10 - "Plan 05-02: Interactive Rubric Form, Live Blind Waiting Room & Unlocked Scorecard UI"
+Cohesion: 0.40
+Nodes (4): Objective, Plan 05-02: Interactive Rubric Form, Live Blind Waiting Room & Unlocked Scorecard UI, Tasks, Verification Criteria
 
 ### Community 11 - "Research Template"
 Cohesion: 0.04
@@ -386,8 +385,8 @@ Cohesion: 0.06
 Nodes (33): 1. Communication Style, 2. Decision Speed, 3. Explanation Depth, 4. Debugging Approach, 5. UX Philosophy, 6. Vendor Philosophy, 7. Frustration Triggers, 8. Learning Style (+25 more)
 
 ### Community 16 - "core.cjs"
-Cohesion: 0.07
-Nodes (24): _deepMergeConfig(), detectSubRepos(), extractCanonicalPlanId(), extractPhaseToken(), filterPlanFiles(), filterSummaryFiles(), fs, getPhaseFileStats() (+16 more)
+Cohesion: 0.05
+Nodes (42): cmdResolveModel(), _deepMergeConfig(), detectSubRepos(), extractCanonicalPlanId(), extractPhaseToken(), filterPlanFiles(), filterSummaryFiles(), fs (+34 more)
 
 ### Community 17 - "AI-SPEC — Phase {N}: {phase_name}"
 Cohesion: 0.06
@@ -402,8 +401,8 @@ Cohesion: 0.07
 Nodes (26): 0. Initialize Milestone Context, 1. Determine Milestone Scope, 2. Read All Phase Verifications, 3. Spawn Integration Checker, 4. Collect Results, 5.5. Nyquist Compliance Discovery, 5. Check Requirements Coverage (3-Source Cross-Reference), 5a. Parse REQUIREMENTS.md Traceability Table (+18 more)
 
 ### Community 20 - "output"
-Cohesion: 0.10
-Nodes (44): cmdCheckCommit(), cmdCommitToSubrepo(), cmdCurrentTimestamp(), cmdGenerateSlug(), cmdSummaryExtract(), cmdTodoComplete(), cmdVerifyPathExists(), cmdWebsearch() (+36 more)
+Cohesion: 0.07
+Nodes (72): cmdCheckCommit(), cmdCommitToSubrepo(), cmdCurrentTimestamp(), cmdGenerateSlug(), cmdHistoryDigest(), cmdProgressRender(), cmdScaffold(), cmdStats() (+64 more)
 
 ### Community 21 - "Verification Patterns"
 Cohesion: 0.09
@@ -514,8 +513,8 @@ Cohesion: 0.12
 Nodes (14): cacheDir, cacheFile, child, cwd, fs, globalConfigDir, globalVersionFile, homeDir (+6 more)
 
 ### Community 48 - "InterviewRoom.jsx"
-Cohesion: 0.19
-Nodes (14): Tasks, CodeEditor(), SUPPORTED_LANGUAGES, ConsoleDrawer(), InterviewTimer(), ProblemDrawer(), getProblemById(), getProblemsByTrack() (+6 more)
+Cohesion: 0.15
+Nodes (17): Objective, Plan 04-03: Curated Problem Bank, Monaco Collaborative Editor, In-Browser Runner & Interview Room Integration, Tasks, Verification Criteria, CodeEditor(), SUPPORTED_LANGUAGES, ConsoleDrawer(), InterviewTimer() (+9 more)
 
 ### Community 49 - "Common Bug Patterns"
 Cohesion: 0.13
@@ -525,9 +524,9 @@ Nodes (14): Async / Timing, Common Bug Patterns, Data Shape / API Contract, Envi
 Cohesion: 0.13
 Nodes (14): Design Rationale, Dynamic Routing with Failure-Tier Escalation (#3024), Model Profiles, Per-Agent Overrides, Per-Phase-Type Model Map (#3023), Phase-type → agent mapping, Profile Definitions, Profile Philosophy (+6 more)
 
-### Community 51 - "extractFrontmatter"
-Cohesion: 0.15
-Nodes (21): cmdHistoryDigest(), cmdFrontmatterGet(), cmdFrontmatterMerge(), cmdFrontmatterSet(), cmdFrontmatterValidate(), extractFrontmatter(), FRONTMATTER_SCHEMAS, fs (+13 more)
+### Community 51 - "uat.cjs"
+Cohesion: 0.31
+Nodes (9): buildCheckpoint(), categorizeItem(), cmdAuditUat(), cmdRenderCheckpoint(), fs, parseCurrentTest(), parseUatItems(), parseVerificationItems() (+1 more)
 
 ### Community 52 - "gsd-tools.cjs"
 Cohesion: 0.15
@@ -550,8 +549,8 @@ Cohesion: 0.14
 Nodes (13): complete, create, /gsd-workstreams, list, progress, resume, status, Step 1: Parse Subcommand (+5 more)
 
 ### Community 57 - "docs.cjs"
-Cohesion: 0.20
-Nodes (13): checkAgentsInstalled(), getAgentsDir(), cmdDocsInit(), detectDocTooling(), detectMonorepoWorkspaces(), detectProjectType(), fs, hasGsdMarker() (+5 more)
+Cohesion: 0.16
+Nodes (16): CANONICAL_EXACT, CANONICAL_PATTERNS, isCanonicalPlanningFile(), checkAgentsInstalled(), getAgentsDir(), cmdDocsInit(), detectDocTooling(), detectMonorepoWorkspaces() (+8 more)
 
 ### Community 58 - "gsd-update-banner.js"
 Cohesion: 0.33
@@ -1114,8 +1113,8 @@ Cohesion: 0.33
 Nodes (5): Deviations from Plan, Key Changes, Next Steps, Phase 01 Plan 01: Server Scaffolding & MongoDB User Schema Summary, Verification
 
 ### Community 342 - "ref_fs"
-Cohesion: 0.18
-Nodes (16): cmdWorktreeCleanupWave(), executeWorktreeWaveCleanupPlan(), fs, gitResultOk(), inspectWorktreeHealth(), listLinkedWorktreePaths(), normalizeCleanupManifest(), normalizeCleanupManifestEntry() (+8 more)
+Cohesion: 0.21
+Nodes (10): fs, isNestedPlanFile(), isNestedSummaryFile(), isRootPlanFile(), isRootSummaryFile(), path, scanPhasePlans(), cmdTemplateSelect() (+2 more)
 
 ### Community 343 - "auth"
 Cohesion: 0.13
@@ -1128,10 +1127,6 @@ Nodes (5): Must Haves (Goal-Backward Verification), Objective, Plan 03-02: Clien
 ### Community 345 - "Phase 02: User Profiles & Developer Preferences - Discussion Log"
 Cohesion: 0.29
 Nodes (6): Availability & Scheduling Structure, Deferred Ideas, Phase 02: User Profiles & Developer Preferences - Discussion Log, Profile Onboarding Flow, Profile Screen Layout & Presentation, Skills & Target Roles Selection
-
-### Community 346 - "model-catalog.cjs"
-Cohesion: 0.18
-Nodes (15): AGENT_DEFAULT_TIERS, AGENT_TO_PHASE_TYPE, _catalogCandidates, formatAgentToModelMapAsTable(), getAgentToModelMapForProfile(), KNOWN_RUNTIMES, MODEL_ALIAS_MAP, MODEL_PROFILES (+7 more)
 
 ### Community 347 - "VideoTiles.jsx"
 Cohesion: 0.27
@@ -1154,16 +1149,16 @@ Cohesion: 0.27
 Nodes (11): parseDecisions(), cmdGapAnalysis(), detectCoverage(), formatGapTable(), fs, naturalKey(), parseRequirements(), path (+3 more)
 
 ### Community 353 - "react"
-Cohesion: 0.13
-Nodes (11): lucide-react, DashboardLayout(), Topbar(), AvailabilityToggle(), PREFERENCE_WINDOWS, POPULAR_SKILLS, SkillTagInput(), COMMON_TIMEZONES (+3 more)
+Cohesion: 0.10
+Nodes (15): lucide-react, react, ProfileCompletionCard(), FeedbackFormModal(), RubricSlider(), SCALE_DESCRIPTORS, COMPETENCY_LABELS, UnlockedScorecard() (+7 more)
 
 ### Community 354 - "Phase 03 Plan 02: Client Socket Integration & Matchmaking Lobby UI Summary"
 Cohesion: 0.33
 Nodes (5): Deviations from Plan, Key Changes, Next Steps, Phase 03 Plan 02: Client Socket Integration & Matchmaking Lobby UI Summary, Verification
 
 ### Community 355 - "Phase 01 Plan 03: Frontend Integration, State Management & Protected Routing Summary"
-Cohesion: 0.40
-Nodes (4): Deviations from Plan, Next Steps, Phase 01 Plan 03: Frontend Integration, State Management & Protected Routing Summary, Verification
+Cohesion: 0.33
+Nodes (5): Deviations from Plan, Key Changes, Next Steps, Phase 01 Plan 03: Frontend Integration, State Management & Protected Routing Summary, Verification
 
 ### Community 356 - "planning-workspace.cjs"
 Cohesion: 0.20
@@ -1178,8 +1173,8 @@ Cohesion: 0.05
 Nodes (52): bugs, url, dependencies, bcryptjs@^3.0.3, class-variance-authority@^0.7.1, clsx@^2.1.1, jsonwebtoken@^9.0.3, lucide-react@^1.68.0 (+44 more)
 
 ### Community 359 - "lucide-react"
-Cohesion: 0.19
-Nodes (15): Key Changes, react, App(), LoginPage(), AsciiArt(), SettingsModal(), Sidebar(), LoginForm() (+7 more)
+Cohesion: 0.18
+Nodes (15): react-router-dom, App(), LoginPage(), AsciiArt(), SettingsModal(), Sidebar(), LoginForm(), ProtectedRoute() (+7 more)
 
 ### Community 360 - "Plan 04-03 Summary: Curated Problem Bank, Monaco Collaborative Editor, In-Browser Runner & Interview Room Integration"
 Cohesion: 0.50
@@ -1230,8 +1225,8 @@ Cohesion: 0.18
 Nodes (10): 1. Cold Start Smoke Test, 2. Post-Interview Feedback Modal Trigger, 3. 4-Dimension Rubric Evaluation Form, 4. Structured Qualitative Feedback with Character Counters, 5. Symmetric Blind Reveal Protection, 6. Unlocked Scorecard Display, 7. Production Build Integrity, Phase 5: Structured Feedback & Evaluation Engine - UAT (+2 more)
 
 ### Community 374 - "Dashboard.jsx"
-Cohesion: 0.22
-Nodes (16): react-router-dom, DIFFICULTIES, MatchmakingQuickCard(), TRACKS, ProfileCompletionCard(), MatchAcceptModal(), SocketContext, useSocket() (+8 more)
+Cohesion: 0.25
+Nodes (14): DIFFICULTIES, MatchmakingQuickCard(), TRACKS, MatchAcceptModal(), SocketContext, useSocket(), Dashboard(), DIFFICULTIES (+6 more)
 
 ### Community 375 - "gsd-check-update-worker.js"
 Cohesion: 0.13
@@ -1258,27 +1253,23 @@ Cohesion: 0.50
 Nodes (3): Accomplishments, Plan 06-02 Summary: Split Workspace Dashboard Redesign, Verification
 
 ### Community 381 - "Interviews.jsx"
-Cohesion: 0.13
-Nodes (14): Objective, Plan 05-02: Interactive Rubric Form, Live Blind Waiting Room & Unlocked Scorecard UI, Tasks, Verification Criteria, SessionDetailDrawer(), FeedbackFormModal(), RubricSlider(), SCALE_DESCRIPTORS (+6 more)
+Cohesion: 0.26
+Nodes (7): SessionDetailDrawer(), DashboardLayout(), Topbar(), Interviews(), API_BASE_URL, getApiUrl(), safeJson()
 
 ### Community 382 - "Plan 04-02 Summary: WebRTC Audio/Video Hook, Media Controls & Quiet Video Tiles"
 Cohesion: 0.50
 Nodes (3): Accomplishments, Plan 04-02 Summary: WebRTC Audio/Video Hook, Media Controls & Quiet Video Tiles, Verification
 
-### Community 383 - "Plan 04-03: Curated Problem Bank, Monaco Collaborative Editor, In-Browser Runner & Interview Room Integration"
-Cohesion: 0.50
-Nodes (3): Objective, Plan 04-03: Curated Problem Bank, Monaco Collaborative Editor, In-Browser Runner & Interview Room Integration, Verification Criteria
-
 ## Knowledge Gaps
 - **3 isolated node(s):** `ADR-0011`, `ADR-0011`, `ADR-0011`
-  These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 2081 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
-- **145 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+  These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 2085 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
+- **146 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `error()` connect `output` to `gsd2-import.cjs`, `state.cjs`, `output`, `workstream.cjs`, `phase.cjs`, `init.cjs`, `gsd-graphify/SKILL.md`, `profile-output.cjs`, `Plan 01-03: Frontend Integration, State Management & Protected Routing`, `verify.cjs`, `Plan 04-03 Summary: Curated Problem Bank, Monaco Collaborative Editor, In-Browser Runner & Interview Room Integration`, `core.cjs`, `InterviewRoom.jsx`, `extractFrontmatter`, `gsd-tools.cjs`, `intel.cjs`, `profile-pipeline.cjs`, `gap-checker.cjs`?**
-  _High betweenness centrality (0.047) - this node is a cross-community bridge._
+- **Why does `error()` connect `output` to `gsd2-import.cjs`, `state.cjs`, `output`, `workstream.cjs`, `phase.cjs`, `init.cjs`, `gsd-graphify/SKILL.md`, `profile-output.cjs`, `Plan 01-03: Frontend Integration, State Management & Protected Routing`, `Plan 04-03 Summary: Curated Problem Bank, Monaco Collaborative Editor, In-Browser Runner & Interview Room Integration`, `core.cjs`, `InterviewRoom.jsx`, `uat.cjs`, `gsd-tools.cjs`, `intel.cjs`, `ref_fs`, `profile-pipeline.cjs`, `gap-checker.cjs`?**
+  _High betweenness centrality (0.048) - this node is a cross-community bridge._
 - **Are the 6 inferred relationships involving `error()` (e.g. with `runCommand()` and `core.cjs`) actually correct?**
   _`error()` has 6 INFERRED edges - model-reasoned connections that need verification._
 - **What connects `ADR-0011`, `ADR-0011`, `ADR-0011` to the rest of the system?**
@@ -1288,6 +1279,6 @@ _Questions this graph is uniquely positioned to answer:_
 - **Are the 3 inferred relationships involving `loadConfig()` (e.g. with `core.cjs` and `How It Works`) actually correct?**
   _`loadConfig()` has 3 INFERRED edges - model-reasoned connections that need verification._
 - **Should `gsd2-import.cjs` be split into smaller, more focused modules?**
-  _Cohesion score 0.08282828282828283 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.05711263881544157 - nodes in this community are weakly interconnected._
 - **Should `state.cjs` be split into smaller, more focused modules?**
-  _Cohesion score 0.0768361581920904 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.08376623376623377 - nodes in this community are weakly interconnected._

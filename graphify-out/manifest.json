@@ -528,9 +528,9 @@
     "semantic_hash": ""
   },
   "src/App.jsx": {
-    "mtime": 1795439381.725179,
-    "seen": 1795439699.0083828,
-    "ast_hash": "464184ce37836cb9a17742220c69718f",
+    "mtime": 1795453889.3196225,
+    "seen": 1795453932.1306977,
+    "ast_hash": "81828b01690225f70c15e72db075ab84",
     "semantic_hash": ""
   },
   "src/components/AsciiArt.jsx": {
@@ -2400,9 +2400,9 @@
     "semantic_hash": ""
   },
   "server/config/db.js": {
-    "mtime": 1795451357.655138,
-    "seen": 1795451382.4136434,
-    "ast_hash": "7d8b509e774b49bf0acfd95ee99365cd",
+    "mtime": 1795452711.0425932,
+    "seen": 1795453932.1306236,
+    "ast_hash": "f82842d0381cc93f0f243c9bcaff858c",
     "semantic_hash": ""
   },
   "server/controllers/authController.js": {
@@ -2586,8 +2586,8 @@
     "semantic_hash": ""
   },
   "src/context/SocketContext.jsx": {
-    "mtime": 1795451343.8424733,
-    "seen": 1795451382.4137478,
+    "mtime": 1795452311.8195589,
+    "seen": 1795453932.1308172,
     "ast_hash": "2f22e3f5ea39d9f3158231545e56fec9",
     "semantic_hash": ""
   },
@@ -2652,9 +2652,9 @@
     "semantic_hash": ""
   },
   "src/components/room/VideoTiles.jsx": {
-    "mtime": 1795349741.5238936,
-    "seen": 1795350887.818232,
-    "ast_hash": "f095bc314bb4ed919a3d2b331e834814",
+    "mtime": 1795453806.869402,
+    "seen": 1795453932.130806,
+    "ast_hash": "118a03573fa1ad2d0b6108eddaf78ea7",
     "semantic_hash": ""
   },
   "src/data/problems.js": {
@@ -2970,8 +2970,8 @@
     "semantic_hash": ""
   },
   "src/utils/api.js": {
-    "mtime": 1795451331.3115249,
-    "seen": 1795451382.4137702,
+    "mtime": 1795452311.8559277,
+    "seen": 1795453932.1308565,
     "ast_hash": "cfe7096a14b86ac7304a63ceba4e6ecf",
     "semantic_hash": ""
   },
@@ -2985,6 +2985,12 @@
     "mtime": 1795450848.382545,
     "seen": 1795450890.418615,
     "ast_hash": "aae840847467f3a86cf9d95c5f705e37",
+    "semantic_hash": ""
+  },
+  "src/components/ErrorBoundary.jsx": {
+    "mtime": 1795453844.886777,
+    "seen": 1795453932.1307065,
+    "ast_hash": "91502cfa840c0c97effac5578a6a46c7",
     "semantic_hash": ""
   },
   "package-lock.json": {

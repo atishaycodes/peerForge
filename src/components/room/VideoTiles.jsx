@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import { Mic, MicOff, User, Wifi, WifiOff } from "lucide-react";
 import MediaControls from "./MediaControls";
 

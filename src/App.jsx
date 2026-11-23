@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from '@/context/AuthContext';
 import { SocketProvider } from '@/context/SocketContext';
 import ProtectedRoute from '@/components/ProtectedRoute';
+import ErrorBoundary from '@/components/ErrorBoundary';
 import { AsciiArt } from '@/components/AsciiArt';
 import LoginForm from '@/components/LoginForm';
 import Landing from '@/pages/Landing';
@@ -97,7 +98,9 @@ export default function App() {
               path="/room/:roomId"
               element={
                 <ProtectedRoute>
-                  <InterviewRoom />
+                  <ErrorBoundary>
+                    <InterviewRoom />
+                  </ErrorBoundary>
                 </ProtectedRoute>
               }
             />
