@@ -7,10 +7,7 @@ const ICE_SERVERS = {
   ],
 };
 
-/**
- * Custom Hook: useWebRTC
- * Manages WebRTC peer connection, local/remote media streams, and device controls.
- */
+
 export const useWebRTC = (socket, roomId, user) => {
   const [localStream, setLocalStream] = useState(null);
   const [remoteStream, setRemoteStream] = useState(null);
