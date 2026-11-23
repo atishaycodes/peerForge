@@ -7,8 +7,9 @@ PeerForge is a high-performance, decentralized peer-to-peer technical mock inter
 ## 1. Project Information & Team Members
 
 - **Project Name:** PeerForge
+- **Live Deployment (Frontend):** [https://peerforge-one.vercel.app](https://peerforge-one.vercel.app)
+- **Production Backend API:** [https://peerforge-backend.onrender.com](https://peerforge-backend.onrender.com)
 - **Target Pull Request:** `Yogeshrathia07/P2P_App` (Branch: `main`)
-- **Submission Group:** `<group-name>`
 
 ### Team Members & Contributions
 
@@ -30,42 +31,63 @@ PeerForge is a high-performance, decentralized peer-to-peer technical mock inter
    - **Minute 30–60 (Phase 2):** Roles rotate automatically. Peer B receives a fresh challenge as Candidate, Peer A becomes Interviewer.
 5. **Symmetric Blind Evaluation:** After session completion, both engineers evaluate each other across 4 competency rubrics (Problem Solving, Code Quality, Communication, System Design). Neither can view the other's feedback until both have submitted.
 
-### Live Deployment Link
-- **Live Application:** `https://<username>.github.io/P2P_App/submissions/<group-name>/` *(or deployed production server)*
-- **Demo Room Access:** Share any generated 6-character room code (e.g., `PF-7K2M9X`) or direct link.
+### Live Deployment Links
+- **Live Web Application:** [https://peerforge-one.vercel.app](https://peerforge-one.vercel.app)
+- **Signaling & Backend Server:** [https://peerforge-backend.onrender.com](https://peerforge-backend.onrender.com)
+
+### Application Screenshots
+
+#### Live Peer-to-Peer Interview Room (Synchronized Monaco Editor + Dual Video Streams)
+![Live P2P Interview Room](docs/screenshots/live-room.jpg)
+
+#### User Authentication & Onboarding
+![Authentication & Onboarding](docs/screenshots/auth-page.jpg)
+
+---
 
 ### Step-by-Step Usage Guide
-1. **Access / Onboarding:** Visit the landing page and click **"Start Practicing"** or sign in.
+
+1. **Access the Application:**
+   - Open [https://peerforge-one.vercel.app](https://peerforge-one.vercel.app) in your web browser.
+   - Click **"Sign Up"** or **"Sign In"** to access your dashboard.
+
 2. **Create or Join a Room:**
-   - In the Dashboard or Lobby, select your interview track (DSA, Frontend, Backend) and target difficulty.
-   - Click **"Generate Room Code & Link"** to create an instant room (e.g., `PF-4N7N75`).
-   - Share the code or direct URL with your peer.
-   - The second peer enters the 6-character code in the **"Join with Room Code"** box and clicks Join.
-3. **Conduct Phase 1 Interview (30 Minutes):**
-   - Candidate types code in the Monaco editor; Interviewer reviews problem spec, hints, and observes live typing.
-   - Click **"Run (Ctrl+Enter)"** to run test cases and verify output.
-4. **Role Rotation (Phase 2):**
-   - At the 30-minute countdown trigger, the room swaps roles. A new problem is selected for the second round.
-5. **Double-Blind Review:**
-   - Both peers complete the 4-dimension rating rubric. Feedback unlocks simultaneously once both reviews are registered.
+   - In the Dashboard or Lobby, select your preferred interview track (**Data Structures & Algorithms**, **Frontend Architecture**, or **Backend System Design**) and difficulty level (**Junior**, **Mid-Level**, **Senior**).
+   - Click **"Generate Room Code & Link"** to create a private room (e.g., `PF-MJSP9N`).
+   - Share the 6-character room code or direct link with your peer.
+   - The second peer joins by entering the code in the **"Join with Room Code"** box on another device or tab.
+
+3. **Phase 1: First Round (30 Minutes):**
+   - The system automatically assigns complementary roles: one user is **Candidate** (active coder), and the other is **Interviewer** (assessor).
+   - The Candidate solves the assigned challenge in the Monaco editor; the Interviewer reviews test cases, hints, and live code.
+   - Click **"Run Code (Ctrl + Enter)"** to run test assertions and view stdout.
+   - Use the camera, microphone, or screen-share buttons to communicate in real time.
+
+4. **Phase 2: Role Rotation (30 Minutes):**
+   - At the 30-minute mark, the session advances to Phase 2: roles swap automatically, the editor resets with a new challenge, and the new Candidate takes the coding lead.
+
+5. **Double-Blind Symmetric Evaluation:**
+   - When the session ends, both peers rate each other across 4 rubrics.
+   - Reviews remain locked until both users submit, preventing retaliation bias.
 
 ---
 
 ## 3. Libraries & Services Used
 
 ### Frontend Client
-- **React 18 & Vite:** Ultra-fast reactive component architecture and production bundling.
-- **Tailwind CSS & Lucide React:** Utility-first styling with modern typography, dark mode workspace, and UI iconography.
-- **@monaco-editor/react:** Industry-standard VS Code editor engine powering collaborative typing and syntax highlighting.
-- **Socket.IO Client (`socket.io-client`):** High-speed WebSocket transport for room signaling, code sync, and timer updates.
-- **WebRTC API (`RTCPeerConnection`):** Native browser P2P video, audio, and screen stream communication.
+- **React 18 & Vite:** High-performance component rendering and sub-second asset bundling.
+- **Tailwind CSS & Lucide React:** Utility-first monochrome styling and responsive icon set.
+- **@monaco-editor/react:** VS Code editor engine powering collaborative typing and multi-language syntax highlighting.
+- **Socket.IO Client (`socket.io-client`):** Real-time WebSocket connection for room signaling, live code synchronization, and session state.
+- **WebRTC API (`RTCPeerConnection`):** Native browser peer-to-peer audio, video, and screen-sharing pipeline.
 
-### Backend & Cloud Services
-- **Node.js & Express.js:** RESTful API server and static asset delivery.
-- **Socket.IO Server:** P2P room discovery, WebRTC SDP offer/answer signaling, and ICE candidate exchange.
-- **MongoDB Atlas & Mongoose:** Real-time cloud database persisting user profiles, completed sessions, and blind reviews across devices.
-- **JWT & bcryptjs:** Cryptographic authentication, password hashing, and secure HTTP cookies.
-- **Google STUN & OpenRelay TURN:** Public STUN servers (`stun:stun.l.google.com:19302`) and TURN relays (`turn:standard.relay.metered.ca`) for NAT/firewall traversal across campus Wi-Fi networks.
+### Backend & Cloud Infrastructure
+- **Node.js & Express.js:** RESTful API endpoints and WebSocket server hosting.
+- **Socket.IO Server:** Peer discovery, room lifecycle arbitration, and WebRTC SDP/ICE candidate relaying.
+- **MongoDB Atlas & Mongoose:** Cloud database persisting user accounts, session history, and symmetric blind feedback reports.
+- **JWT & bcryptjs:** Cryptographic token verification, password hashing, and authorization.
+- **Google STUN & OpenRelay TURN:** Public STUN (`stun:stun.l.google.com:19302`) and TURN relays (`turn:standard.relay.metered.ca`) for NAT/firewall traversal across campus and mobile networks.
+- **Vercel & Render:** Automated continuous deployment for the frontend client and backend microservice.
 
 ---
 
@@ -80,7 +102,7 @@ PeerForge addresses 5 core challenges of decentralized and peer-to-peer architec
 ### 2. Problem #2: Data Lost on Refresh
 - **Why it happens:** Browser memory clears upon page reload, destroying local component state, WebRTC peer connections, and in-flight code.
 - **How PeerForge solves it:** 
-  1. The client maintains authenticated JWT tokens in persistent storage.
+  1. The client maintains authenticated JWT tokens and pre-hydrates user state from persistent storage.
   2. Upon page refresh, the user's re-connection handshake reconciles their authenticated `userId` against existing room participant records, cleanly re-attaching their new socket without terminating the session or resetting the code buffer.
   3. Historical session metrics and evaluations are permanently committed to MongoDB Atlas.
 
@@ -100,41 +122,53 @@ PeerForge addresses 5 core challenges of decentralized and peer-to-peer architec
 
 ## 5. Five Technical Challenges Faced While Building & How We Solved Them
 
-### Problem 1: Remote Video & Audio Stream Not Rendering on the Peer's Tile
-- **Why it happened:** In WebRTC, the `ontrack` event fires asynchronously once SDP negotiation completes. In React, the `<video>` component mounted before the remote media stream was populated in state. Because HTML5 video elements do not reliably auto-play dynamic React stream bindings without user interaction, remote video tiles remained black and silent.
-- **What we tried:** Directly setting `videoElement.src = remoteStream` inside the JSX render loop and polling the stream status with `setInterval`. This caused continuous re-render cycles and audio distortion.
-- **Final solution:** Implemented an explicit `useEffect` ref attachment in [`VideoTiles.jsx`](file:///c:/Users/Atishay/Downloads/peerForge/src/components/room/VideoTiles.jsx). When `remoteStream` becomes available, it attaches directly to `videoRef.current.srcObject = remoteStream`, attaches an `onloadedmetadata` event listener, and invokes `.play().catch(...)` to bypass autoplay policy rejections safely.
+### Problem 1: One-Way Audio Transmission Mismatch in WebRTC (Laptop to Phone Silent)
+- **The problem:** WebRTC audio transmitted in only one direction: the phone's voice was clearly audible on the laptop speaker, but the laptop's microphone produced complete silence on the phone.
+- **Why it happened:** Pre-allocating transceivers with `pc.addTransceiver("audio", { direction: "sendrecv" })` created an empty sender with `sender.track === null`. When local media was acquired, `sender.replaceTrack(track)` was called asynchronously without awaiting the returned promise before invoking `pc.createOffer()`. Because `replaceTrack` was still pending during SDP generation, the browser generated an SDP offer without audio SSRCs or media stream descriptors, causing the receiving device to decode zero audio packets.
+- **What you tried:** Adding fallback transceiver checks, polling sender state in intervals, and setting `offerToReceiveAudio: true` in the offer options.
+- **Your final solution:** Created a synchronous track attachment helper (`attachTracksToPeer` in [`src/hooks/useWebRTC.js`](file:///c:/Users/Atishay/Downloads/peerForge/src/hooks/useWebRTC.js)) that binds the microphone track directly via `pc.addTrack(track, stream)`. This binds the track synchronously and associates media stream IDs prior to SDP negotiation, ensuring both SDP Offer and Answer contain complete audio SSRCs.
 
 ---
 
-### Problem 2: Device Hardware Race Conditions & Screen Share Replacement
-- **Why it happened:** When switching between webcam video and screen sharing (`getDisplayMedia`), calling `getUserMedia` again to revert back caused browser hardware access locks on Windows and macOS. Furthermore, stopping a video track when muting caused the remote peer's connection to enter a permanently terminated state.
-- **What we tried:** Renegotiating a full SDP Offer/Answer cycle every time camera or screen share was toggled. This caused a 2–3 second screen freeze and dropped audio packets on every toggle.
-- **Final solution:** Separated stream track acquisition from peer negotiation. Local mute/camera toggles simply switch `track.enabled = false/true` on the existing hardware track without dropping the stream. For screen sharing, we used the WebRTC `RTCRtpSender.replaceTrack(newTrack)` API, which swaps the outgoing video feed instantly with 0ms renegotiation overhead.
+### Problem 2: Mobile Browser Autoplay Audio Policy Suppression & Touch Unlock
+- **The problem:** On mobile devices (iOS Safari and Android Chrome), remote audio would not play automatically when joining an interview room, even when audio packets were arriving across the network.
+- **Why it happened:** Modern mobile operating systems strictly enforce media autoplay policies that block unmuted `<video>` and `<audio>` elements unless triggered directly inside a user gesture (`touchstart`/`touchend`). Setting `muted={false}` on the `<video>` element caused iOS Safari to pause the video element entirely. Furthermore, previous autoplay unlock handlers only listened for desktop `click` and `keydown` events, which do not reliably fire on mobile touch viewports.
+- **What you tried:** Unmuting the video element directly and attaching window-level `click` listeners.
+- **Your final solution:** In [`src/components/room/VideoTiles.jsx`](file:///c:/Users/Atishay/Downloads/peerForge/src/components/room/VideoTiles.jsx), we decoupled video display from audio playback:
+  1. Kept `<video>` permanently set to `muted={true}` with `playsInline`, ensuring 100% compliant video playback without browser pause blocks.
+  2. Routed remote audio through a dedicated `<audio>` element with global capture listeners for `touchstart`, `touchend`, `pointerdown`, and `click`.
+  3. Added an interactive **"🔊 Tap here to enable sound"** banner that appears if the browser blocks autoplay, allowing an instant one-tap user unlock.
 
 ---
 
-### Problem 3: Monaco Collaborative Editor Desynchronization & Infinite Echo Loops
-- **Why it happened:** When Peer A entered a keystroke, Monaco dispatched a `room:code-change` event via Socket.IO. When Peer B received the event and called `editor.setValue(newCode)`, Monaco fired Peer B's `onDidChangeContent` listener, immediately broadcasting the same code back to Peer A. This created an infinite ping-pong echo loop that locked up the browser tab and reset the user's cursor to line 1 column 1 on every keystroke.
-- **What we tried:** Added a 500ms debounce timer on outgoing socket emissions. While this slowed down the loop, it caused severe text desynchronization and erased characters when both developers typed concurrently.
-- **Final solution:** Implemented an `isRemoteChangeRef` latch flag in [`CodeEditor.jsx`](file:///c:/Users/Atishay/Downloads/peerForge/src/components/room/CodeEditor.jsx). Before programmatic updates from a remote peer are applied via `setValue()`, `isRemoteChangeRef.current` is set to `true`. The editor change listener checks this flag: if `true`, it ignores the event and resets the flag without broadcasting, completely breaking the echo loop while preserving cursor positions.
+### Problem 3: Cross-Origin Production API Routing & Third-Party Cookie Drops on Refresh
+- **The problem:** In production, submitting forms returned `SyntaxError: Unexpected token 'T', "The page c"... is not valid JSON` (404 HTML) or HTTP 405, and refreshing the browser immediately logged the user out and redirected to `/login`.
+- **Why it happened:** The frontend was hosted on Vercel (`peerforge-one.vercel.app`) while the backend ran on Render (`peerforge-backend.onrender.com`). Calling relative `/api/*` endpoints hit Vercel's static host instead of Render, returning Vercel's default 404 HTML page. Furthermore, cross-site third-party cookies are blocked by default on modern browsers between different domains (Vercel and Render), causing cookie-only `checkAuth()` to fail on page reload.
+- **What you tried:** Using Vite development proxies (which do not apply to production static builds) and relying solely on `credentials: "include"` session cookies.
+- **Your final solution:** 
+  1. Added a `vercel.json` rewrites configuration routing all `/api/:path*` requests directly to `https://peerforge-backend.onrender.com/api/:path*`.
+  2. Implemented an `authFetch` utility in [`src/utils/api.js`](file:///c:/Users/Atishay/Downloads/peerForge/src/utils/api.js) attaching standard `Authorization: Bearer <token>` headers to every request.
+  3. Updated backend cookies with `sameSite: "none"` and `secure: true`.
+  4. Pre-hydrated user authentication state synchronously from `localStorage.getItem("auth_user")` in `AuthContext.jsx`, eliminating session logout on page refresh.
 
 ---
 
-### Problem 4: Role Inversion & Asymmetric Role Assignment on Page Refresh
-- **Why it happened:** In a bilateral mock interview, one user must be the `candidate` and the other must be the `interviewer`. When two peers joined a room at the exact same millisecond or refreshed their browser, both devices defaulted to the `candidate` role, leaving the room with two coders and no interviewer question spec.
-- **What we tried:** Allowing users to manually select their role using radio buttons before joining. This resulted in frequent conflicts where both users picked `candidate`.
-- **Final solution:** Centralized role complement arbitration on the server in [`roomSignaling.js`](file:///c:/Users/Atishay/Downloads/peerForge/server/socket/roomSignaling.js). When a user joins:
-  - If `room.participants.size === 0`, they are assigned `candidate`.
-  - If `room.participants.size === 1`, the server inspects the first peer's role and automatically assigns the strictly complementary role (`interviewer`).
-  - On page reload, the server matches the user by their persistent `userId` and restores their previously assigned role without re-randomizing.
+### Problem 4: Monaco Collaborative Editor Infinite Echo Loop & Cursor Jumping
+- **The problem:** Whenever either peer typed in the shared code editor, the browser entered an infinite broadcast loop, freezing the tab and resetting the user's cursor to line 1, column 1 on every keystroke.
+- **Why it happened:** When Peer A typed, Socket.IO sent `room:code-change`. When Peer B received this and called `editor.setValue(newCode)`, Monaco's native `onDidChangeContent` listener fired on Peer B's client, broadcasting the same code back to Peer A in an infinite ping-pong loop.
+- **What you tried:** Applying a debounce timer (300ms–500ms) on code emissions. This delayed the loop but caused character dropping and desynchronization when both users typed concurrently.
+- **Your final solution:** Implemented an `isRemoteChangeRef` latch flag in [`src/components/room/CodeEditor.jsx`](file:///c:/Users/Atishay/Downloads/peerForge/src/components/room/CodeEditor.jsx). Before applying incoming code via `setValue()`, the latch is set to `true`. The editor's change event handler checks this flag: if `true`, it suppresses socket emission and resets the latch, completely eliminating echo loops while preserving cursor positions.
 
 ---
 
-### Problem 5: Symmetric Blind Feedback Premature Reveal & Retaliation Bias
-- **Why it happened:** In technical interviews, if Developer A gives Developer B a critical review and Developer B can view it immediately, Developer B is incentivized to retaliate with a negative score. Storing feedback on the client allowed tech-savvy users to inspect network traffic and read the evaluation before submitting their own.
-- **What we tried:** Hiding the feedback UI with client-side CSS and storing submitted scores in `localStorage`. This was easily bypassed via browser developer tools.
-- **Final solution:** Implemented a secure double-blind submission controller in [`server/controllers/feedbackController.js`](file:///c:/Users/Atishay/Downloads/peerForge/server/controllers/feedbackController.js). Submitted evaluations are stored server-side with `status: "waiting_partner"`. When queried, the API explicitly strips and censors rating values until both developers have submitted. Once both reviews exist for the session, the server unlocks the full report and emits a real-time `feedback:unlocked` event to both clients.
+### Problem 5: Cloud Database Dynamic IP Whitelisting & SSL Alert Number 80 on Render
+- **The problem:** When deploying the backend to Render, the service failed to connect to MongoDB Atlas, repeatedly logging `[Database Error] Connection error: ... SSL routines:ssl3_read_bytes:tlsv1 alert internal error ... SSL alert number 80` and `Mongoose disconnected from MongoDB`.
+- **Why it happened:** Render instances run inside AWS container environments with dynamic IP addresses and default IPv6 DNS resolution. MongoDB Atlas rejects inbound connections from non-whitelisted IPs with TLS alert 80, and Node.js attempting IPv6 resolution against Atlas SRV records timed out.
+- **What you tried:** Restarting the Render service and hardcoding individual Render outbound IP addresses.
+- **Your final solution:** 
+  1. Configured Network Access in MongoDB Atlas with `0.0.0.0/0` (allowing cloud deployment connections secured via strong cluster credentials).
+  2. Configured Mongoose with `family: 4` in [`server/config/db.js`](file:///c:/Users/Atishay/Downloads/peerForge/server/config/db.js) to force IPv4 DNS resolution.
+  3. Added an exponential backoff reconnect loop in `server/config/db.js` so transient network hiccups reconnect automatically without crashing the server process.
 
 ---
 
@@ -155,7 +189,7 @@ cd peerForge
 npm install
 
 # 3. Configure environment variables
-# Copy .env.example to .env and optionally add your MongoDB Atlas URI:
+# Copy .env.example to .env and configure your variables:
 cp .env.example .env
 
 # 4. Start the backend signaling and API server
@@ -165,7 +199,7 @@ npm run server
 npm run dev
 ```
 
-Visit `http://localhost:5173` in two different browser windows (or across two devices on the same network) to conduct an end-to-end mock interview.
+Visit `http://localhost:5173` in two different browser windows (or across two devices on the same local network) to test the peer-to-peer interview flow.
 
 ---
 

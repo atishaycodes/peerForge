@@ -2316,9 +2316,9 @@
     "semantic_hash": ""
   },
   "README.md": {
-    "mtime": 1795446840.1676443,
-    "seen": 1795450332.2750957,
-    "ast_hash": "5b31d7f629be3b0f7c44653ff9c5ec14",
+    "mtime": 1795464139.346974,
+    "seen": 1795464166.3959925,
+    "ast_hash": "2caae9b62646a329ed75085a6cc93fdf",
     "semantic_hash": ""
   },
   "index.html": {
@@ -2652,8 +2652,8 @@
     "semantic_hash": ""
   },
   "src/components/room/VideoTiles.jsx": {
-    "mtime": 1795457521.3062415,
-    "seen": 1795457549.3112762,
+    "mtime": 1795457588.071725,
+    "seen": 1795464166.39386,
     "ast_hash": "6b54c75a485eaa6d9ae2df75ea132ff4",
     "semantic_hash": ""
   },
@@ -2664,8 +2664,8 @@
     "semantic_hash": ""
   },
   "src/hooks/useWebRTC.js": {
-    "mtime": 1795457487.31662,
-    "seen": 1795457549.3112955,
+    "mtime": 1795457588.1653736,
+    "seen": 1795464166.3938894,
     "ast_hash": "be355c9e461871d3acf2be31442a99b1",
     "semantic_hash": ""
   },
@@ -2991,6 +2991,18 @@
     "mtime": 1795453844.886777,
     "seen": 1795453932.1307065,
     "ast_hash": "91502cfa840c0c97effac5578a6a46c7",
+    "semantic_hash": ""
+  },
+  "docs/screenshots/auth-page.jpg": {
+    "mtime": 1795448410.6709218,
+    "seen": 1795464166.3960037,
+    "ast_hash": "2074b65fa00f781639a2fb387406aa9f",
+    "semantic_hash": ""
+  },
+  "docs/screenshots/live-room.jpg": {
+    "mtime": 1795456099.9360785,
+    "seen": 1795464166.3960087,
+    "ast_hash": "7e03b1c466f8e7a82bef3912a3f2f628",
     "semantic_hash": ""
   },
   "package-lock.json": {

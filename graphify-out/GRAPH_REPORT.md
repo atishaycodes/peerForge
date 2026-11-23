@@ -1,17 +1,17 @@
-# Graph Report - peerForge  (2026-11-23)
+# Graph Report - peerForge  (2026-11-24)
 
 ## Corpus Check
-- 493 files · ~442,360 words
+- 493 files · ~442,635 words
 - Verdict: corpus is large enough that graph structure adds value.
 - Unclassified: 5 file(s) not represented in the graph (top: (none) 3, .example 1, .css 1)
 
 ## Summary
-- 3398 nodes · 5311 edges · 381 communities (235 shown, 146 thin omitted)
-- Extraction: 90% EXTRACTED · 10% INFERRED · 0% AMBIGUOUS · INFERRED: 535 edges (avg confidence: 0.86)
+- 3401 nodes · 5316 edges · 380 communities (235 shown, 145 thin omitted)
+- Extraction: 90% EXTRACTED · 10% INFERRED · 0% AMBIGUOUS · INFERRED: 537 edges (avg confidence: 0.87)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `6b80a2a4`
+- Built from commit: `21833547`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -34,7 +34,7 @@
 - Dimensions
 - core.cjs
 - AI-SPEC — Phase {N}: {phase_name}
-- ref_os
+- learnings.cjs
 - audit-milestone.md
 - output
 - Verification Patterns
@@ -71,9 +71,9 @@
 - gsd-tools.cjs
 - Phase Prompt Template
 - validate-phase.md
-- gsd-statusline.js
+- worktree-safety.cjs
 - Step 2: Execute Operation
-- docs.cjs
+- verify.cjs
 - gsd-update-banner.js
 - Section Templates
 - Milestone: v{version} — {name}
@@ -251,7 +251,7 @@
 - Test Results
 - Plan 02-02: Profile Screen, Tag Input & Dashboard Onboarding Banner
 - Phase 01 Plan 01: Server Scaffolding & MongoDB User Schema Summary
-- ref_fs
+- settings-advanced.md
 - auth
 - Plan 03-02: Client Socket Integration & Matchmaking Lobby UI
 - Phase 02: User Profiles & Developer Preferences - Discussion Log
@@ -259,24 +259,25 @@
 - Phase 02 Plan 02: Profile Screen, Tag Input & Dashboard Onboarding Banner Summary
 - index.js
 - Phase 4: WebRTC Video/Audio & Collaborative Code Room - Discussion Log
-- VideoTiles.jsx
+- gsd-read-injection-scanner.js
 - gap-checker.cjs
 - vercel.json
 - react
-- Plan 02-01: Profile Backend API & Schema Extension
-- Phase 01 Plan 03: Frontend Integration, State Management & Protected Routing Summary
+- 5. Five Technical Challenges Faced While Building & How We Solved Them
+- Plan 03-01: Socket.IO Server Infrastructure & In-Memory Matchmaking Queue
 - planning-workspace.cjs
 - Plan 01-03: Frontend Integration, State Management & Protected Routing
 - package.json
-- App.jsx
+- useAuth
 - Plan 04-03 Summary: Curated Problem Bank, Monaco Collaborative Editor, In-Browser Runner & Interview Room Integration
 - active-workstream-store.cjs
 - routeValidateCommand
 - Implementation Decisions
 - Test Results
 - Phase 03 Plan 02: Client Socket Integration & Matchmaking Lobby UI Summary
-- tailwindcss-animate
-- Plan 06-01: Session History & Analytics Backend REST Endpoints
+- Phase 03 Plan 01: Socket.IO Server Infrastructure & In-Memory Matchmaking Queue Summary
+- Plan 04-01 Summary: WebRTC Signaling Gateway, Room Session State & Dependencies
+- Plan 04-03: Curated Problem Bank, Monaco Collaborative Editor, In-Browser Runner & Interview Room Integration
 - Phase 5: Structured Feedback & Evaluation Engine - Discussion Log
 - <decisions>
 - Phase 4 Verification: WebRTC Video/Audio & Collaborative Code Room
@@ -288,8 +289,6 @@
 - Phase 6 Verification: Dashboard, History & Verification
 - Plan 06-02: Split Workspace Dashboard Redesign: History Table, Scorecard Slide-Over & Competency Card
 - Plan 06-02 Summary: Split Workspace Dashboard Redesign
-- lucide-react
-- Plan 04-02 Summary: WebRTC Audio/Video Hook, Media Controls & Quiet Video Tiles
 
 ## God Nodes (most connected - your core abstractions)
 1. `output()` - 144 edges
@@ -304,21 +303,21 @@
 10. `toPosixPath()` - 33 edges
 
 ## Surprising Connections (you probably didn't know these)
-- `Objective` --references--> `useWebRTC()`  [INFERRED]
-  .planning/phases/04-webrtc-video-audio-collaborative-code-room/04-02-PLAN.md → src/hooks/useWebRTC.js
-- `Accomplishments` --references--> `useWebRTC()`  [INFERRED]
-  .planning/phases/04-webrtc-video-audio-collaborative-code-room/04-02-SUMMARY.md → src/hooks/useWebRTC.js
+- `5. Problem #11: Strangers in Your Room (Address Guessing)` --references--> `generateRandomRoomCode()`  [INFERRED]
+  README.md → src/utils/roomUtils.js
+- `Problem 3: Cross-Origin Production API Routing & Third-Party Cookie Drops on Refresh` --references--> `authFetch()`  [INFERRED]
+  README.md → src/utils/api.js
 - `Accomplishments` --references--> `error()`  [INFERRED]
   .planning/phases/04-webrtc-video-audio-collaborative-code-room/04-03-SUMMARY.md → .agent/get-shit-done/bin/lib/core.cjs
-- `Tasks` --references--> `auth()`  [INFERRED]
-  .planning/phases/02-user-profiles-developer-preferences/02-01-PLAN.md → server/middleware/auth.js
-- `Verification Criteria` --references--> `auth()`  [INFERRED]
-  .planning/phases/02-user-profiles-developer-preferences/02-01-PLAN.md → server/middleware/auth.js
+- `Accomplishments` --references--> `handleUserLeaveRoom()`  [INFERRED]
+  .planning/phases/04-webrtc-video-audio-collaborative-code-room/04-01-SUMMARY.md → server/socket/roomSignaling.js
+- `Key Changes` --references--> `useSocket()`  [INFERRED]
+  .planning/phases/03-matchmaking-engine-socket-signaling/03-02-SUMMARY.md → src/context/SocketContext.jsx
 
 ## Import Cycles
 - None detected.
 
-## Communities (381 total, 146 thin omitted)
+## Communities (380 total, 145 thin omitted)
 
 ### Community 0 - "shell-command-projection.cjs"
 Cohesion: 0.06
@@ -329,12 +328,12 @@ Cohesion: 0.06
 Nodes (54): candidateNames(), findInNodeModules(), findInPath(), fs, isExecutableFile(), path, requireFallowBinary(), resolveFallowBinary() (+46 more)
 
 ### Community 2 - "state.cjs"
-Cohesion: 0.08
-Nodes (45): getMilestonePhaseFilter(), isDirInMilestone(), reconstructFrontmatter(), cmdMilestoneComplete(), cmdPhasesClear(), fs, path, planningPaths() (+37 more)
+Cohesion: 0.06
+Nodes (65): cmdProgressRender(), extractOneLinerFromBody(), getMilestonePhaseFilter(), isDirInMilestone(), cmdFrontmatterGet(), cmdFrontmatterMerge(), cmdFrontmatterSet(), cmdFrontmatterValidate() (+57 more)
 
 ### Community 3 - "output"
-Cohesion: 0.07
-Nodes (29): cmdConfigGet(), cmdConfigSet(), CONFIG_KEY_SUGGESTIONS, fs, getCmdConfigSetModelProfileResultMessage(), path, SCHEMA_DEFAULTS, DYNAMIC_KEY_PATTERNS (+21 more)
+Cohesion: 0.09
+Nodes (27): cmdConfigGet(), cmdConfigPath(), cmdConfigSet(), cmdConfigSetModelProfile(), CONFIG_KEY_SUGGESTIONS, fs, getCmdConfigSetModelProfileResultMessage(), path (+19 more)
 
 ### Community 4 - "install-profiles.cjs"
 Cohesion: 0.06
@@ -342,19 +341,19 @@ Nodes (49): allClusteredSkills(), ADR-0011, CLUSTERS, ADR-0011, CLEANUP_SIGNALS,
 
 ### Community 5 - "phase.cjs"
 Cohesion: 0.11
-Nodes (44): comparePhaseNum(), escapeRegex(), extractCurrentMilestone(), normalizePhaseName(), phaseMarkdownRegexSource(), phaseMarkdownRegexSourceExact(), phaseTokenMatches(), readSubdirectories() (+36 more)
+Nodes (43): cmdStats(), comparePhaseNum(), escapeRegex(), extractCurrentMilestone(), getArchivedPhaseDirs(), normalizePhaseName(), phaseMarkdownRegexSource(), phaseMarkdownRegexSourceExact() (+35 more)
 
 ### Community 6 - "init.cjs"
-Cohesion: 0.16
-Nodes (44): cmdCommit(), cmdListTodos(), cmdTodoMatchPhase(), findPhaseInternal(), generateSlugInternal(), getMilestoneInfo(), getRoadmapPhaseInternal(), gitWorktreeInfoInternal() (+36 more)
+Cohesion: 0.11
+Nodes (59): cmdCommit(), cmdListTodos(), cmdTodoMatchPhase(), determinePhaseStatus(), checkAgentsInstalled(), findPhaseInternal(), generateSlugInternal(), getAgentsDir() (+51 more)
 
 ### Community 7 - "ref_path"
-Cohesion: 0.10
-Nodes (15): fs, INJECTION_PATTERNS, path, stdinTimeout, fs, path, stdinTimeout, ALL_PATTERNS (+7 more)
+Cohesion: 0.15
+Nodes (10): fs, INJECTION_PATTERNS, path, stdinTimeout, fs, path, stdinTimeout, fs (+2 more)
 
 ### Community 8 - "profile-output.cjs"
-Cohesion: 0.11
-Nodes (27): buildSection(), CLAUDE_INSTRUCTIONS, CLAUDE_MD_FALLBACKS, CLAUDE_MD_PROFILE_PLACEHOLDER, CLAUDE_MD_WORKFLOW_ENFORCEMENT, cmdGenerateClaudeMd(), buildSectionContent(), cmdProfileQuestionnaire() (+19 more)
+Cohesion: 0.07
+Nodes (48): buildAgentSkillsBlock(), buildSection(), CLAUDE_INSTRUCTIONS, CLAUDE_MD_FALLBACKS, CLAUDE_MD_PROFILE_PLACEHOLDER, CLAUDE_MD_WORKFLOW_ENFORCEMENT, cmdGenerateClaudeMd(), buildSectionContent() (+40 more)
 
 ### Community 9 - "installer-migrations.cjs"
 Cohesion: 0.09
@@ -362,7 +361,7 @@ Nodes (45): actionSource(), path, recordSource(), requireActionEvidence(), requi
 
 ### Community 10 - "react"
 Cohesion: 0.13
-Nodes (11): Objective, Plan 05-02: Interactive Rubric Form, Live Blind Waiting Room & Unlocked Scorecard UI, Tasks, Verification Criteria, react, FeedbackFormModal(), RubricSlider(), SCALE_DESCRIPTORS (+3 more)
+Nodes (14): Objective, Plan 05-02: Interactive Rubric Form, Live Blind Waiting Room & Unlocked Scorecard UI, Tasks, Verification Criteria, SessionDetailDrawer(), FeedbackFormModal(), RubricSlider(), SCALE_DESCRIPTORS (+6 more)
 
 ### Community 11 - "Research Template"
 Cohesion: 0.04
@@ -385,24 +384,24 @@ Cohesion: 0.06
 Nodes (33): 1. Communication Style, 2. Decision Speed, 3. Explanation Depth, 4. Debugging Approach, 5. UX Philosophy, 6. Vendor Philosophy, 7. Frustration Triggers, 8. Learning Style (+25 more)
 
 ### Community 16 - "core.cjs"
-Cohesion: 0.05
-Nodes (42): cmdResolveModel(), _deepMergeConfig(), detectSubRepos(), extractCanonicalPlanId(), extractPhaseToken(), filterPlanFiles(), filterSummaryFiles(), fs (+34 more)
+Cohesion: 0.07
+Nodes (24): _deepMergeConfig(), detectSubRepos(), extractCanonicalPlanId(), extractPhaseToken(), filterPlanFiles(), filterSummaryFiles(), fs, getPhaseFileStats() (+16 more)
 
 ### Community 17 - "AI-SPEC — Phase {N}: {phase_name}"
 Cohesion: 0.06
 Nodes (31): 1. System Classification, 1b. Domain Context, 2. Framework Decision, 3. Framework Quick Reference, 4. Implementation Guidance, 4b. AI Systems Best Practices, 5. Evaluation Strategy, 6. Guardrails (+23 more)
 
-### Community 18 - "ref_os"
-Cohesion: 0.36
-Nodes (8): buildAgentSkillsBlock(), expandTilde(), getGlobalConfigDir(), getGlobalSkillDir(), getGlobalSkillDisplayPath(), getGlobalSkillsBase(), os, path
+### Community 18 - "learnings.cjs"
+Cohesion: 0.16
+Nodes (22): cmdLearningsCopy(), cmdLearningsDelete(), cmdLearningsList(), cmdLearningsPrune(), cmdLearningsQuery(), contentHash(), crypto, DEFAULT_STORE_DIR (+14 more)
 
 ### Community 19 - "audit-milestone.md"
 Cohesion: 0.07
 Nodes (26): 0. Initialize Milestone Context, 1. Determine Milestone Scope, 2. Read All Phase Verifications, 3. Spawn Integration Checker, 4. Collect Results, 5.5. Nyquist Compliance Discovery, 5. Check Requirements Coverage (3-Source Cross-Reference), 5a. Parse REQUIREMENTS.md Traceability Table (+18 more)
 
 ### Community 20 - "output"
-Cohesion: 0.07
-Nodes (72): cmdCheckCommit(), cmdCommitToSubrepo(), cmdCurrentTimestamp(), cmdGenerateSlug(), cmdHistoryDigest(), cmdProgressRender(), cmdScaffold(), cmdStats() (+64 more)
+Cohesion: 0.12
+Nodes (39): cmdCheckCommit(), cmdCommitToSubrepo(), cmdCurrentTimestamp(), cmdGenerateSlug(), cmdHistoryDigest(), cmdResolveModel(), cmdScaffold(), cmdSummaryExtract() (+31 more)
 
 ### Community 21 - "Verification Patterns"
 Cohesion: 0.09
@@ -417,8 +416,8 @@ Cohesion: 0.10
 Nodes (20): AI Evaluation Reference, Common Pitfalls, Core Concepts, Eval Tooling Guide, Evals in the Development Lifecycle, Evaluation Dimensions, Execute Phase (Instrument While Building), Model vs. Product Evaluation (+12 more)
 
 ### Community 24 - "command-aliases.generated.cjs"
-Cohesion: 0.12
-Nodes (18): routeCjsCommandFamily(), INIT_COMMAND_ALIASES, NON_FAMILY_COMMAND_ALIASES, PHASE_COMMAND_ALIASES, PHASE_SUBCOMMANDS, PHASES_COMMAND_ALIASES, PHASES_SUBCOMMANDS, ROADMAP_COMMAND_ALIASES (+10 more)
+Cohesion: 0.14
+Nodes (16): routeCjsCommandFamily(), INIT_COMMAND_ALIASES, NON_FAMILY_COMMAND_ALIASES, PHASE_COMMAND_ALIASES, PHASE_SUBCOMMANDS, PHASES_COMMAND_ALIASES, PHASES_SUBCOMMANDS, ROADMAP_COMMAND_ALIASES (+8 more)
 
 ### Community 25 - "profile-pipeline.cjs"
 Cohesion: 0.23
@@ -514,7 +513,7 @@ Nodes (14): cacheDir, cacheFile, child, cwd, fs, globalConfigDir, globalVersionF
 
 ### Community 48 - "InterviewRoom.jsx"
 Cohesion: 0.14
-Nodes (18): Objective, Plan 04-03: Curated Problem Bank, Monaco Collaborative Editor, In-Browser Runner & Interview Room Integration, Tasks, Verification Criteria, CodeEditor(), SUPPORTED_LANGUAGES, ConsoleDrawer(), InterviewTimer() (+10 more)
+Nodes (18): Accomplishments, Plan 04-02 Summary: WebRTC Audio/Video Hook, Media Controls & Quiet Video Tiles, Verification, Tasks, CodeEditor(), SUPPORTED_LANGUAGES, ConsoleDrawer(), InterviewTimer() (+10 more)
 
 ### Community 49 - "Common Bug Patterns"
 Cohesion: 0.13
@@ -529,8 +528,8 @@ Cohesion: 0.31
 Nodes (9): buildCheckpoint(), categorizeItem(), cmdAuditUat(), cmdRenderCheckpoint(), fs, parseCurrentTest(), parseUatItems(), parseVerificationItems() (+1 more)
 
 ### Community 52 - "gsd-tools.cjs"
-Cohesion: 0.15
-Nodes (16): extractField(), fs, main(), parseMultiwordArg(), parseNamedArgs(), path, runCommand(), walkDir() (+8 more)
+Cohesion: 0.13
+Nodes (18): extractField(), fs, main(), parseMultiwordArg(), parseNamedArgs(), path, runCommand(), walkDir() (+10 more)
 
 ### Community 53 - "Phase Prompt Template"
 Cohesion: 0.14
@@ -540,17 +539,17 @@ Nodes (13): Anti-Patterns, Context Section, Examples, File Template, Frontmatter
 Cohesion: 0.14
 Nodes (13): 0. Initialize, 1. Detect Input State, 2. Discovery, 2a. Read Phase Artifacts, 2b. Build Requirement-to-Task Map, 2c. Detect Test Infrastructure, 2d. Cross-Reference, 3. Gap Analysis (+5 more)
 
-### Community 55 - "gsd-statusline.js"
-Cohesion: 0.30
-Nodes (13): composeStatusline(), formatGsdState(), fs, getConfigValue(), os, parseStateMd(), path, readGsdConfig() (+5 more)
+### Community 55 - "worktree-safety.cjs"
+Cohesion: 0.19
+Nodes (16): cmdWorktreeCleanupWave(), executeWorktreeWaveCleanupPlan(), fs, gitResultOk(), inspectWorktreeHealth(), listLinkedWorktreePaths(), normalizeCleanupManifest(), normalizeCleanupManifestEntry() (+8 more)
 
 ### Community 56 - "Step 2: Execute Operation"
 Cohesion: 0.14
 Nodes (13): complete, create, /gsd-workstreams, list, progress, resume, status, Step 1: Parse Subcommand (+5 more)
 
-### Community 57 - "docs.cjs"
-Cohesion: 0.16
-Nodes (16): CANONICAL_EXACT, CANONICAL_PATTERNS, isCanonicalPlanningFile(), checkAgentsInstalled(), getAgentsDir(), cmdDocsInit(), detectDocTooling(), detectMonorepoWorkspaces() (+8 more)
+### Community 57 - "verify.cjs"
+Cohesion: 0.12
+Nodes (23): CANONICAL_EXACT, CANONICAL_PATTERNS, isCanonicalPlanningFile(), parseMustHavesBlock(), execGit(), cmdValidateConsistency(), cmdValidateHealth(), cmdVerifyArtifacts() (+15 more)
 
 ### Community 58 - "gsd-update-banner.js"
 Cohesion: 0.33
@@ -921,8 +920,8 @@ Cohesion: 0.29
 Nodes (6): Configuration, Frameworks, Key Dependencies, Languages, Runtime, Technology Stack
 
 ### Community 150 - "PeerForge — Decentralized Peer-to-Peer Technical Mock Interview Platform"
-Cohesion: 0.07
-Nodes (26): 1. Problem #1: Late Joiners See No History, 1. Project Information & Team Members, 2. Problem #2: Data Lost on Refresh, 2. What the App Does & How to Use It, 3. Libraries & Services Used, 3. Problem #5: Peers Cannot Connect (Campus / Office Wi-Fi NAT), 4. Problem #7: Too Many People in One Room (Mesh Explosion), 4. Section 3 Decentralized Problems Solved & How (+18 more)
+Cohesion: 0.08
+Nodes (23): 1. Problem #1: Late Joiners See No History, 1. Project Information & Team Members, 2. Problem #2: Data Lost on Refresh, 2. What the App Does & How to Use It, 3. Libraries & Services Used, 3. Problem #5: Peers Cannot Connect (Campus / Office Wi-Fi NAT), 4. Problem #7: Too Many People in One Room (Mesh Explosion), 4. Section 3 Decentralized Problems Solved & How (+15 more)
 
 ### Community 151 - "compilerOptions"
 Cohesion: 0.40
@@ -1049,8 +1048,8 @@ Cohesion: 0.40
 Nodes (4): Milestone 1 Conclusion, Milestones & Phases, Project State — PeerForge, Project Status
 
 ### Community 182 - "intel.cjs"
-Cohesion: 0.08
-Nodes (43): crypto, disabledResponse(), ensureIntelDir(), fs, hashFile(), INTEL_FILES, intelDiff(), intelExtractExports() (+35 more)
+Cohesion: 0.17
+Nodes (21): crypto, disabledResponse(), ensureIntelDir(), fs, hashFile(), INTEL_FILES, intelDiff(), intelExtractExports() (+13 more)
 
 ### Community 183 - "Implementation Decisions"
 Cohesion: 0.11
@@ -1112,13 +1111,13 @@ Nodes (5): Must Haves (Goal-Backward Verification), Objective, Plan 02-02: Profi
 Cohesion: 0.33
 Nodes (5): Deviations from Plan, Key Changes, Next Steps, Phase 01 Plan 01: Server Scaffolding & MongoDB User Schema Summary, Verification
 
-### Community 342 - "ref_fs"
-Cohesion: 0.21
-Nodes (10): fs, isNestedPlanFile(), isNestedSummaryFile(), isRootPlanFile(), isRootSummaryFile(), path, scanPhasePlans(), cmdTemplateSelect() (+2 more)
+### Community 342 - "settings-advanced.md"
+Cohesion: 0.29
+Nodes (6): Section 1 — Planning Tuning, Section 2 — Execution Tuning, Section 3 — Discussion Tuning, Section 4 — Cross-AI Execution, Section 5 — Git Customization, Section 6 — Runtime / Output
 
 ### Community 343 - "auth"
-Cohesion: 0.14
-Nodes (18): Key Changes, Key Changes, Tasks, Accomplishments, Plan 06-01 Summary: Session History & Analytics Backend REST Endpoints, Verification, express, getProfile() (+10 more)
+Cohesion: 0.09
+Nodes (26): Must Haves (Goal-Backward Verification), Objective, Plan 02-01: Profile Backend API & Schema Extension, Tasks, Verification Criteria, Key Changes, Key Changes, Objective (+18 more)
 
 ### Community 344 - "Plan 03-02: Client Socket Integration & Matchmaking Lobby UI"
 Cohesion: 0.33
@@ -1137,35 +1136,35 @@ Cohesion: 0.40
 Nodes (4): Deviations from Plan, Next Steps, Phase 02 Plan 02: Profile Screen, Tag Input & Dashboard Onboarding Banner Summary, Verification
 
 ### Community 348 - "index.js"
-Cohesion: 0.10
-Nodes (33): Must Haves (Goal-Backward Verification), Objective, Plan 03-01: Socket.IO Server Infrastructure & In-Memory Matchmaking Queue, Tasks, Verification Criteria, Deviations from Plan, Key Changes, Next Steps (+25 more)
+Cohesion: 0.19
+Nodes (22): Tasks, Key Changes, Objective, Plan 04-01: WebRTC Signaling Gateway, Room Session State & Editor Dependencies, Tasks, Verification Criteria, addToQueue(), cleanupSocketMatches() (+14 more)
 
 ### Community 349 - "Phase 4: WebRTC Video/Audio & Collaborative Code Room - Discussion Log"
 Cohesion: 0.22
 Nodes (8): Code Execution & Output Console, Collaborative Code Editor, Deferred Ideas, Interview Timer & Role Switcher, Phase 4: WebRTC Video/Audio & Collaborative Code Room - Discussion Log, Problem Prompt Loading, WebRTC Media & Permission Handling, Workspace Layout & Video Tiles
 
-### Community 350 - "VideoTiles.jsx"
-Cohesion: 0.27
-Nodes (7): Objective, Plan 04-02: WebRTC Audio/Video Hook, Media Controls & Quiet Video Tiles, Tasks, Verification Criteria, MediaControls(), VideoStreamTile(), VideoTiles()
+### Community 350 - "gsd-read-injection-scanner.js"
+Cohesion: 0.29
+Nodes (5): ALL_PATTERNS, INJECTION_PATTERNS, path, stdinTimeout, SUMMARISATION_PATTERNS
 
 ### Community 351 - "gap-checker.cjs"
 Cohesion: 0.27
 Nodes (11): parseDecisions(), cmdGapAnalysis(), detectCoverage(), formatGapTable(), fs, naturalKey(), parseRequirements(), path (+3 more)
 
 ### Community 353 - "react"
-Cohesion: 0.18
-Nodes (10): DashboardLayout(), Topbar(), AvailabilityToggle(), PREFERENCE_WINDOWS, POPULAR_SKILLS, SkillTagInput(), COMMON_TIMEZONES, TimezoneSelect() (+2 more)
+Cohesion: 0.10
+Nodes (21): Objective, Plan 04-02: WebRTC Audio/Video Hook, Media Controls & Quiet Video Tiles, Tasks, Verification Criteria, lucide-react, react, DashboardLayout(), SettingsModal() (+13 more)
 
-### Community 354 - "Plan 02-01: Profile Backend API & Schema Extension"
+### Community 354 - "5. Five Technical Challenges Faced While Building & How We Solved Them"
 Cohesion: 0.33
-Nodes (5): Must Haves (Goal-Backward Verification), Objective, Plan 02-01: Profile Backend API & Schema Extension, Tasks, Verification Criteria
+Nodes (6): 5. Five Technical Challenges Faced While Building & How We Solved Them, Problem 1: One-Way Audio Transmission Mismatch in WebRTC (Laptop to Phone Silent), Problem 2: Mobile Browser Autoplay Audio Policy Suppression & Touch Unlock, Problem 3: Cross-Origin Production API Routing & Third-Party Cookie Drops on Refresh, Problem 4: Monaco Collaborative Editor Infinite Echo Loop & Cursor Jumping, Problem 5: Cloud Database Dynamic IP Whitelisting & SSL Alert Number 80 on Render
 
-### Community 355 - "Phase 01 Plan 03: Frontend Integration, State Management & Protected Routing Summary"
-Cohesion: 0.33
-Nodes (5): Deviations from Plan, Key Changes, Next Steps, Phase 01 Plan 03: Frontend Integration, State Management & Protected Routing Summary, Verification
+### Community 355 - "Plan 03-01: Socket.IO Server Infrastructure & In-Memory Matchmaking Queue"
+Cohesion: 0.40
+Nodes (4): Must Haves (Goal-Backward Verification), Objective, Plan 03-01: Socket.IO Server Infrastructure & In-Memory Matchmaking Queue, Verification Criteria
 
 ### Community 356 - "planning-workspace.cjs"
-Cohesion: 0.20
+Cohesion: 0.18
 Nodes (15): createSessionScopedPointerAdapter(), createSharedPointerAdapter(), crypto, fs, getControllingTtyToken(), getSessionScopedWorkstreamFile(), getWorkstreamSessionKey(), _heldPlanningLocks (+7 more)
 
 ### Community 357 - "Plan 01-03: Frontend Integration, State Management & Protected Routing"
@@ -1173,12 +1172,12 @@ Cohesion: 0.33
 Nodes (5): Must Haves (Goal-Backward Verification), Objective, Plan 01-03: Frontend Integration, State Management & Protected Routing, Tasks, Verification Criteria
 
 ### Community 358 - "package.json"
-Cohesion: 0.11
-Nodes (23): bugs, url, description, devDependencies, autoprefixer@^10.6.2, concurrently@^10.0.6, nodemon@^3.1.14, postcss@^8.5.32 (+15 more)
+Cohesion: 0.09
+Nodes (25): bugs, url, tailwindcss-animate@^1.0.7, description, devDependencies, autoprefixer@^10.6.2, concurrently@^10.0.6, nodemon@^3.1.14 (+17 more)
 
-### Community 359 - "App.jsx"
-Cohesion: 0.21
-Nodes (6): App(), LoginPage(), AsciiArt(), ErrorBoundary, AuthProvider(), SocketProvider()
+### Community 359 - "useAuth"
+Cohesion: 0.11
+Nodes (18): Deviations from Plan, Key Changes, Next Steps, Phase 01 Plan 03: Frontend Integration, State Management & Protected Routing Summary, Verification, App(), LoginPage(), AsciiArt() (+10 more)
 
 ### Community 360 - "Plan 04-03 Summary: Curated Problem Bank, Monaco Collaborative Editor, In-Browser Runner & Interview Room Integration"
 Cohesion: 0.50
@@ -1204,9 +1203,17 @@ Nodes (10): 1. Cold Start Smoke Test, 2. 3-Column Quiet IDE Workspace Layout, 3.
 Cohesion: 0.33
 Nodes (5): Deviations from Plan, Key Changes, Next Steps, Phase 03 Plan 02: Client Socket Integration & Matchmaking Lobby UI Summary, Verification
 
-### Community 367 - "Plan 06-01: Session History & Analytics Backend REST Endpoints"
+### Community 366 - "Phase 03 Plan 01: Socket.IO Server Infrastructure & In-Memory Matchmaking Queue Summary"
+Cohesion: 0.40
+Nodes (4): Deviations from Plan, Next Steps, Phase 03 Plan 01: Socket.IO Server Infrastructure & In-Memory Matchmaking Queue Summary, Verification
+
+### Community 367 - "Plan 04-01 Summary: WebRTC Signaling Gateway, Room Session State & Dependencies"
 Cohesion: 0.50
-Nodes (3): Objective, Plan 06-01: Session History & Analytics Backend REST Endpoints, Verification Criteria
+Nodes (3): Accomplishments, Plan 04-01 Summary: WebRTC Signaling Gateway, Room Session State & Dependencies, Verification
+
+### Community 368 - "Plan 04-03: Curated Problem Bank, Monaco Collaborative Editor, In-Browser Runner & Interview Room Integration"
+Cohesion: 0.50
+Nodes (3): Objective, Plan 04-03: Curated Problem Bank, Monaco Collaborative Editor, In-Browser Runner & Interview Room Integration, Verification Criteria
 
 ### Community 369 - "Phase 5: Structured Feedback & Evaluation Engine - Discussion Log"
 Cohesion: 0.33
@@ -1230,7 +1237,7 @@ Nodes (10): 1. Cold Start Smoke Test, 2. Post-Interview Feedback Modal Trigger, 
 
 ### Community 374 - "Dashboard.jsx"
 Cohesion: 0.22
-Nodes (15): DIFFICULTIES, MatchmakingQuickCard(), TRACKS, ProfileCompletionCard(), MatchAcceptModal(), SocketContext, useSocket(), Dashboard() (+7 more)
+Nodes (16): react-router-dom, DIFFICULTIES, MatchmakingQuickCard(), TRACKS, ProfileCompletionCard(), MatchAcceptModal(), SocketContext, useSocket() (+8 more)
 
 ### Community 375 - "gsd-check-update-worker.js"
 Cohesion: 0.13
@@ -1252,24 +1259,16 @@ Nodes (4): Objective, Plan 06-02: Split Workspace Dashboard Redesign: History Ta
 Cohesion: 0.50
 Nodes (3): Accomplishments, Plan 06-02 Summary: Split Workspace Dashboard Redesign, Verification
 
-### Community 381 - "lucide-react"
-Cohesion: 0.17
-Nodes (15): lucide-react, react-router-dom, SessionDetailDrawer(), SettingsModal(), Sidebar(), LoginForm(), ProtectedRoute(), AuthContext (+7 more)
-
-### Community 382 - "Plan 04-02 Summary: WebRTC Audio/Video Hook, Media Controls & Quiet Video Tiles"
-Cohesion: 0.50
-Nodes (3): Accomplishments, Plan 04-02 Summary: WebRTC Audio/Video Hook, Media Controls & Quiet Video Tiles, Verification
-
 ## Knowledge Gaps
 - **3 isolated node(s):** `ADR-0011`, `ADR-0011`, `ADR-0011`
   These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 2085 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
-- **146 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **145 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `error()` connect `output` to `gsd2-import.cjs`, `state.cjs`, `output`, `workstream.cjs`, `phase.cjs`, `init.cjs`, `gsd-graphify/SKILL.md`, `profile-output.cjs`, `Plan 01-03: Frontend Integration, State Management & Protected Routing`, `Plan 04-03 Summary: Curated Problem Bank, Monaco Collaborative Editor, In-Browser Runner & Interview Room Integration`, `core.cjs`, `InterviewRoom.jsx`, `uat.cjs`, `gsd-tools.cjs`, `intel.cjs`, `ref_fs`, `profile-pipeline.cjs`, `gap-checker.cjs`?**
-  _High betweenness centrality (0.036) - this node is a cross-community bridge._
+- **Why does `error()` connect `output` to `gsd2-import.cjs`, `state.cjs`, `output`, `workstream.cjs`, `phase.cjs`, `init.cjs`, `gsd-graphify/SKILL.md`, `profile-output.cjs`, `Plan 01-03: Frontend Integration, State Management & Protected Routing`, `Plan 04-03 Summary: Curated Problem Bank, Monaco Collaborative Editor, In-Browser Runner & Interview Room Integration`, `core.cjs`, `InterviewRoom.jsx`, `learnings.cjs`, `uat.cjs`, `gsd-tools.cjs`, `profile-pipeline.cjs`, `verify.cjs`, `gap-checker.cjs`?**
+  _High betweenness centrality (0.037) - this node is a cross-community bridge._
 - **Are the 6 inferred relationships involving `error()` (e.g. with `runCommand()` and `core.cjs`) actually correct?**
   _`error()` has 6 INFERRED edges - model-reasoned connections that need verification._
 - **What connects `ADR-0011`, `ADR-0011`, `ADR-0011` to the rest of the system?**
@@ -1281,4 +1280,4 @@ _Questions this graph is uniquely positioned to answer:_
 - **Should `gsd2-import.cjs` be split into smaller, more focused modules?**
   _Cohesion score 0.05711263881544157 - nodes in this community are weakly interconnected._
 - **Should `state.cjs` be split into smaller, more focused modules?**
-  _Cohesion score 0.08376623376623377 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.059940059940059943 - nodes in this community are weakly interconnected._
