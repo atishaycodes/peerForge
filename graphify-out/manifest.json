@@ -2316,8 +2316,8 @@
     "semantic_hash": ""
   },
   "README.md": {
-    "mtime": 1795441541.351282,
-    "seen": 1795441569.8333788,
+    "mtime": 1795446840.1676443,
+    "seen": 1795450332.2750957,
     "ast_hash": "5b31d7f629be3b0f7c44653ff9c5ec14",
     "semantic_hash": ""
   },
@@ -2400,8 +2400,8 @@
     "semantic_hash": ""
   },
   "server/config/db.js": {
-    "mtime": 1795441431.173468,
-    "seen": 1795441569.8327463,
+    "mtime": 1795446840.2903233,
+    "seen": 1795450332.2741349,
     "ast_hash": "d47e257fd2ad47081272f99048f5e61b",
     "semantic_hash": ""
   },
@@ -2430,9 +2430,9 @@
     "semantic_hash": ""
   },
   "server/server.js": {
-    "mtime": 1794141259.7529137,
-    "seen": 1795346872.312733,
-    "ast_hash": "d6e439bcced81f8ee025be25ddb04fd0",
+    "mtime": 1795448738.0842934,
+    "seen": 1795450332.2741754,
+    "ast_hash": "5baed136863ce30f24115a93f8ede364",
     "semantic_hash": ""
   },
   "src/components/ProtectedRoute.jsx": {
@@ -2442,15 +2442,15 @@
     "semantic_hash": ""
   },
   "src/context/AuthContext.jsx": {
-    "mtime": 1794138657.414654,
-    "seen": 1794138865.3736792,
-    "ast_hash": "77aa09a9e7f5f81ebe62bbdcee8add38",
+    "mtime": 1795450331.2596886,
+    "seen": 1795450332.2742622,
+    "ast_hash": "685cd6bc8900b6c67a2e284b31229cac",
     "semantic_hash": ""
   },
   "src/pages/Dashboard.jsx": {
-    "mtime": 1794136793.926188,
-    "seen": 1794136831.5041494,
-    "ast_hash": "24f4ced9c8fda71dfb97216e9f7d6641",
+    "mtime": 1795450331.515867,
+    "seen": 1795450332.2742763,
+    "ast_hash": "8f960d204a58b137826982a99657a257",
     "semantic_hash": ""
   },
   ".planning/phases/01-backend-foundation-authentication/01-01-SUMMARY.md": {
@@ -2586,9 +2586,9 @@
     "semantic_hash": ""
   },
   "src/context/SocketContext.jsx": {
-    "mtime": 1794140377.4822104,
-    "seen": 1794141242.6834543,
-    "ast_hash": "0bf66147ce94b5804f51238650d34288",
+    "mtime": 1795450331.3950455,
+    "seen": 1795450332.2742648,
+    "ast_hash": "190aa8eae1baa9978ef48604c1b9c9a8",
     "semantic_hash": ""
   },
   "src/pages/InterviewRoom.jsx": {
@@ -2748,9 +2748,9 @@
     "semantic_hash": ""
   },
   "src/components/feedback/FeedbackFormModal.jsx": {
-    "mtime": 1793996755.03327,
-    "seen": 1794130744.0627213,
-    "ast_hash": "1f0204fe7ea88f0379b49a148a229691",
+    "mtime": 1795450331.198674,
+    "seen": 1795450332.274213,
+    "ast_hash": "4a6afc7d026b39c79d44a95acee8c91a",
     "semantic_hash": ""
   },
   "src/components/feedback/RubricSlider.jsx": {
@@ -2952,9 +2952,9 @@
     "semantic_hash": ""
   },
   "src/pages/Interviews.jsx": {
-    "mtime": 1794134971.931234,
-    "seen": 1794136831.5041583,
-    "ast_hash": "13d9096d6cdbaaa18fab67488adf882c",
+    "mtime": 1795450331.6939454,
+    "seen": 1795450332.2742813,
+    "ast_hash": "e02846a5bec1a7a32e9078fad8a10209",
     "semantic_hash": ""
   },
   "src/utils/roomUtils.js": {
@@ -2967,6 +2967,18 @@
     "mtime": 1795439745.1776135,
     "seen": 1795441569.8328412,
     "ast_hash": "33fd148cdc65114623c413b9e412efaf",
+    "semantic_hash": ""
+  },
+  "src/utils/api.js": {
+    "mtime": 1795448554.2169056,
+    "seen": 1795450332.2742918,
+    "ast_hash": "476d91ae68cb7b0c5020a8a7517d1a08",
+    "semantic_hash": ""
+  },
+  "vercel.json": {
+    "mtime": 1795448573.0968175,
+    "seen": 1795450332.2743022,
+    "ast_hash": "64f825fece3740d8ca4c1d58756ee639",
     "semantic_hash": ""
   },
   "package-lock.json": {

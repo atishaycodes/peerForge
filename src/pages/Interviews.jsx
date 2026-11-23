@@ -15,6 +15,7 @@ import { useAuth } from '@/context/AuthContext';
 import DashboardLayout from '@/components/layout/DashboardLayout';
 import SessionDetailDrawer from '@/components/dashboard/SessionDetailDrawer';
 import MatchAcceptModal from '@/components/lobby/MatchAcceptModal';
+import { getApiUrl } from '@/utils/api';
 
 export default function Interviews() {
   const { user } = useAuth();
@@ -33,8 +34,8 @@ export default function Interviews() {
 
     try {
       const [histRes, upcRes] = await Promise.all([
-        fetch('/api/sessions/history', { credentials: 'include' }),
-        fetch('/api/sessions/upcoming', { credentials: 'include' }),
+        fetch(getApiUrl('/api/sessions/history'), { credentials: 'include' }),
+        fetch(getApiUrl('/api/sessions/upcoming'), { credentials: 'include' }),
       ]);
 
       if (histRes.ok) {

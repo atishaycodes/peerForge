@@ -3,6 +3,7 @@ import { MessageSquare, ShieldCheck, AlertCircle, Loader2, ArrowRight } from "lu
 import RubricSlider from "./RubricSlider";
 import WaitingBlindRoom from "./WaitingBlindRoom";
 import UnlockedScorecard from "./UnlockedScorecard";
+import { getApiUrl } from "../../utils/api";
 
 /**
  * FeedbackFormModal
@@ -38,7 +39,7 @@ export const FeedbackFormModal = ({
   const fetchSessionFeedback = useCallback(async () => {
     if (!roomId) return;
     try {
-      const res = await fetch(`/api/feedback/session/${roomId}`, {
+      const res = await fetch(getApiUrl(`/api/feedback/session/${roomId}`), {
         headers: { "Content-Type": "application/json" },
         credentials: "include",
       });
@@ -99,7 +100,7 @@ export const FeedbackFormModal = ({
     setError(null);
 
     try {
-      const res = await fetch("/api/feedback/submit", {
+      const res = await fetch(getApiUrl("/api/feedback/submit"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",

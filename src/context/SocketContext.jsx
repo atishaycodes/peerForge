@@ -27,8 +27,11 @@ export function SocketProvider({ children }) {
 
   // Initialize socket instance once across entire app lifecycle
   useEffect(() => {
-    const origin = typeof window !== 'undefined' ? window.location.origin : '/';
-    const socket = io(origin, {
+    const backendOrigin =
+      import.meta.env.VITE_BACKEND_URL ||
+      import.meta.env.VITE_API_URL ||
+      (typeof window !== 'undefined' ? window.location.origin : '/');
+    const socket = io(backendOrigin, {
       withCredentials: true,
       autoConnect: true,
       reconnection: true,

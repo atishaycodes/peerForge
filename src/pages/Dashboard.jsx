@@ -16,6 +16,7 @@ import ProfileCompletionCard from '@/components/dashboard/ProfileCompletionCard'
 import SessionDetailDrawer from '@/components/dashboard/SessionDetailDrawer';
 import MatchAcceptModal from '@/components/lobby/MatchAcceptModal';
 import { normalizeRoomCode, isValidRoomCode } from '@/utils/roomUtils';
+import { getApiUrl } from '@/utils/api';
 
 export default function Dashboard() {
   const { user } = useAuth();
@@ -48,9 +49,9 @@ export default function Dashboard() {
 
     try {
       const [histRes, anaRes, upcRes] = await Promise.all([
-        fetch('/api/sessions/history', { credentials: 'include' }),
-        fetch('/api/sessions/analytics', { credentials: 'include' }),
-        fetch('/api/sessions/upcoming', { credentials: 'include' }),
+        fetch(getApiUrl('/api/sessions/history'), { credentials: 'include' }),
+        fetch(getApiUrl('/api/sessions/analytics'), { credentials: 'include' }),
+        fetch(getApiUrl('/api/sessions/upcoming'), { credentials: 'include' }),
       ]);
 
       if (histRes.ok) {

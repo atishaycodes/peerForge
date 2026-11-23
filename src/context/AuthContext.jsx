@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from "react";
+import { getApiUrl, safeJson } from "../utils/api";
 
 const AuthContext = createContext(null);
 
@@ -11,7 +12,7 @@ export function AuthProvider({ children }) {
   const checkAuth = useCallback(async () => {
     try {
       setLoading(true);
-      const res = await fetch("/api/auth/me", {
+      const res = await fetch(getApiUrl("/api/auth/me"), {
         headers: {
           "Content-Type": "application/json",
         },
@@ -19,7 +20,7 @@ export function AuthProvider({ children }) {
       });
 
       if (res.ok) {
-        const data = await res.json();
+        const data = await safeJson(res);
         if (data.token) {
           localStorage.setItem("auth_token", data.token);
         }
@@ -45,14 +46,14 @@ export function AuthProvider({ children }) {
   const login = async ({ email, password }) => {
     try {
       setError(null);
-      const res = await fetch("/api/auth/login", {
+      const res = await fetch(getApiUrl("/api/auth/login"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
         body: JSON.stringify({ email, password }),
       });
 
-      const data = await res.json();
+      const data = await safeJson(res, "Failed to log in");
       if (!res.ok) {
         throw new Error(data.message || "Failed to log in");
       }
@@ -72,14 +73,14 @@ export function AuthProvider({ children }) {
   const register = async ({ name, email, password }) => {
     try {
       setError(null);
-      const res = await fetch("/api/auth/register", {
+      const res = await fetch(getApiUrl("/api/auth/register"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
         body: JSON.stringify({ name, email, password }),
       });
 
-      const data = await res.json();
+      const data = await safeJson(res, "Failed to create account");
       if (!res.ok) {
         throw new Error(data.message || "Failed to create account");
       }
@@ -98,7 +99,7 @@ export function AuthProvider({ children }) {
   // Logout action
   const logout = async () => {
     try {
-      await fetch("/api/auth/logout", {
+      await fetch(getApiUrl("/api/auth/logout"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
@@ -116,14 +117,14 @@ export function AuthProvider({ children }) {
   const updateProfile = async (profileData) => {
     try {
       setError(null);
-      const res = await fetch("/api/profile", {
+      const res = await fetch(getApiUrl("/api/profile"), {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
         body: JSON.stringify(profileData),
       });
 
-      const data = await res.json();
+      const data = await safeJson(res, "Failed to update profile");
       if (!res.ok) {
         throw new Error(data.message || "Failed to update profile");
       }
