@@ -1,7 +1,7 @@
 # Graph Report - peerForge  (2026-11-23)
 
 ## Corpus Check
-- 492 files · ~441,685 words
+- 492 files · ~441,721 words
 - Verdict: corpus is large enough that graph structure adds value.
 - Unclassified: 5 file(s) not represented in the graph (top: (none) 3, .example 1, .css 1)
 
@@ -11,7 +11,7 @@
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `8a7dc0fc`
+- Built from commit: `2da2b612`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -305,14 +305,14 @@
 10. `toPosixPath()` - 33 edges
 
 ## Surprising Connections (you probably didn't know these)
+- `Key Changes` --references--> `useSocket()`  [INFERRED]
+  .planning/phases/03-matchmaking-engine-socket-signaling/03-02-SUMMARY.md → src/context/SocketContext.jsx
 - `Accomplishments` --references--> `error()`  [INFERRED]
   .planning/phases/04-webrtc-video-audio-collaborative-code-room/04-03-SUMMARY.md → .agent/get-shit-done/bin/lib/core.cjs
 - `Accomplishments` --references--> `handleUserLeaveRoom()`  [INFERRED]
   .planning/phases/04-webrtc-video-audio-collaborative-code-room/04-01-SUMMARY.md → server/socket/roomSignaling.js
 - `Tasks` --references--> `useAuth()`  [INFERRED]
   .planning/phases/02-user-profiles-developer-preferences/02-02-PLAN.md → src/context/AuthContext.jsx
-- `Key Changes` --references--> `useSocket()`  [INFERRED]
-  .planning/phases/03-matchmaking-engine-socket-signaling/03-02-SUMMARY.md → src/context/SocketContext.jsx
 - `5. Problem #11: Strangers in Your Room (Address Guessing)` --references--> `generateRandomRoomCode()`  [INFERRED]
   README.md → src/utils/roomUtils.js
 
@@ -1278,7 +1278,7 @@ Nodes (3): Objective, Plan 04-03: Curated Problem Bank, Monaco Collaborative Edi
 _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `error()` connect `output` to `gsd2-import.cjs`, `state.cjs`, `output`, `workstream.cjs`, `phase.cjs`, `init.cjs`, `gsd-graphify/SKILL.md`, `profile-output.cjs`, `Plan 01-03: Frontend Integration, State Management & Protected Routing`, `verify.cjs`, `Plan 04-03 Summary: Curated Problem Bank, Monaco Collaborative Editor, In-Browser Runner & Interview Room Integration`, `core.cjs`, `InterviewRoom.jsx`, `extractFrontmatter`, `gsd-tools.cjs`, `intel.cjs`, `profile-pipeline.cjs`, `gap-checker.cjs`?**
-  _High betweenness centrality (0.044) - this node is a cross-community bridge._
+  _High betweenness centrality (0.047) - this node is a cross-community bridge._
 - **Are the 6 inferred relationships involving `error()` (e.g. with `runCommand()` and `core.cjs`) actually correct?**
   _`error()` has 6 INFERRED edges - model-reasoned connections that need verification._
 - **What connects `ADR-0011`, `ADR-0011`, `ADR-0011` to the rest of the system?**

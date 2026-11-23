@@ -1,12 +1,13 @@
 /**
  * Global API Base URL and Endpoint Resolution
- * In dev: falls back to relative "" (proxied via vite.config.js to localhost:5000)
- * In production (e.g. Vercel): uses VITE_BACKEND_URL (e.g. https://peerforge-backend.onrender.com)
+ * Automatically points to Render backend on Vercel deployments, or localhost in dev.
  */
+const isVercel = typeof window !== "undefined" && window.location.hostname.endsWith(".vercel.app");
+
 export const API_BASE_URL = (
   import.meta.env.VITE_BACKEND_URL ||
   import.meta.env.VITE_API_URL ||
-  ""
+  (isVercel ? "https://peerforge-backend.onrender.com" : "")
 ).replace(/\/$/, "");
 
 export const getApiUrl = (endpoint) => {
@@ -15,19 +16,19 @@ export const getApiUrl = (endpoint) => {
 };
 
 /**
- * Safely parse JSON response from backend, preventing HTML 404 SyntaxError in production
+ * Safely parse JSON response from backend
  */
 export const safeJson = async (response, defaultErrorMessage = "Request failed") => {
   const contentType = response.headers.get("content-type") || "";
   if (!contentType.includes("application/json")) {
     const text = await response.text();
-    if (response.status === 404) {
+    if (response.status === 404 || response.status === 405) {
       throw new Error(
-        `Backend API not found (404). Please ensure the backend server is running and VITE_BACKEND_URL is configured in Vercel.`
+        `Backend API unreachable (${response.status}). Please check your backend deployment on Render.`
       );
     }
     throw new Error(
-      `Server returned unexpected response (${response.status}): ${text.slice(0, 100) || defaultErrorMessage}`
+      `Server returned an error (${response.status}): ${text.slice(0, 100) || defaultErrorMessage}`
     );
   }
   return await response.json();

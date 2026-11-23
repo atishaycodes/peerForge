@@ -27,21 +27,25 @@ export const connectDB = async () => {
     console.warn("[Database Warning] Mongoose disconnected from MongoDB.");
   });
 
-  try {
-    const conn = await mongoose.connect(targetUri, {
-      serverSelectionTimeoutMS: 8000,
-      retryWrites: true,
-      w: "majority",
-    });
-    console.log(`[Database] MongoDB Connected: ${conn.connection.host}`);
-    return conn;
-  } catch (error) {
-    console.error(`[Database Error]: Failed to connect to MongoDB at ${targetUri}.`);
-    console.error(`Reason: ${error.message}`);
-    if (process.env.NODE_ENV === "production") {
-      process.exit(1);
+  const attemptConnect = async () => {
+    try {
+      const conn = await mongoose.connect(targetUri, {
+        serverSelectionTimeoutMS: 8000,
+        retryWrites: true,
+        w: "majority",
+      });
+      console.log(`[Database] MongoDB Connected: ${conn.connection.host}`);
+      return conn;
+    } catch (error) {
+      console.error(`[Database Error]: Failed to connect to MongoDB at ${targetUri}.`);
+      console.error(`Reason: ${error.message}`);
+      console.warn("[Database Info] Ensure 0.0.0.0/0 is whitelisted in MongoDB Atlas Network Access.");
+      // Retry in 5 seconds
+      setTimeout(attemptConnect, 5000);
     }
-  }
+  };
+
+  return await attemptConnect();
 };
 
 export default connectDB;
