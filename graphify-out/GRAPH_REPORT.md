@@ -1,7 +1,7 @@
 # Graph Report - peerForge  (2026-11-23)
 
 ## Corpus Check
-- 493 files · ~441,933 words
+- 493 files · ~442,131 words
 - Verdict: corpus is large enough that graph structure adds value.
 - Unclassified: 5 file(s) not represented in the graph (top: (none) 3, .example 1, .css 1)
 
@@ -11,7 +11,7 @@
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `929259ff`
+- Built from commit: `2a86eee3`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -304,16 +304,16 @@
 10. `toPosixPath()` - 33 edges
 
 ## Surprising Connections (you probably didn't know these)
+- `Objective` --references--> `useWebRTC()`  [INFERRED]
+  .planning/phases/04-webrtc-video-audio-collaborative-code-room/04-02-PLAN.md → src/hooks/useWebRTC.js
+- `Accomplishments` --references--> `useWebRTC()`  [INFERRED]
+  .planning/phases/04-webrtc-video-audio-collaborative-code-room/04-02-SUMMARY.md → src/hooks/useWebRTC.js
 - `Accomplishments` --references--> `error()`  [INFERRED]
   .planning/phases/04-webrtc-video-audio-collaborative-code-room/04-03-SUMMARY.md → .agent/get-shit-done/bin/lib/core.cjs
 - `Accomplishments` --references--> `handleUserLeaveRoom()`  [INFERRED]
   .planning/phases/04-webrtc-video-audio-collaborative-code-room/04-01-SUMMARY.md → server/socket/roomSignaling.js
 - `Tasks` --references--> `useAuth()`  [INFERRED]
   .planning/phases/02-user-profiles-developer-preferences/02-02-PLAN.md → src/context/AuthContext.jsx
-- `Key Changes` --references--> `useSocket()`  [INFERRED]
-  .planning/phases/03-matchmaking-engine-socket-signaling/03-02-SUMMARY.md → src/context/SocketContext.jsx
-- `5. Problem #11: Strangers in Your Room (Address Guessing)` --references--> `generateRandomRoomCode()`  [INFERRED]
-  README.md → src/utils/roomUtils.js
 
 ## Import Cycles
 - None detected.
@@ -1269,7 +1269,7 @@ Nodes (3): Accomplishments, Plan 04-02 Summary: WebRTC Audio/Video Hook, Media C
 _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `error()` connect `output` to `gsd2-import.cjs`, `state.cjs`, `output`, `workstream.cjs`, `phase.cjs`, `init.cjs`, `gsd-graphify/SKILL.md`, `profile-output.cjs`, `Plan 01-03: Frontend Integration, State Management & Protected Routing`, `Plan 04-03 Summary: Curated Problem Bank, Monaco Collaborative Editor, In-Browser Runner & Interview Room Integration`, `core.cjs`, `InterviewRoom.jsx`, `uat.cjs`, `gsd-tools.cjs`, `intel.cjs`, `ref_fs`, `profile-pipeline.cjs`, `gap-checker.cjs`?**
-  _High betweenness centrality (0.048) - this node is a cross-community bridge._
+  _High betweenness centrality (0.031) - this node is a cross-community bridge._
 - **Are the 6 inferred relationships involving `error()` (e.g. with `runCommand()` and `core.cjs`) actually correct?**
   _`error()` has 6 INFERRED edges - model-reasoned connections that need verification._
 - **What connects `ADR-0011`, `ADR-0011`, `ADR-0011` to the rest of the system?**

@@ -59,16 +59,27 @@ const VideoStreamTile = ({
     };
   }, [stream]);
 
-  // Dedicated audio element for remote stream to guarantee audio output regardless of video visibility
+  // Dedicated audio element for remote stream with autoplay unlock listener
   useEffect(() => {
     const audioEl = audioRef.current;
     if (!isLocal && audioEl && stream) {
       if (audioEl.srcObject !== stream) {
         audioEl.srcObject = stream;
       }
-      audioEl.play().catch((err) => {
-        console.warn("[VideoStreamTile] Remote audio play notice:", err.message);
-      });
+      
+      const playPromise = audioEl.play();
+      if (playPromise !== undefined) {
+        playPromise.catch((err) => {
+          console.warn("[VideoStreamTile] Remote audio play blocked by policy, will unlock on interaction:", err.message);
+          const unlock = () => {
+            audioEl.play().catch(() => {});
+            window.removeEventListener("click", unlock);
+            window.removeEventListener("keydown", unlock);
+          };
+          window.addEventListener("click", unlock, { once: true });
+          window.addEventListener("keydown", unlock, { once: true });
+        });
+      }
     }
   }, [isLocal, stream]);
 
@@ -87,12 +98,12 @@ const VideoStreamTile = ({
 
   return (
     <div className="relative bg-neutral-950 border border-neutral-800 rounded-lg overflow-hidden flex flex-col items-center justify-center aspect-video w-full group">
-      {/* Active Video Stream Element (kept mounted to preserve WebRTC srcObject binding) */}
+      {/* Active Video Stream Element (always muted so display/hide toggles never kill audio) */}
       <video
         ref={videoRef}
         autoPlay
         playsInline
-        muted={isLocal} // Always mute local video playback to prevent feedback
+        muted={true}
         className={`w-full h-full object-cover ${showVideo ? "block" : "hidden"}`}
       />
 

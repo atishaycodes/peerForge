@@ -46,13 +46,26 @@ export const useWebRTC = (socket, roomId, user) => {
       const pc = new RTCPeerConnection(ICE_SERVERS);
       peerConnectionRef.current = pc;
 
+      // Pre-allocate bidirectional transceivers so audio and video channels are negotiated immediately in both directions
+      try {
+        pc.addTransceiver("audio", { direction: "sendrecv" });
+        pc.addTransceiver("video", { direction: "sendrecv" });
+      } catch (e) {
+        console.warn("[WebRTC] addTransceiver fallback:", e.message);
+      }
+
       // Add local media tracks to peer connection
       if (localStreamRef.current) {
         localStreamRef.current.getTracks().forEach((track) => {
-          try {
-            pc.addTrack(track, localStreamRef.current);
-          } catch (e) {
-            console.warn("[WebRTC] Initial addTrack notice:", e.message);
+          const sender = pc.getSenders().find((s) => s.track?.kind === track.kind);
+          if (sender) {
+            sender.replaceTrack(track).catch(() => {});
+          } else {
+            try {
+              pc.addTrack(track, localStreamRef.current);
+            } catch (e) {
+              console.warn("[WebRTC] Initial addTrack notice:", e.message);
+            }
           }
         });
       }
@@ -122,7 +135,11 @@ export const useWebRTC = (socket, roomId, user) => {
         if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
           stream = await navigator.mediaDevices.getUserMedia({
             video: { width: { ideal: 640 }, height: { ideal: 360 } },
-            audio: true,
+            audio: {
+              echoCancellation: true,
+              noiseSuppression: true,
+              autoGainControl: true,
+            },
           });
           hasRealVideo = true;
         }
@@ -132,7 +149,13 @@ export const useWebRTC = (socket, roomId, user) => {
         // 2. Try microphone only
         try {
           if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-            stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+            stream = await navigator.mediaDevices.getUserMedia({
+              audio: {
+                echoCancellation: true,
+                noiseSuppression: true,
+                autoGainControl: true,
+              },
+            });
           }
         } catch (audioErr) {
           console.warn("[WebRTC] Microphone notice:", audioErr.message);
@@ -282,7 +305,22 @@ export const useWebRTC = (socket, roomId, user) => {
       try {
         const pc = getOrCreatePeerConnection(peer.socketId);
 
-        const offer = await pc.createOffer();
+        // Make sure all local tracks are attached before creating offer
+        if (localStreamRef.current) {
+          localStreamRef.current.getTracks().forEach((track) => {
+            const sender = pc.getSenders().find((s) => s.track?.kind === track.kind);
+            if (sender) {
+              sender.replaceTrack(track).catch(() => {});
+            } else {
+              try { pc.addTrack(track, localStreamRef.current); } catch (e) {}
+            }
+          });
+        }
+
+        const offer = await pc.createOffer({
+          offerToReceiveAudio: true,
+          offerToReceiveVideo: true,
+        });
         await pc.setLocalDescription(offer);
 
         socket.emit("webrtc:offer", {
@@ -315,7 +353,22 @@ export const useWebRTC = (socket, roomId, user) => {
           }
         }
 
-        const answer = await pc.createAnswer();
+        // Attach local tracks before answering so bidirectional audio/video is established
+        if (localStreamRef.current) {
+          localStreamRef.current.getTracks().forEach((track) => {
+            const sender = pc.getSenders().find((s) => s.track?.kind === track.kind);
+            if (sender) {
+              sender.replaceTrack(track).catch(() => {});
+            } else {
+              try { pc.addTrack(track, localStreamRef.current); } catch (e) {}
+            }
+          });
+        }
+
+        const answer = await pc.createAnswer({
+          offerToReceiveAudio: true,
+          offerToReceiveVideo: true,
+        });
         await pc.setLocalDescription(answer);
 
         socket.emit("webrtc:answer", {
