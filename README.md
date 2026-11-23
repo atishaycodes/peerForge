@@ -11,12 +11,19 @@ PeerForge is a high-performance, decentralized peer-to-peer technical mock inter
 - **Production Backend API:** [https://peerforge-backend.onrender.com](https://peerforge-backend.onrender.com)
 - **Target Pull Request:** `Yogeshrathia07/P2P_App` (Branch: `main`)
 
-### Team Members & Contributions
+### Members
+
+| Name | SAP ID | GitHub username |
+| :--- | :--- | :--- |
+| Atishay Gupta | 590025547 | atishaycodes |
+| Ujjwal Tyagi | 590025596 | ujjwal29-iu |
+
+### Member Roles & Detailed Contributions
 
 | Member Name | Role | Responsibilities & What Each Member Implemented |
 | :--- | :--- | :--- |
-| **Atishay** | **Lead System Architect & Full-Stack Developer** | • Designed and engineered the end-to-end **WebRTC P2P communication pipeline** (`RTCPeerConnection`), handling media tracks, transceivers, mute/unmute toggles, camera switches, screen sharing, and ICE gathering.<br>• Implemented **STUN/TURN network traversal** with OpenRelay fallback to ensure connectivity across strict campus and corporate symmetric NATs.<br>• Built the **authoritative Socket.IO signaling server** (`server/socket/roomSignaling.js`) managing room session snapshots, role complement arbitration, and the strict 2-peer capacity gate.<br>• Engineered the **Monaco collaborative code editor** with remote-change latch flags to prevent infinite echo loops, language switching, and the client-side JavaScript execution and test evaluation engine.<br>• Built the **60-minute interview state machine** orchestrating the 30-minute bilateral role swap (Phase 1 &rarr; Phase 2).<br>• Designed the **double-blind symmetric feedback engine** with MongoDB storage, preventing retaliation bias until both peers submit.<br>• Designed and developed the **minimalist monochrome UI design system** and SaaS landing page. |
-| **Ujjwal** | **Frontend & Problem Bank Contributor** | • Curated, structured, and implemented the comprehensive **problem bank dataset** (`src/data/problems.js`) covering Data Structures & Algorithms (DSA), Frontend Web Architecture, and Backend System Design with structured test cases.<br>• Built the **Problem Specification Drawer** (`src/components/room/ProblemDrawer.jsx`), displaying problem descriptions, input/output examples, and edge-case constraints.<br>• Designed and styled difficulty badges, track filter pills, and responsive layout containers for mobile, tablet, and desktop viewports.<br>• Conducted cross-browser layout testing and UI refinement for candidate and interviewer view modes. |
+| **Atishay Gupta**<br>(`atishaycodes`) | **Lead System Architect & Full-Stack Developer** | • Designed and engineered the end-to-end **WebRTC P2P communication pipeline** (`RTCPeerConnection`), handling media tracks, transceivers, mute/unmute toggles, camera switches, screen sharing, and ICE gathering.<br>• Implemented **STUN/TURN network traversal** with OpenRelay fallback to ensure connectivity across strict campus and corporate symmetric NATs.<br>• Built the **authoritative Socket.IO signaling server** (`server/socket/roomSignaling.js`) managing room session snapshots, role complement arbitration, and the strict 2-peer capacity gate.<br>• Engineered the **Monaco collaborative code editor** with remote-change latch flags to prevent infinite echo loops, language switching, and the client-side JavaScript execution and test evaluation engine.<br>• Built the **60-minute interview state machine** orchestrating the 30-minute bilateral role swap (Phase 1 &rarr; Phase 2).<br>• Designed the **double-blind symmetric feedback engine** with MongoDB storage, preventing retaliation bias until both peers submit.<br>• Designed and developed the **minimalist monochrome UI design system** and SaaS landing page. |
+| **Ujjwal Tyagi**<br>(`ujjwal29-iu`) | **Frontend & Problem Bank Contributor** | • Curated, structured, and implemented the comprehensive **problem bank dataset** (`src/data/problems.js`) covering Data Structures & Algorithms (DSA), Frontend Web Architecture, and Backend System Design with structured test cases.<br>• Built the **Problem Specification Drawer** (`src/components/room/ProblemDrawer.jsx`), displaying problem descriptions, input/output examples, and edge-case constraints.<br>• Designed and styled difficulty badges, track filter pills, and responsive layout containers for mobile, tablet, and desktop viewports.<br>• Conducted cross-browser layout testing and UI refinement for candidate and interviewer view modes. |
 
 ---
 
