@@ -16,6 +16,30 @@ export const getApiUrl = (endpoint) => {
 };
 
 /**
+ * Authenticated fetch helper that automatically attaches JWT from localStorage
+ * Works reliably across cross-origin deployments (Vercel -> Render) where cookies may be dropped
+ */
+export const authFetch = (endpoint, options = {}) => {
+  const token = typeof window !== "undefined" ? localStorage.getItem("auth_token") : null;
+  const headers = {
+    ...(options.body && !(options.body instanceof FormData)
+      ? { "Content-Type": "application/json" }
+      : {}),
+    ...(options.headers || {}),
+  };
+
+  if (token) {
+    headers["Authorization"] = `Bearer ${token}`;
+  }
+
+  return fetch(getApiUrl(endpoint), {
+    ...options,
+    headers,
+    credentials: "include",
+  });
+};
+
+/**
  * Safely parse JSON response from backend
  */
 export const safeJson = async (response, defaultErrorMessage = "Request failed") => {

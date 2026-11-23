@@ -2406,9 +2406,9 @@
     "semantic_hash": ""
   },
   "server/controllers/authController.js": {
-    "mtime": 1794140120.128286,
-    "seen": 1794140321.655889,
-    "ast_hash": "027d934a0c70ec791b098d7460dad55d",
+    "mtime": 1795455327.5862067,
+    "seen": 1795455353.8827517,
+    "ast_hash": "6094f6a676a42b6815c46f6fd5a4ecee",
     "semantic_hash": ""
   },
   "server/middleware/auth.js": {
@@ -2442,9 +2442,9 @@
     "semantic_hash": ""
   },
   "src/context/AuthContext.jsx": {
-    "mtime": 1795450331.2596886,
-    "seen": 1795450332.2742622,
-    "ast_hash": "685cd6bc8900b6c67a2e284b31229cac",
+    "mtime": 1795455286.2375047,
+    "seen": 1795455353.8828313,
+    "ast_hash": "a56446ca085e38b6b019e59bad0d5b6d",
     "semantic_hash": ""
   },
   "src/pages/Dashboard.jsx": {
@@ -2652,8 +2652,8 @@
     "semantic_hash": ""
   },
   "src/components/room/VideoTiles.jsx": {
-    "mtime": 1795454967.0023592,
-    "seen": 1795455005.0816443,
+    "mtime": 1795455106.9724336,
+    "seen": 1795455353.882828,
     "ast_hash": "9932a45ea4faeafb1dd33065c72fae31",
     "semantic_hash": ""
   },
@@ -2664,8 +2664,8 @@
     "semantic_hash": ""
   },
   "src/hooks/useWebRTC.js": {
-    "mtime": 1795454903.8103049,
-    "seen": 1795455005.0816538,
+    "mtime": 1795455107.057617,
+    "seen": 1795455353.8828359,
     "ast_hash": "bf6d3253ff4d6ec5fe40454678341c9d",
     "semantic_hash": ""
   },
@@ -2970,9 +2970,9 @@
     "semantic_hash": ""
   },
   "src/utils/api.js": {
-    "mtime": 1795452311.8559277,
-    "seen": 1795453932.1308565,
-    "ast_hash": "cfe7096a14b86ac7304a63ceba4e6ecf",
+    "mtime": 1795455247.6110682,
+    "seen": 1795455353.8828497,
+    "ast_hash": "b0c4b2acaf1ebdb7ca4d401a8ac984d6",
     "semantic_hash": ""
   },
   "vercel.json": {

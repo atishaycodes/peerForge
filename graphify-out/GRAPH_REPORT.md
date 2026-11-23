@@ -1,17 +1,17 @@
 # Graph Report - peerForge  (2026-11-23)
 
 ## Corpus Check
-- 493 files · ~442,131 words
+- 493 files · ~442,319 words
 - Verdict: corpus is large enough that graph structure adds value.
 - Unclassified: 5 file(s) not represented in the graph (top: (none) 3, .example 1, .css 1)
 
 ## Summary
-- 3396 nodes · 5307 edges · 381 communities (235 shown, 146 thin omitted)
+- 3397 nodes · 5309 edges · 381 communities (236 shown, 145 thin omitted)
 - Extraction: 90% EXTRACTED · 10% INFERRED · 0% AMBIGUOUS · INFERRED: 535 edges (avg confidence: 0.86)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `2a86eee3`
+- Built from commit: `bfbe0bda`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -55,7 +55,7 @@
 - Testing Patterns Template
 - Architecture Research Template
 - Phase 01: Backend Foundation & Authentication - Context
-- User.js
+- Phase 02 Plan 01: Profile Backend API & Schema Extension Summary
 - drift.cjs
 - installer-migration-report.cjs
 - 000-first-time-baseline.cjs
@@ -249,26 +249,26 @@
 - server.js
 - Phase 03: Matchmaking Engine & Socket.IO Signaling - Discussion Log
 - Test Results
-- Plan 02-02: Profile Screen, Tag Input & Dashboard Onboarding Banner
+- useAuth
 - Phase 01 Plan 01: Server Scaffolding & MongoDB User Schema Summary
 - ref_fs
 - auth
 - Plan 03-02: Client Socket Integration & Matchmaking Lobby UI
 - Phase 02: User Profiles & Developer Preferences - Discussion Log
-- ErrorBoundary
-- VideoTiles.jsx
+- dependencies
+- Phase 02 Plan 02: Profile Screen, Tag Input & Dashboard Onboarding Banner Summary
 - index.js
 - Phase 4: WebRTC Video/Audio & Collaborative Code Room - Discussion Log
 - Plan 04-01 Summary: WebRTC Signaling Gateway, Room Session State & Dependencies
 - gap-checker.cjs
 - vercel.json
 - react
-- Phase 03 Plan 02: Client Socket Integration & Matchmaking Lobby UI Summary
+- Plan 04-03: Curated Problem Bank, Monaco Collaborative Editor, In-Browser Runner & Interview Room Integration
 - Phase 01 Plan 03: Frontend Integration, State Management & Protected Routing Summary
 - planning-workspace.cjs
 - Plan 01-03: Frontend Integration, State Management & Protected Routing
-- dependencies
-- lucide-react
+- package.json
+- App.jsx
 - Plan 04-03 Summary: Curated Problem Bank, Monaco Collaborative Editor, In-Browser Runner & Interview Room Integration
 - active-workstream-store.cjs
 - routeValidateCommand
@@ -288,7 +288,7 @@
 - Phase 6 Verification: Dashboard, History & Verification
 - Plan 06-02: Split Workspace Dashboard Redesign: History Table, Scorecard Slide-Over & Competency Card
 - Plan 06-02 Summary: Split Workspace Dashboard Redesign
-- Interviews.jsx
+- AuthContext.jsx
 - Plan 04-02 Summary: WebRTC Audio/Video Hook, Media Controls & Quiet Video Tiles
 
 ## God Nodes (most connected - your core abstractions)
@@ -304,21 +304,21 @@
 10. `toPosixPath()` - 33 edges
 
 ## Surprising Connections (you probably didn't know these)
-- `Objective` --references--> `useWebRTC()`  [INFERRED]
-  .planning/phases/04-webrtc-video-audio-collaborative-code-room/04-02-PLAN.md → src/hooks/useWebRTC.js
-- `Accomplishments` --references--> `useWebRTC()`  [INFERRED]
-  .planning/phases/04-webrtc-video-audio-collaborative-code-room/04-02-SUMMARY.md → src/hooks/useWebRTC.js
 - `Accomplishments` --references--> `error()`  [INFERRED]
   .planning/phases/04-webrtc-video-audio-collaborative-code-room/04-03-SUMMARY.md → .agent/get-shit-done/bin/lib/core.cjs
 - `Accomplishments` --references--> `handleUserLeaveRoom()`  [INFERRED]
   .planning/phases/04-webrtc-video-audio-collaborative-code-room/04-01-SUMMARY.md → server/socket/roomSignaling.js
-- `Tasks` --references--> `useAuth()`  [INFERRED]
-  .planning/phases/02-user-profiles-developer-preferences/02-02-PLAN.md → src/context/AuthContext.jsx
+- `5. Problem #11: Strangers in Your Room (Address Guessing)` --references--> `generateRandomRoomCode()`  [INFERRED]
+  README.md → src/utils/roomUtils.js
+- `Accomplishments` --references--> `useWebRTC()`  [INFERRED]
+  .planning/phases/04-webrtc-video-audio-collaborative-code-room/04-02-SUMMARY.md → src/hooks/useWebRTC.js
+- `5. Symmetric Blind Reveal Protection` --references--> `getSessionFeedback()`  [INFERRED]
+  .planning/phases/05-structured-feedback-evaluation-engine/05-UAT.md → server/controllers/feedbackController.js
 
 ## Import Cycles
 - None detected.
 
-## Communities (381 total, 146 thin omitted)
+## Communities (381 total, 145 thin omitted)
 
 ### Community 0 - "shell-command-projection.cjs"
 Cohesion: 0.06
@@ -361,8 +361,8 @@ Cohesion: 0.09
 Nodes (45): actionSource(), path, recordSource(), requireActionEvidence(), requireNonEmptyString(), requireStringArray(), validateInstallerMigrationActions(), validateInstallerMigrationRecord() (+37 more)
 
 ### Community 10 - "Plan 05-02: Interactive Rubric Form, Live Blind Waiting Room & Unlocked Scorecard UI"
-Cohesion: 0.40
-Nodes (4): Objective, Plan 05-02: Interactive Rubric Form, Live Blind Waiting Room & Unlocked Scorecard UI, Tasks, Verification Criteria
+Cohesion: 0.25
+Nodes (6): Objective, Plan 05-02: Interactive Rubric Form, Live Blind Waiting Room & Unlocked Scorecard UI, Tasks, Verification Criteria, RubricSlider(), SCALE_DESCRIPTORS
 
 ### Community 11 - "Research Template"
 Cohesion: 0.04
@@ -476,9 +476,9 @@ Nodes (16): Anti-Pattern 1: [Name], Anti-Pattern 2: [Name], Anti-Patterns, Archi
 Cohesion: 0.12
 Nodes (16): Canonical References, Deferred Ideas, Established Patterns, Existing Code Insights, Existing Codebase References, Implementation Decisions, JWT & Session Storage Strategy, Phase 01: Backend Foundation & Authentication - Context (+8 more)
 
-### Community 39 - "User.js"
-Cohesion: 0.12
-Nodes (16): Deviations from Plan, Key Changes, Next Steps, Phase 02 Plan 01: Profile Backend API & Schema Extension Summary, Verification, Deviations from Plan, Key Changes, Next Steps (+8 more)
+### Community 39 - "Phase 02 Plan 01: Profile Backend API & Schema Extension Summary"
+Cohesion: 0.40
+Nodes (4): Deviations from Plan, Next Steps, Phase 02 Plan 01: Profile Backend API & Schema Extension Summary, Verification
 
 ### Community 40 - "drift.cjs"
 Cohesion: 0.18
@@ -513,8 +513,8 @@ Cohesion: 0.12
 Nodes (14): cacheDir, cacheFile, child, cwd, fs, globalConfigDir, globalVersionFile, homeDir (+6 more)
 
 ### Community 48 - "InterviewRoom.jsx"
-Cohesion: 0.15
-Nodes (17): Objective, Plan 04-03: Curated Problem Bank, Monaco Collaborative Editor, In-Browser Runner & Interview Room Integration, Tasks, Verification Criteria, CodeEditor(), SUPPORTED_LANGUAGES, ConsoleDrawer(), InterviewTimer() (+9 more)
+Cohesion: 0.12
+Nodes (22): Objective, Plan 04-02: WebRTC Audio/Video Hook, Media Controls & Quiet Video Tiles, Tasks, Verification Criteria, Tasks, lucide-react, CodeEditor(), SUPPORTED_LANGUAGES (+14 more)
 
 ### Community 49 - "Common Bug Patterns"
 Cohesion: 0.13
@@ -1094,7 +1094,7 @@ Nodes (13): 1. Workspace Layout & Video Tiles, 2. Collaborative Code Editor Expe
 
 ### Community 337 - "server.js"
 Cohesion: 0.12
-Nodes (12): cookie-parser@^1.4.7, cors@^2.8.6, dotenv@^18.0.9, express@^5.3.0, cookie-parser, cors, dotenv, express (+4 more)
+Nodes (12): cookie-parser@^1.4.7, cors@^2.8.6, dotenv@^18.0.9, socket.io@^4.8.4, cookie-parser, cors, dotenv, socket.io (+4 more)
 
 ### Community 338 - "Phase 03: Matchmaking Engine & Socket.IO Signaling - Discussion Log"
 Cohesion: 0.25
@@ -1104,9 +1104,9 @@ Nodes (7): Deferred Ideas, Lobby UI Placement & Real-Time Presence, Match Confir
 Cohesion: 0.20
 Nodes (9): 1. Cold Start Smoke Test & API Endpoints, 2. Aggregated Skill Ratings & Competency Progress Card (DASH-02), 3. Past Sessions History Table (DASH-01), 4. Post-Interview Scorecard Slide-Over Sheet Drawer, 5. Upcoming Scheduled Sessions List (DASH-03), 6. Production Build Integrity, Phase 6: Dashboard, History & Verification - UAT, Summary (+1 more)
 
-### Community 340 - "Plan 02-02: Profile Screen, Tag Input & Dashboard Onboarding Banner"
-Cohesion: 0.33
-Nodes (5): Must Haves (Goal-Backward Verification), Objective, Plan 02-02: Profile Screen, Tag Input & Dashboard Onboarding Banner, Tasks, Verification Criteria
+### Community 340 - "useAuth"
+Cohesion: 0.19
+Nodes (10): Must Haves (Goal-Backward Verification), Objective, Plan 02-02: Profile Screen, Tag Input & Dashboard Onboarding Banner, Tasks, Verification Criteria, SettingsModal(), Sidebar(), LoginForm() (+2 more)
 
 ### Community 341 - "Phase 01 Plan 01: Server Scaffolding & MongoDB User Schema Summary"
 Cohesion: 0.33
@@ -1117,8 +1117,8 @@ Cohesion: 0.21
 Nodes (10): fs, isNestedPlanFile(), isNestedSummaryFile(), isRootPlanFile(), isRootSummaryFile(), path, scanPhasePlans(), cmdTemplateSelect() (+2 more)
 
 ### Community 343 - "auth"
-Cohesion: 0.13
-Nodes (17): Must Haves (Goal-Backward Verification), Objective, Plan 02-01: Profile Backend API & Schema Extension, Tasks, Verification Criteria, Objective, Plan 06-01: Session History & Analytics Backend REST Endpoints, Tasks (+9 more)
+Cohesion: 0.09
+Nodes (26): Must Haves (Goal-Backward Verification), Objective, Plan 02-01: Profile Backend API & Schema Extension, Tasks, Verification Criteria, Key Changes, Key Changes, Objective (+18 more)
 
 ### Community 344 - "Plan 03-02: Client Socket Integration & Matchmaking Lobby UI"
 Cohesion: 0.33
@@ -1128,9 +1128,13 @@ Nodes (5): Must Haves (Goal-Backward Verification), Objective, Plan 03-02: Clien
 Cohesion: 0.29
 Nodes (6): Availability & Scheduling Structure, Deferred Ideas, Phase 02: User Profiles & Developer Preferences - Discussion Log, Profile Onboarding Flow, Profile Screen Layout & Presentation, Skills & Target Roles Selection
 
-### Community 347 - "VideoTiles.jsx"
-Cohesion: 0.27
-Nodes (7): Objective, Plan 04-02: WebRTC Audio/Video Hook, Media Controls & Quiet Video Tiles, Tasks, Verification Criteria, MediaControls(), VideoStreamTile(), VideoTiles()
+### Community 346 - "dependencies"
+Cohesion: 0.09
+Nodes (26): dependencies, bcryptjs@^3.0.3, class-variance-authority@^0.7.1, clsx@^2.1.1, express@^5.3.0, jsonwebtoken@^9.0.3, lucide-react@^1.68.0, @monaco-editor/react@^4.7.0 (+18 more)
+
+### Community 347 - "Phase 02 Plan 02: Profile Screen, Tag Input & Dashboard Onboarding Banner Summary"
+Cohesion: 0.40
+Nodes (4): Deviations from Plan, Next Steps, Phase 02 Plan 02: Profile Screen, Tag Input & Dashboard Onboarding Banner Summary, Verification
 
 ### Community 348 - "index.js"
 Cohesion: 0.19
@@ -1149,12 +1153,12 @@ Cohesion: 0.27
 Nodes (11): parseDecisions(), cmdGapAnalysis(), detectCoverage(), formatGapTable(), fs, naturalKey(), parseRequirements(), path (+3 more)
 
 ### Community 353 - "react"
-Cohesion: 0.10
-Nodes (15): lucide-react, react, ProfileCompletionCard(), FeedbackFormModal(), RubricSlider(), SCALE_DESCRIPTORS, COMPETENCY_LABELS, UnlockedScorecard() (+7 more)
+Cohesion: 0.15
+Nodes (11): react, DashboardLayout(), Topbar(), AvailabilityToggle(), PREFERENCE_WINDOWS, POPULAR_SKILLS, SkillTagInput(), COMMON_TIMEZONES (+3 more)
 
-### Community 354 - "Phase 03 Plan 02: Client Socket Integration & Matchmaking Lobby UI Summary"
-Cohesion: 0.33
-Nodes (5): Deviations from Plan, Key Changes, Next Steps, Phase 03 Plan 02: Client Socket Integration & Matchmaking Lobby UI Summary, Verification
+### Community 354 - "Plan 04-03: Curated Problem Bank, Monaco Collaborative Editor, In-Browser Runner & Interview Room Integration"
+Cohesion: 0.50
+Nodes (3): Objective, Plan 04-03: Curated Problem Bank, Monaco Collaborative Editor, In-Browser Runner & Interview Room Integration, Verification Criteria
 
 ### Community 355 - "Phase 01 Plan 03: Frontend Integration, State Management & Protected Routing Summary"
 Cohesion: 0.33
@@ -1168,13 +1172,13 @@ Nodes (15): createSessionScopedPointerAdapter(), createSharedPointerAdapter(), c
 Cohesion: 0.33
 Nodes (5): Must Haves (Goal-Backward Verification), Objective, Plan 01-03: Frontend Integration, State Management & Protected Routing, Tasks, Verification Criteria
 
-### Community 358 - "dependencies"
-Cohesion: 0.05
-Nodes (52): bugs, url, dependencies, bcryptjs@^3.0.3, class-variance-authority@^0.7.1, clsx@^2.1.1, jsonwebtoken@^9.0.3, lucide-react@^1.68.0 (+44 more)
+### Community 358 - "package.json"
+Cohesion: 0.09
+Nodes (25): bugs, url, tailwindcss-animate@^1.0.7, description, devDependencies, autoprefixer@^10.6.2, concurrently@^10.0.6, nodemon@^3.1.14 (+17 more)
 
-### Community 359 - "lucide-react"
-Cohesion: 0.18
-Nodes (15): react-router-dom, App(), LoginPage(), AsciiArt(), SettingsModal(), Sidebar(), LoginForm(), ProtectedRoute() (+7 more)
+### Community 359 - "App.jsx"
+Cohesion: 0.19
+Nodes (6): App(), LoginPage(), AsciiArt(), ErrorBoundary, ProtectedRoute(), SocketProvider()
 
 ### Community 360 - "Plan 04-03 Summary: Curated Problem Bank, Monaco Collaborative Editor, In-Browser Runner & Interview Room Integration"
 Cohesion: 0.50
@@ -1225,8 +1229,8 @@ Cohesion: 0.18
 Nodes (10): 1. Cold Start Smoke Test, 2. Post-Interview Feedback Modal Trigger, 3. 4-Dimension Rubric Evaluation Form, 4. Structured Qualitative Feedback with Character Counters, 5. Symmetric Blind Reveal Protection, 6. Unlocked Scorecard Display, 7. Production Build Integrity, Phase 5: Structured Feedback & Evaluation Engine - UAT (+2 more)
 
 ### Community 374 - "Dashboard.jsx"
-Cohesion: 0.25
-Nodes (14): DIFFICULTIES, MatchmakingQuickCard(), TRACKS, MatchAcceptModal(), SocketContext, useSocket(), Dashboard(), DIFFICULTIES (+6 more)
+Cohesion: 0.14
+Nodes (21): Deviations from Plan, Key Changes, Next Steps, Phase 03 Plan 02: Client Socket Integration & Matchmaking Lobby UI Summary, Verification, react-router-dom, DIFFICULTIES, MatchmakingQuickCard() (+13 more)
 
 ### Community 375 - "gsd-check-update-worker.js"
 Cohesion: 0.13
@@ -1252,9 +1256,9 @@ Nodes (4): Objective, Plan 06-02: Split Workspace Dashboard Redesign: History Ta
 Cohesion: 0.50
 Nodes (3): Accomplishments, Plan 06-02 Summary: Split Workspace Dashboard Redesign, Verification
 
-### Community 381 - "Interviews.jsx"
-Cohesion: 0.26
-Nodes (7): SessionDetailDrawer(), DashboardLayout(), Topbar(), Interviews(), API_BASE_URL, getApiUrl(), safeJson()
+### Community 381 - "AuthContext.jsx"
+Cohesion: 0.18
+Nodes (12): SessionDetailDrawer(), FeedbackFormModal(), COMPETENCY_LABELS, UnlockedScorecard(), WaitingBlindRoom(), AuthContext, AuthProvider(), Interviews() (+4 more)
 
 ### Community 382 - "Plan 04-02 Summary: WebRTC Audio/Video Hook, Media Controls & Quiet Video Tiles"
 Cohesion: 0.50
@@ -1263,13 +1267,13 @@ Nodes (3): Accomplishments, Plan 04-02 Summary: WebRTC Audio/Video Hook, Media C
 ## Knowledge Gaps
 - **3 isolated node(s):** `ADR-0011`, `ADR-0011`, `ADR-0011`
   These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 2085 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
-- **146 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **145 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `error()` connect `output` to `gsd2-import.cjs`, `state.cjs`, `output`, `workstream.cjs`, `phase.cjs`, `init.cjs`, `gsd-graphify/SKILL.md`, `profile-output.cjs`, `Plan 01-03: Frontend Integration, State Management & Protected Routing`, `Plan 04-03 Summary: Curated Problem Bank, Monaco Collaborative Editor, In-Browser Runner & Interview Room Integration`, `core.cjs`, `InterviewRoom.jsx`, `uat.cjs`, `gsd-tools.cjs`, `intel.cjs`, `ref_fs`, `profile-pipeline.cjs`, `gap-checker.cjs`?**
-  _High betweenness centrality (0.031) - this node is a cross-community bridge._
+  _High betweenness centrality (0.040) - this node is a cross-community bridge._
 - **Are the 6 inferred relationships involving `error()` (e.g. with `runCommand()` and `core.cjs`) actually correct?**
   _`error()` has 6 INFERRED edges - model-reasoned connections that need verification._
 - **What connects `ADR-0011`, `ADR-0011`, `ADR-0011` to the rest of the system?**

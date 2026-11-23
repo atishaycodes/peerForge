@@ -1,38 +1,55 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from "react";
-import { getApiUrl, safeJson } from "../utils/api";
+import { authFetch, safeJson } from "../utils/api";
 
 const AuthContext = createContext(null);
 
 export function AuthProvider({ children }) {
-  const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
+  // Pre-hydrate user immediately from localStorage to eliminate flicker / refresh redirect
+  const [user, setUser] = useState(() => {
+    try {
+      const savedUser = localStorage.getItem("auth_user");
+      return savedUser ? JSON.parse(savedUser) : null;
+    } catch {
+      return null;
+    }
+  });
+
+  // If we already have token and user in localStorage, don't block the screen with full-page loader
+  const [loading, setLoading] = useState(() => {
+    return Boolean(localStorage.getItem("auth_token") && !localStorage.getItem("auth_user"));
+  });
   const [error, setError] = useState(null);
 
-  // Check current session from backend cookie
+  // Check current session from backend using Bearer token + cookie
   const checkAuth = useCallback(async () => {
+    const token = localStorage.getItem("auth_token");
+    if (!token) {
+      setUser(null);
+      setLoading(false);
+      return;
+    }
+
     try {
-      setLoading(true);
-      const res = await fetch(getApiUrl("/api/auth/me"), {
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include",
-      });
+      const res = await authFetch("/api/auth/me");
 
       if (res.ok) {
         const data = await safeJson(res);
         if (data.token) {
           localStorage.setItem("auth_token", data.token);
         }
-        setUser(data.user);
-      } else {
+        if (data.user) {
+          localStorage.setItem("auth_user", JSON.stringify(data.user));
+          setUser(data.user);
+        }
+      } else if (res.status === 401) {
+        // Only clear credentials if token was explicitly invalid/expired
         localStorage.removeItem("auth_token");
+        localStorage.removeItem("auth_user");
         setUser(null);
       }
     } catch (err) {
-      console.error("[Auth] Session check failed:", err);
-      localStorage.removeItem("auth_token");
-      setUser(null);
+      console.warn("[Auth] Session validation notice:", err.message);
+      // On temporary network hiccup, do NOT immediately log out the user if they have cached credentials
     } finally {
       setLoading(false);
     }
@@ -46,10 +63,8 @@ export function AuthProvider({ children }) {
   const login = async ({ email, password }) => {
     try {
       setError(null);
-      const res = await fetch(getApiUrl("/api/auth/login"), {
+      const res = await authFetch("/api/auth/login", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
         body: JSON.stringify({ email, password }),
       });
 
@@ -61,7 +76,10 @@ export function AuthProvider({ children }) {
       if (data.token) {
         localStorage.setItem("auth_token", data.token);
       }
-      setUser(data.user);
+      if (data.user) {
+        localStorage.setItem("auth_user", JSON.stringify(data.user));
+        setUser(data.user);
+      }
       return { success: true, user: data.user };
     } catch (err) {
       setError(err.message);
@@ -73,10 +91,8 @@ export function AuthProvider({ children }) {
   const register = async ({ name, email, password }) => {
     try {
       setError(null);
-      const res = await fetch(getApiUrl("/api/auth/register"), {
+      const res = await authFetch("/api/auth/register", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
         body: JSON.stringify({ name, email, password }),
       });
 
@@ -88,7 +104,10 @@ export function AuthProvider({ children }) {
       if (data.token) {
         localStorage.setItem("auth_token", data.token);
       }
-      setUser(data.user);
+      if (data.user) {
+        localStorage.setItem("auth_user", JSON.stringify(data.user));
+        setUser(data.user);
+      }
       return { success: true, user: data.user };
     } catch (err) {
       setError(err.message);
@@ -99,15 +118,14 @@ export function AuthProvider({ children }) {
   // Logout action
   const logout = async () => {
     try {
-      await fetch(getApiUrl("/api/auth/logout"), {
+      await authFetch("/api/auth/logout", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
       });
     } catch (err) {
       console.error("[Auth] Logout failed:", err);
     } finally {
       localStorage.removeItem("auth_token");
+      localStorage.removeItem("auth_user");
       setUser(null);
       setError(null);
     }
@@ -117,10 +135,8 @@ export function AuthProvider({ children }) {
   const updateProfile = async (profileData) => {
     try {
       setError(null);
-      const res = await fetch(getApiUrl("/api/profile"), {
+      const res = await authFetch("/api/profile", {
         method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
         body: JSON.stringify(profileData),
       });
 
@@ -129,7 +145,10 @@ export function AuthProvider({ children }) {
         throw new Error(data.message || "Failed to update profile");
       }
 
-      setUser(data.user);
+      if (data.user) {
+        localStorage.setItem("auth_user", JSON.stringify(data.user));
+        setUser(data.user);
+      }
       return { success: true, user: data.user };
     } catch (err) {
       setError(err.message);
