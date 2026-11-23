@@ -30,16 +30,17 @@ export const connectDB = async () => {
   const attemptConnect = async () => {
     try {
       const conn = await mongoose.connect(targetUri, {
-        serverSelectionTimeoutMS: 8000,
+        serverSelectionTimeoutMS: 10000,
         retryWrites: true,
         w: "majority",
+        family: 4, // Force IPv4 on Linux containers (Render/AWS) to avoid IPv6 TLS alert 80
       });
       console.log(`[Database] MongoDB Connected: ${conn.connection.host}`);
       return conn;
     } catch (error) {
       console.error(`[Database Error]: Failed to connect to MongoDB at ${targetUri}.`);
       console.error(`Reason: ${error.message}`);
-      console.warn("[Database Info] Ensure 0.0.0.0/0 is whitelisted in MongoDB Atlas Network Access.");
+      console.warn("[Database Info] Check that 0.0.0.0/0 is ACTIVE in MongoDB Atlas Network Access.");
       // Retry in 5 seconds
       setTimeout(attemptConnect, 5000);
     }
