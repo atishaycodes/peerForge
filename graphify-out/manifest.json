@@ -528,9 +528,9 @@
     "semantic_hash": ""
   },
   "src/App.jsx": {
-    "mtime": 1794134837.6215632,
-    "seen": 1794134949.352224,
-    "ast_hash": "bbb26341fb0f03ae4ee8821c2874ca1b",
+    "mtime": 1795439381.725179,
+    "seen": 1795439699.0083828,
+    "ast_hash": "464184ce37836cb9a17742220c69718f",
     "semantic_hash": ""
   },
   "src/components/AsciiArt.jsx": {
@@ -2652,8 +2652,8 @@
     "semantic_hash": ""
   },
   "src/components/room/VideoTiles.jsx": {
-    "mtime": 1795347652.3332884,
-    "seen": 1795349500.7957845,
+    "mtime": 1795349741.5238936,
+    "seen": 1795350887.818232,
     "ast_hash": "f095bc314bb4ed919a3d2b331e834814",
     "semantic_hash": ""
   },
@@ -2664,8 +2664,8 @@
     "semantic_hash": ""
   },
   "src/hooks/useWebRTC.js": {
-    "mtime": 1795349448.3906355,
-    "seen": 1795349500.7958307,
+    "mtime": 1795349741.6923497,
+    "seen": 1795350887.8182561,
     "ast_hash": "b7ba220e2ccceb9f84bd38c3158208bc",
     "semantic_hash": ""
   },
@@ -2961,6 +2961,12 @@
     "mtime": 1794140377.587715,
     "seen": 1794141242.6834886,
     "ast_hash": "0d7a6be5c4237f2af0a767473115c036",
+    "semantic_hash": ""
+  },
+  "src/pages/Landing.jsx": {
+    "mtime": 1795439643.0706458,
+    "seen": 1795439699.0085924,
+    "ast_hash": "33fd148cdc65114623c413b9e412efaf",
     "semantic_hash": ""
   },
   "package-lock.json": {

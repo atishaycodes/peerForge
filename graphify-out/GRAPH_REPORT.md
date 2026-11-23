@@ -1,17 +1,17 @@
 # Graph Report - peerForge  (2026-11-22)
 
 ## Corpus Check
-- 488 files · ~436,435 words
+- 489 files · ~439,267 words
 - Verdict: corpus is large enough that graph structure adds value.
 - Unclassified: 5 file(s) not represented in the graph (top: (none) 3, .example 1, .css 1)
 
 ## Summary
-- 3359 nodes · 5251 edges · 382 communities (238 shown, 144 thin omitted)
+- 3361 nodes · 5259 edges · 382 communities (238 shown, 144 thin omitted)
 - Extraction: 90% EXTRACTED · 10% INFERRED · 0% AMBIGUOUS · INFERRED: 534 edges (avg confidence: 0.86)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `db43e085`
+- Built from commit: `7e53d45a`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -28,15 +28,15 @@
 - installer-migrations.cjs
 - output
 - Research Template
-- package.json
+- scripts
 - plan-phase.md
 - Core Workflow
 - Dimensions
 - core.cjs
 - AI-SPEC — Phase {N}: {phase_name}
-- verify.cjs
+- ref_os
 - audit-milestone.md
-- scanPhasePlans
+- gsd-prompt-guard.js
 - Verification Patterns
 - Forensics Workflow
 - AI Evaluation Reference
@@ -55,7 +55,7 @@
 - Testing Patterns Template
 - Architecture Research Template
 - Phase 01: Backend Foundation & Authentication - Context
-- User.js
+- Phase 02 Plan 01: Profile Backend API & Schema Extension Summary
 - drift.cjs
 - installer-migration-report.cjs
 - 000-first-time-baseline.cjs
@@ -67,13 +67,13 @@
 - InterviewRoom.jsx
 - Common Bug Patterns
 - Model Profiles
-- uat.cjs
+- ref_path
 - worktree-safety.cjs
 - Phase Prompt Template
 - validate-phase.md
 - gsd-statusline.js
 - Step 2: Execute Operation
-- App.jsx
+- Phase 02 Plan 02: Profile Screen, Tag Input & Dashboard Onboarding Banner Summary
 - gsd-update-banner.js
 - Section Templates
 - Milestone: v{version} — {name}
@@ -265,7 +265,7 @@
 - react
 - Phase 03 Plan 02: Client Socket Integration & Matchmaking Lobby UI Summary
 - Phase 01 Plan 03: Frontend Integration, State Management & Protected Routing Summary
-- model-catalog.cjs
+- gsd-read-guard.js
 - Plan 01-03: Frontend Integration, State Management & Protected Routing
 - dependencies
 - lucide-react
@@ -282,7 +282,7 @@
 - Plan 05-02 Summary: Interactive Rubric Form, Live Blind Waiting Room & Unlocked Scorecard UI
 - Test Results
 - Dashboard.jsx
-- ref_path
+- gsd-check-update-worker.js
 - Areas Discussed
 - Phase 03 Plan 01: Socket.IO Server Infrastructure & In-Memory Matchmaking Queue Summary
 - Phase 6 Verification: Dashboard, History & Verification
@@ -300,21 +300,21 @@
 5. `planningDir()` - 58 edges
 6. `platformReadSync()` - 57 edges
 7. `planningPaths()` - 49 edges
-8. `react` - 40 edges
+8. `react` - 41 edges
 9. `extractFrontmatter()` - 36 edges
 10. `toPosixPath()` - 33 edges
 
 ## Surprising Connections (you probably didn't know these)
-- `Objective` --references--> `useWebRTC()`  [INFERRED]
-  .planning/phases/04-webrtc-video-audio-collaborative-code-room/04-02-PLAN.md → src/hooks/useWebRTC.js
-- `Accomplishments` --references--> `useWebRTC()`  [INFERRED]
-  .planning/phases/04-webrtc-video-audio-collaborative-code-room/04-02-SUMMARY.md → src/hooks/useWebRTC.js
 - `Accomplishments` --references--> `error()`  [INFERRED]
   .planning/phases/04-webrtc-video-audio-collaborative-code-room/04-03-SUMMARY.md → .agent/get-shit-done/bin/lib/core.cjs
 - `Accomplishments` --references--> `handleUserLeaveRoom()`  [INFERRED]
   .planning/phases/04-webrtc-video-audio-collaborative-code-room/04-01-SUMMARY.md → server/socket/roomSignaling.js
 - `Tasks` --references--> `useAuth()`  [INFERRED]
   .planning/phases/02-user-profiles-developer-preferences/02-02-PLAN.md → src/context/AuthContext.jsx
+- `Key Changes` --references--> `useSocket()`  [INFERRED]
+  .planning/phases/03-matchmaking-engine-socket-signaling/03-02-SUMMARY.md → src/context/SocketContext.jsx
+- `Objective` --references--> `useWebRTC()`  [INFERRED]
+  .planning/phases/04-webrtc-video-audio-collaborative-code-room/04-02-PLAN.md → src/hooks/useWebRTC.js
 
 ## Import Cycles
 - None detected.
@@ -326,16 +326,16 @@ Cohesion: 0.06
 Nodes (54): CHECK_REASON, checkLatestVersion(), main(), applyBudget(), buildAdjacencyMap(), checkGraphifyInstalled(), checkGraphifyVersion(), countCommitsBetween() (+46 more)
 
 ### Community 1 - "gsd2-import.cjs"
-Cohesion: 0.08
-Nodes (39): candidateNames(), findInNodeModules(), findInPath(), fs, isExecutableFile(), path, requireFallowBinary(), resolveFallowBinary() (+31 more)
+Cohesion: 0.06
+Nodes (54): candidateNames(), findInNodeModules(), findInPath(), fs, isExecutableFile(), path, requireFallowBinary(), resolveFallowBinary() (+46 more)
 
 ### Community 2 - "state.cjs"
-Cohesion: 0.07
-Nodes (59): getMilestonePhaseFilter(), isDirInMilestone(), cmdFrontmatterGet(), cmdFrontmatterMerge(), cmdFrontmatterSet(), cmdFrontmatterValidate(), extractFrontmatter(), FRONTMATTER_SCHEMAS (+51 more)
+Cohesion: 0.08
+Nodes (51): extractOneLinerFromBody(), getMilestonePhaseFilter(), isDirInMilestone(), cmdMilestoneComplete(), cmdPhasesClear(), fs, path, fs (+43 more)
 
 ### Community 3 - "output"
-Cohesion: 0.07
-Nodes (52): cmdScaffold(), cmdTodoComplete(), buildNewProjectConfig(), cmdConfigEnsureSection(), cmdConfigGet(), cmdConfigNewProject(), cmdConfigPath(), cmdConfigSet() (+44 more)
+Cohesion: 0.08
+Nodes (46): cmdScaffold(), cmdTodoComplete(), buildNewProjectConfig(), cmdConfigEnsureSection(), cmdConfigGet(), cmdConfigNewProject(), cmdConfigPath(), cmdConfigSet() (+38 more)
 
 ### Community 4 - "install-profiles.cjs"
 Cohesion: 0.06
@@ -343,11 +343,11 @@ Nodes (49): allClusteredSkills(), ADR-0011, CLUSTERS, ADR-0011, CLEANUP_SIGNALS,
 
 ### Community 5 - "phase.cjs"
 Cohesion: 0.11
-Nodes (38): escapeRegex(), extractCurrentMilestone(), normalizePhaseName(), phaseMarkdownRegexSource(), phaseMarkdownRegexSourceExact(), phaseTokenMatches(), readSubdirectories(), replaceInCurrentMilestone() (+30 more)
+Nodes (44): cmdStats(), comparePhaseNum(), escapeRegex(), extractCurrentMilestone(), getArchivedPhaseDirs(), normalizePhaseName(), phaseMarkdownRegexSource(), phaseMarkdownRegexSourceExact() (+36 more)
 
 ### Community 6 - "init.cjs"
-Cohesion: 0.13
-Nodes (51): cmdListTodos(), cmdTodoMatchPhase(), checkAgentsInstalled(), findPhaseInternal(), getMilestoneInfo(), getRoadmapPhaseInternal(), gitWorktreeInfoInternal(), loadConfig() (+43 more)
+Cohesion: 0.12
+Nodes (55): cmdListTodos(), cmdTodoMatchPhase(), checkAgentsInstalled(), findPhaseInternal(), generateSlugInternal(), getAgentsDir(), getMilestoneInfo(), getRoadmapPhaseInternal() (+47 more)
 
 ### Community 7 - "intel.cjs"
 Cohesion: 0.17
@@ -362,16 +362,16 @@ Cohesion: 0.09
 Nodes (45): actionSource(), path, recordSource(), requireActionEvidence(), requireNonEmptyString(), requireStringArray(), validateInstallerMigrationActions(), validateInstallerMigrationRecord() (+37 more)
 
 ### Community 10 - "output"
-Cohesion: 0.13
-Nodes (30): cmdCheckCommit(), cmdCommit(), cmdCommitToSubrepo(), cmdCurrentTimestamp(), cmdGenerateSlug(), cmdHistoryDigest(), cmdProgressRender(), cmdResolveModel() (+22 more)
+Cohesion: 0.09
+Nodes (40): CANONICAL_EXACT, CANONICAL_PATTERNS, isCanonicalPlanningFile(), cmdCheckCommit(), cmdCommit(), cmdCommitToSubrepo(), cmdCurrentTimestamp(), cmdGenerateSlug() (+32 more)
 
 ### Community 11 - "Research Template"
 Cohesion: 0.04
 Nodes (44): Anti-Patterns to Avoid, Anti-Patterns to Avoid, Architecture Patterns, Architecture Patterns, Basic R3F + Rapier Setup, Code Examples, Code Examples, [Common Operation 1] (+36 more)
 
-### Community 12 - "package.json"
-Cohesion: 0.08
-Nodes (29): bugs, url, description, devDependencies, autoprefixer@^10.6.2, concurrently@^10.0.6, nodemon@^3.1.14, postcss@^8.5.32 (+21 more)
+### Community 12 - "scripts"
+Cohesion: 0.33
+Nodes (6): scripts, build, client, dev, preview, server
 
 ### Community 13 - "plan-phase.md"
 Cohesion: 0.05
@@ -387,23 +387,23 @@ Nodes (33): 1. Communication Style, 2. Decision Speed, 3. Explanation Depth, 4. 
 
 ### Community 16 - "core.cjs"
 Cohesion: 0.07
-Nodes (25): _deepMergeConfig(), detectSubRepos(), extractCanonicalPlanId(), extractPhaseToken(), filterPlanFiles(), filterSummaryFiles(), fs, getAgentsDir() (+17 more)
+Nodes (24): _deepMergeConfig(), detectSubRepos(), extractCanonicalPlanId(), extractPhaseToken(), filterPlanFiles(), filterSummaryFiles(), fs, getPhaseFileStats() (+16 more)
 
 ### Community 17 - "AI-SPEC — Phase {N}: {phase_name}"
 Cohesion: 0.06
 Nodes (31): 1. System Classification, 1b. Domain Context, 2. Framework Decision, 3. Framework Quick Reference, 4. Implementation Guidance, 4b. AI Systems Best Practices, 5. Evaluation Strategy, 6. Guardrails (+23 more)
 
-### Community 18 - "verify.cjs"
-Cohesion: 0.13
-Nodes (19): CANONICAL_EXACT, CANONICAL_PATTERNS, isCanonicalPlanningFile(), CONFIG_DEFAULTS, parseMustHavesBlock(), cmdValidateConsistency(), cmdValidateHealth(), cmdVerifyArtifacts() (+11 more)
+### Community 18 - "ref_os"
+Cohesion: 0.30
+Nodes (10): buildAgentSkillsBlock(), buildSkillManifest(), expandTilde(), getGlobalConfigDir(), getGlobalSkillDir(), getGlobalSkillDisplayPath(), getGlobalSkillsBase(), os (+2 more)
 
 ### Community 19 - "audit-milestone.md"
 Cohesion: 0.07
 Nodes (26): 0. Initialize Milestone Context, 1. Determine Milestone Scope, 2. Read All Phase Verifications, 3. Spawn Integration Checker, 4. Collect Results, 5.5. Nyquist Compliance Discovery, 5. Check Requirements Coverage (3-Source Cross-Reference), 5a. Parse REQUIREMENTS.md Traceability Table (+18 more)
 
-### Community 20 - "scanPhasePlans"
-Cohesion: 0.33
-Nodes (8): fs, isNestedPlanFile(), isNestedSummaryFile(), isRootPlanFile(), isRootSummaryFile(), path, scanPhasePlans(), cmdStateValidate()
+### Community 20 - "gsd-prompt-guard.js"
+Cohesion: 0.40
+Nodes (4): fs, INJECTION_PATTERNS, path, stdinTimeout
 
 ### Community 21 - "Verification Patterns"
 Cohesion: 0.09
@@ -422,8 +422,8 @@ Cohesion: 0.14
 Nodes (16): routeCjsCommandFamily(), INIT_COMMAND_ALIASES, NON_FAMILY_COMMAND_ALIASES, PHASE_COMMAND_ALIASES, PHASE_SUBCOMMANDS, PHASES_COMMAND_ALIASES, PHASES_SUBCOMMANDS, ROADMAP_COMMAND_ALIASES (+8 more)
 
 ### Community 25 - "profile-pipeline.cjs"
-Cohesion: 0.23
-Nodes (18): reapStaleTempFiles(), cmdExtractMessages(), cmdProfileSample(), cmdScanSessions(), formatBytes(), formatProjectTable(), formatSessionTable(), fs (+10 more)
+Cohesion: 0.21
+Nodes (19): ensureGsdTempDir(), reapStaleTempFiles(), cmdExtractMessages(), cmdProfileSample(), cmdScanSessions(), formatBytes(), formatProjectTable(), formatSessionTable() (+11 more)
 
 ### Community 26 - "checkpoints.md"
 Cohesion: 0.10
@@ -446,8 +446,8 @@ Cohesion: 0.11
 Nodes (18): Advanced Fields, Complete Field Reference, Core Fields, Example Configurations, Features Fields, Field Interactions, Git Fields, Hook Fields (+10 more)
 
 ### Community 31 - "security.cjs"
-Cohesion: 0.07
-Nodes (48): CANONICAL_HEADERS, classifyHeader(), CONSEQUENCE_NEGATIVE_HINTS, CONSEQUENCE_POSITIVE_HINTS, fs, main(), normalizeAdrHeader(), parseAdrMarkdown() (+40 more)
+Cohesion: 0.08
+Nodes (41): CANONICAL_HEADERS, classifyHeader(), CONSEQUENCE_NEGATIVE_HINTS, CONSEQUENCE_POSITIVE_HINTS, fs, main(), normalizeAdrHeader(), parseAdrMarkdown() (+33 more)
 
 ### Community 32 - "Verification Overrides"
 Cohesion: 0.11
@@ -458,8 +458,8 @@ Cohesion: 0.11
 Nodes (17): 5a: Deterministic verifier (binding gate, #2969), 5b: Hunk Verification Table review (advisory gate, #1999), Git-enhanced two-way merge, Option A: Pristine hash from backup-meta.json + git history (most reliable), Option B: Pristine snapshot directory, Option C: No baseline available (two-way fallback), Post-merge verification, Reapply Local Patches Workflow (+9 more)
 
 ### Community 34 - "workstream.cjs"
-Cohesion: 0.17
-Nodes (25): createPlanningWorkspace(), getActiveWorkstream(), planningRoot(), setActiveWorkstream(), cmdWorkstreamComplete(), cmdWorkstreamGet(), cmdWorkstreamList(), cmdWorkstreamProgress() (+17 more)
+Cohesion: 0.14
+Nodes (27): createPlanningWorkspace(), getActiveWorkstream(), planningRoot(), setActiveWorkstream(), cmdWorkstreamComplete(), cmdWorkstreamCreate(), cmdWorkstreamGet(), cmdWorkstreamList() (+19 more)
 
 ### Community 35 - "Gate Prompt Patterns"
 Cohesion: 0.12
@@ -477,9 +477,9 @@ Nodes (16): Anti-Pattern 1: [Name], Anti-Pattern 2: [Name], Anti-Patterns, Archi
 Cohesion: 0.12
 Nodes (16): Canonical References, Deferred Ideas, Established Patterns, Existing Code Insights, Existing Codebase References, Implementation Decisions, JWT & Session Storage Strategy, Phase 01: Backend Foundation & Authentication - Context (+8 more)
 
-### Community 39 - "User.js"
-Cohesion: 0.12
-Nodes (16): Deviations from Plan, Key Changes, Next Steps, Phase 02 Plan 01: Profile Backend API & Schema Extension Summary, Verification, Deviations from Plan, Key Changes, Next Steps (+8 more)
+### Community 39 - "Phase 02 Plan 01: Profile Backend API & Schema Extension Summary"
+Cohesion: 0.40
+Nodes (4): Deviations from Plan, Next Steps, Phase 02 Plan 01: Profile Backend API & Schema Extension Summary, Verification
 
 ### Community 40 - "drift.cjs"
 Cohesion: 0.18
@@ -525,9 +525,9 @@ Nodes (14): Async / Timing, Common Bug Patterns, Data Shape / API Contract, Envi
 Cohesion: 0.13
 Nodes (14): Design Rationale, Dynamic Routing with Failure-Tier Escalation (#3024), Model Profiles, Per-Agent Overrides, Per-Phase-Type Model Map (#3023), Phase-type → agent mapping, Profile Definitions, Profile Philosophy (+6 more)
 
-### Community 51 - "uat.cjs"
-Cohesion: 0.31
-Nodes (9): buildCheckpoint(), categorizeItem(), cmdAuditUat(), cmdRenderCheckpoint(), fs, parseCurrentTest(), parseUatItems(), parseVerificationItems() (+1 more)
+### Community 51 - "ref_path"
+Cohesion: 0.09
+Nodes (29): cmdHistoryDigest(), cmdSummaryExtract(), cmdFrontmatterGet(), cmdFrontmatterMerge(), cmdFrontmatterSet(), cmdFrontmatterValidate(), extractFrontmatter(), FRONTMATTER_SCHEMAS (+21 more)
 
 ### Community 52 - "worktree-safety.cjs"
 Cohesion: 0.19
@@ -549,9 +549,9 @@ Nodes (13): composeStatusline(), formatGsdState(), fs, getConfigValue(), os, par
 Cohesion: 0.14
 Nodes (13): complete, create, /gsd-workstreams, list, progress, resume, status, Step 1: Parse Subcommand (+5 more)
 
-### Community 57 - "App.jsx"
-Cohesion: 0.25
-Nodes (10): App(), LoginPage(), AsciiArt(), ProfileCompletionCard(), SessionDetailDrawer(), MatchAcceptModal(), AuthProvider(), SocketProvider() (+2 more)
+### Community 57 - "Phase 02 Plan 02: Profile Screen, Tag Input & Dashboard Onboarding Banner Summary"
+Cohesion: 0.40
+Nodes (4): Deviations from Plan, Next Steps, Phase 02 Plan 02: Profile Screen, Tag Input & Dashboard Onboarding Banner Summary, Verification
 
 ### Community 58 - "gsd-update-banner.js"
 Cohesion: 0.33
@@ -1050,7 +1050,7 @@ Cohesion: 0.40
 Nodes (4): Milestone 1 Conclusion, Milestones & Phases, Project State — PeerForge, Project Status
 
 ### Community 182 - "learnings.cjs"
-Cohesion: 0.15
+Cohesion: 0.16
 Nodes (22): cmdLearningsCopy(), cmdLearningsDelete(), cmdLearningsList(), cmdLearningsPrune(), cmdLearningsQuery(), contentHash(), crypto, DEFAULT_STORE_DIR (+14 more)
 
 ### Community 183 - "Implementation Decisions"
@@ -1095,7 +1095,7 @@ Nodes (13): 1. Workspace Layout & Video Tiles, 2. Collaborative Code Editor Expe
 
 ### Community 337 - "server.js"
 Cohesion: 0.13
-Nodes (12): cookie-parser@^1.4.7, dotenv@^18.0.9, express@^5.3.0, socket.io@^4.8.4, cookie-parser, dotenv, express, socket.io (+4 more)
+Nodes (12): cookie-parser@^1.4.7, cors@^2.8.6, dotenv@^18.0.9, socket.io@^4.8.4, cookie-parser, cors, dotenv, socket.io (+4 more)
 
 ### Community 338 - "Phase 03: Matchmaking Engine & Socket.IO Signaling - Discussion Log"
 Cohesion: 0.25
@@ -1118,19 +1118,19 @@ Cohesion: 0.13
 Nodes (18): extractField(), fs, main(), parseMultiwordArg(), parseNamedArgs(), path, runCommand(), walkDir() (+10 more)
 
 ### Community 343 - "auth"
-Cohesion: 0.13
-Nodes (17): Must Haves (Goal-Backward Verification), Objective, Plan 02-01: Profile Backend API & Schema Extension, Tasks, Verification Criteria, Objective, Plan 06-01: Session History & Analytics Backend REST Endpoints, Tasks (+9 more)
+Cohesion: 0.09
+Nodes (26): Must Haves (Goal-Backward Verification), Objective, Plan 02-01: Profile Backend API & Schema Extension, Tasks, Verification Criteria, Key Changes, Key Changes, Objective (+18 more)
 
 ### Community 344 - "Plan 03-02: Client Socket Integration & Matchmaking Lobby UI"
-Cohesion: 0.33
-Nodes (5): Must Haves (Goal-Backward Verification), Objective, Plan 03-02: Client Socket Integration & Matchmaking Lobby UI, Tasks, Verification Criteria
+Cohesion: 0.40
+Nodes (4): Must Haves (Goal-Backward Verification), Objective, Plan 03-02: Client Socket Integration & Matchmaking Lobby UI, Verification Criteria
 
 ### Community 345 - "Phase 02: User Profiles & Developer Preferences - Discussion Log"
 Cohesion: 0.29
 Nodes (6): Availability & Scheduling Structure, Deferred Ideas, Phase 02: User Profiles & Developer Preferences - Discussion Log, Profile Onboarding Flow, Profile Screen Layout & Presentation, Skills & Target Roles Selection
 
 ### Community 346 - "planning-workspace.cjs"
-Cohesion: 0.20
+Cohesion: 0.18
 Nodes (15): createSessionScopedPointerAdapter(), createSharedPointerAdapter(), crypto, fs, getControllingTtyToken(), getSessionScopedWorkstreamFile(), getWorkstreamSessionKey(), _heldPlanningLocks (+7 more)
 
 ### Community 347 - "VideoTiles.jsx"
@@ -1158,32 +1158,32 @@ Cohesion: 0.29
 Nodes (6): Section 1 — Planning Tuning, Section 2 — Execution Tuning, Section 3 — Discussion Tuning, Section 4 — Cross-AI Execution, Section 5 — Git Customization, Section 6 — Runtime / Output
 
 ### Community 353 - "react"
-Cohesion: 0.18
-Nodes (8): lucide-react, react, FeedbackFormModal(), RubricSlider(), SCALE_DESCRIPTORS, COMPETENCY_LABELS, UnlockedScorecard(), WaitingBlindRoom()
+Cohesion: 0.10
+Nodes (18): lucide-react, react, SessionDetailDrawer(), FeedbackFormModal(), RubricSlider(), SCALE_DESCRIPTORS, COMPETENCY_LABELS, UnlockedScorecard() (+10 more)
 
 ### Community 354 - "Phase 03 Plan 02: Client Socket Integration & Matchmaking Lobby UI Summary"
 Cohesion: 0.33
 Nodes (5): Deviations from Plan, Key Changes, Next Steps, Phase 03 Plan 02: Client Socket Integration & Matchmaking Lobby UI Summary, Verification
 
 ### Community 355 - "Phase 01 Plan 03: Frontend Integration, State Management & Protected Routing Summary"
-Cohesion: 0.33
-Nodes (5): Deviations from Plan, Key Changes, Next Steps, Phase 01 Plan 03: Frontend Integration, State Management & Protected Routing Summary, Verification
+Cohesion: 0.40
+Nodes (4): Deviations from Plan, Next Steps, Phase 01 Plan 03: Frontend Integration, State Management & Protected Routing Summary, Verification
 
-### Community 356 - "model-catalog.cjs"
-Cohesion: 0.18
-Nodes (15): AGENT_DEFAULT_TIERS, AGENT_TO_PHASE_TYPE, _catalogCandidates, formatAgentToModelMapAsTable(), getAgentToModelMapForProfile(), KNOWN_RUNTIMES, MODEL_ALIAS_MAP, MODEL_PROFILES (+7 more)
+### Community 356 - "gsd-read-guard.js"
+Cohesion: 0.50
+Nodes (3): fs, path, stdinTimeout
 
 ### Community 357 - "Plan 01-03: Frontend Integration, State Management & Protected Routing"
-Cohesion: 0.33
-Nodes (5): Must Haves (Goal-Backward Verification), Objective, Plan 01-03: Frontend Integration, State Management & Protected Routing, Tasks, Verification Criteria
+Cohesion: 0.40
+Nodes (4): Must Haves (Goal-Backward Verification), Objective, Plan 01-03: Frontend Integration, State Management & Protected Routing, Verification Criteria
 
 ### Community 358 - "dependencies"
-Cohesion: 0.07
-Nodes (29): dependencies, bcryptjs@^3.0.3, class-variance-authority@^0.7.1, clsx@^2.1.1, cors@^2.8.6, jsonwebtoken@^9.0.3, lucide-react@^1.68.0, @monaco-editor/react@^4.7.0 (+21 more)
+Cohesion: 0.05
+Nodes (51): bugs, url, dependencies, bcryptjs@^3.0.3, class-variance-authority@^0.7.1, clsx@^2.1.1, express@^5.3.0, jsonwebtoken@^9.0.3 (+43 more)
 
 ### Community 359 - "lucide-react"
-Cohesion: 0.13
-Nodes (17): react-router-dom, DashboardLayout(), SettingsModal(), Sidebar(), Topbar(), LoginForm(), AvailabilityToggle(), PREFERENCE_WINDOWS (+9 more)
+Cohesion: 0.16
+Nodes (18): Tasks, Key Changes, Tasks, react-router-dom, App(), LoginPage(), AsciiArt(), SettingsModal() (+10 more)
 
 ### Community 360 - "Plan 04-03 Summary: Curated Problem Bank, Monaco Collaborative Editor, In-Browser Runner & Interview Room Integration"
 Cohesion: 0.50
@@ -1206,8 +1206,8 @@ Cohesion: 0.40
 Nodes (4): Must Haves (Goal-Backward Verification), Objective, Plan 03-01: Socket.IO Server Infrastructure & In-Memory Matchmaking Queue, Verification Criteria
 
 ### Community 367 - "active-workstream-store.cjs"
-Cohesion: 0.39
-Nodes (6): parseCliWorkstream(), resolveActiveWorkstream(), validateWorkstreamName(), validateWorkstreamName(), isValidActiveWorkstreamName(), toWorkstreamSlug()
+Cohesion: 0.53
+Nodes (5): parseCliWorkstream(), resolveActiveWorkstream(), validateWorkstreamName(), validateWorkstreamName(), isValidActiveWorkstreamName()
 
 ### Community 368 - "gsd-read-injection-scanner.js"
 Cohesion: 0.29
@@ -1234,12 +1234,12 @@ Cohesion: 0.18
 Nodes (10): 1. Cold Start Smoke Test, 2. Post-Interview Feedback Modal Trigger, 3. 4-Dimension Rubric Evaluation Form, 4. Structured Qualitative Feedback with Character Counters, 5. Symmetric Blind Reveal Protection, 6. Unlocked Scorecard Display, 7. Production Build Integrity, Phase 5: Structured Feedback & Evaluation Engine - UAT (+2 more)
 
 ### Community 374 - "Dashboard.jsx"
-Cohesion: 0.26
-Nodes (12): DIFFICULTIES, MatchmakingQuickCard(), TRACKS, SocketContext, useSocket(), DIFFICULTIES, Lobby(), TRACKS (+4 more)
+Cohesion: 0.22
+Nodes (15): DIFFICULTIES, MatchmakingQuickCard(), TRACKS, ProfileCompletionCard(), MatchAcceptModal(), SocketContext, useSocket(), Dashboard() (+7 more)
 
-### Community 375 - "ref_path"
-Cohesion: 0.08
-Nodes (21): { execFileSync }, fs, MANAGED_HOOKS, path, result, staleHooks, fs, os (+13 more)
+### Community 375 - "gsd-check-update-worker.js"
+Cohesion: 0.13
+Nodes (11): { execFileSync }, fs, MANAGED_HOOKS, path, result, staleHooks, fs, os (+3 more)
 
 ### Community 376 - "Areas Discussed"
 Cohesion: 0.25
@@ -1281,8 +1281,8 @@ Nodes (3): Objective, Plan 04-03: Curated Problem Bank, Monaco Collaborative Edi
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `error()` connect `output` to `gsd2-import.cjs`, `state.cjs`, `workstream.cjs`, `gsd-graphify/SKILL.md`, `phase.cjs`, `init.cjs`, `Plan 01-03: Frontend Integration, State Management & Protected Routing`, `profile-output.cjs`, `Plan 04-03 Summary: Curated Problem Bank, Monaco Collaborative Editor, In-Browser Runner & Interview Room Integration`, `output`, `core.cjs`, `InterviewRoom.jsx`, `verify.cjs`, `uat.cjs`, `gsd-tools.cjs`, `learnings.cjs`, `profile-pipeline.cjs`, `gap-checker.cjs`?**
-  _High betweenness centrality (0.037) - this node is a cross-community bridge._
+- **Why does `express` connect `auth` to `server.js`, `authRoutes.js`, `dependencies`, `feedbackController.js`?**
+  _High betweenness centrality (0.030) - this node is a cross-community bridge._
 - **Are the 6 inferred relationships involving `error()` (e.g. with `runCommand()` and `core.cjs`) actually correct?**
   _`error()` has 6 INFERRED edges - model-reasoned connections that need verification._
 - **What connects `ADR-0011`, `ADR-0011`, `ADR-0011` to the rest of the system?**
@@ -1292,6 +1292,6 @@ _Questions this graph is uniquely positioned to answer:_
 - **Are the 3 inferred relationships involving `loadConfig()` (e.g. with `core.cjs` and `How It Works`) actually correct?**
   _`loadConfig()` has 3 INFERRED edges - model-reasoned connections that need verification._
 - **Should `gsd2-import.cjs` be split into smaller, more focused modules?**
-  _Cohesion score 0.08282828282828283 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.05711263881544157 - nodes in this community are weakly interconnected._
 - **Should `state.cjs` be split into smaller, more focused modules?**
-  _Cohesion score 0.06680080482897384 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.07540983606557378 - nodes in this community are weakly interconnected._

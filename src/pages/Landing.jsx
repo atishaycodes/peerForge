@@ -93,7 +93,7 @@ export default function Landing() {
                 to="/dashboard"
                 className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-black text-white hover:bg-neutral-800 text-xs font-medium transition-all shadow-sm active:scale-95"
               >
-                <span>Dashboard ({user.name.split(" ")[0]})</span>
+                <span>Dashboard</span>
                 <ArrowRight className="w-3.5 h-3.5" />
               </Link>
             ) : (
@@ -364,7 +364,7 @@ export default function Landing() {
                   <div className="w-12 h-12 rounded-full bg-neutral-800 border border-neutral-700 flex items-center justify-center font-mono font-bold text-neutral-300 mb-1">
                     ME
                   </div>
-                  <span className="text-[11px] text-neutral-300 font-mono">You (Atishay)</span>
+                  <span className="text-[11px] text-neutral-300 font-mono">You (Candidate)</span>
                   <span className="text-[10px] text-neutral-500">Candidate Round</span>
                 </div>
 
