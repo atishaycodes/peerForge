@@ -7,15 +7,20 @@ import React from 'react';
 // Remix the source recipe (styles, animation, palette) in the editor:
 // https://21st.dev/community/ascii/editor?from=e05cb032-35be-4bcd-999b-cbf5b1588bac
 export function AsciiArt({ className, style }) {
+  // Support both root deployment (Vercel) and subpath deployment (GitHub Pages)
+  const isSubpath =
+    typeof window !== "undefined" &&
+    window.location.pathname.includes("/submissions/");
+  const prefix = isSubpath ? "./" : "/";
+
   return (
     <video
       className={className}
-      src="/vignette-bloom.mp4"
-      poster="/vignette-bloom.webp"
       autoPlay
       loop
       muted
       playsInline
+      poster={`${prefix}vignette-bloom.webp`}
       aria-label="Vignette Bloom — animated ASCII art"
       style={{
         display: "block",
@@ -25,7 +30,12 @@ export function AsciiArt({ className, style }) {
         objectPosition: "30% center", // Centers the statue/man horizontally in the container
         ...style,
       }}
-    />
+    >
+      <source src={`${prefix}vignette-bloom.mp4`} type="video/mp4" />
+      <source src="./vignette-bloom.mp4" type="video/mp4" />
+      <source src="vignette-bloom.mp4" type="video/mp4" />
+      <source src="/vignette-bloom.mp4" type="video/mp4" />
+    </video>
   );
 }
 

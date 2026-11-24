@@ -534,9 +534,9 @@
     "semantic_hash": ""
   },
   "src/components/AsciiArt.jsx": {
-    "mtime": 1793796839.8646805,
-    "seen": 1793973607.82267,
-    "ast_hash": "74db33de223870c45e1e0d37f0c2918a",
+    "mtime": 1795508333.3952353,
+    "seen": 1795508465.1196678,
+    "ast_hash": "a4d0b12aa4dc428afe6ed2f84c5c2811",
     "semantic_hash": ""
   },
   "src/components/LoginForm.jsx": {
@@ -558,9 +558,9 @@
     "semantic_hash": ""
   },
   "vite.config.js": {
-    "mtime": 1794137997.9219937,
-    "seen": 1794138865.3737469,
-    "ast_hash": "082c8e3d9aa82f91dd5f3cf1ae9c0a99",
+    "mtime": 1795507667.2721467,
+    "seen": 1795507711.4850268,
+    "ast_hash": "13d35a9e6df517b7ba11ec85c2ebde11",
     "semantic_hash": ""
   },
   ".agent/get-shit-done/contexts/dev.md": {
@@ -2430,9 +2430,9 @@
     "semantic_hash": ""
   },
   "server/server.js": {
-    "mtime": 1795448738.0842934,
-    "seen": 1795450332.2741754,
-    "ast_hash": "5baed136863ce30f24115a93f8ede364",
+    "mtime": 1795508256.1467614,
+    "seen": 1795508465.1196513,
+    "ast_hash": "f029cd01cafd19645f89b722ab5047aa",
     "semantic_hash": ""
   },
   "src/components/ProtectedRoute.jsx": {
@@ -2586,9 +2586,9 @@
     "semantic_hash": ""
   },
   "src/context/SocketContext.jsx": {
-    "mtime": 1795452311.8195589,
-    "seen": 1795453932.1308172,
-    "ast_hash": "2f22e3f5ea39d9f3158231545e56fec9",
+    "mtime": 1795508296.7673333,
+    "seen": 1795508465.1197567,
+    "ast_hash": "b26089b0dc74387bee56d37327a7436e",
     "semantic_hash": ""
   },
   "src/pages/InterviewRoom.jsx": {
@@ -2970,9 +2970,9 @@
     "semantic_hash": ""
   },
   "src/utils/api.js": {
-    "mtime": 1795455247.6110682,
-    "seen": 1795455353.8828497,
-    "ast_hash": "b0c4b2acaf1ebdb7ca4d401a8ac984d6",
+    "mtime": 1795508273.3882484,
+    "seen": 1795508465.1197815,
+    "ast_hash": "4d579a9f4310bb3921e94b61c439075e",
     "semantic_hash": ""
   },
   "vercel.json": {
