@@ -2316,9 +2316,9 @@
     "semantic_hash": ""
   },
   "README.md": {
-    "mtime": 1795464695.621166,
-    "seen": 1795464756.4390922,
-    "ast_hash": "722926419b5e2c45ff4a144f9c69c070",
+    "mtime": 1795503213.127256,
+    "seen": 1795503251.1092224,
+    "ast_hash": "10eb4984d5ab10bb8b438b18ae3157d5",
     "semantic_hash": ""
   },
   "index.html": {
@@ -2994,15 +2994,27 @@
     "semantic_hash": ""
   },
   "docs/screenshots/auth-page.jpg": {
-    "mtime": 1795448410.6709218,
-    "seen": 1795464166.3960037,
-    "ast_hash": "2074b65fa00f781639a2fb387406aa9f",
+    "mtime": 1795503134.5854428,
+    "seen": 1795503251.1092355,
+    "ast_hash": "fb6014d8a19382c8c321434a4455dd58",
     "semantic_hash": ""
   },
-  "docs/screenshots/live-room.jpg": {
-    "mtime": 1795456099.9360785,
-    "seen": 1795464166.3960087,
-    "ast_hash": "7e03b1c466f8e7a82bef3912a3f2f628",
+  "docs/screenshots/dashboard.png": {
+    "mtime": 1795503134.6164398,
+    "seen": 1795503251.1092415,
+    "ast_hash": "2fd0e8713ce2e9f6d22e764bce547f73",
+    "semantic_hash": ""
+  },
+  "docs/screenshots/interview-room.png": {
+    "mtime": 1795503134.6397681,
+    "seen": 1795503251.1092465,
+    "ast_hash": "b9e1248ab1569da504f7ba36c8a57361",
+    "semantic_hash": ""
+  },
+  "docs/screenshots/landing-page.png": {
+    "mtime": 1795503134.5577574,
+    "seen": 1795503251.1092503,
+    "ast_hash": "2352c544831c5c4f962866d2497487e9",
     "semantic_hash": ""
   },
   "package-lock.json": {
