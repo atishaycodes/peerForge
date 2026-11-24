@@ -534,9 +534,9 @@
     "semantic_hash": ""
   },
   "src/components/AsciiArt.jsx": {
-    "mtime": 1795508333.3952353,
-    "seen": 1795508465.1196678,
-    "ast_hash": "a4d0b12aa4dc428afe6ed2f84c5c2811",
+    "mtime": 1795509056.2655118,
+    "seen": 1795509131.3994157,
+    "ast_hash": "1bed24888d6afcf242de1e13c155d916",
     "semantic_hash": ""
   },
   "src/components/LoginForm.jsx": {
@@ -2586,8 +2586,8 @@
     "semantic_hash": ""
   },
   "src/context/SocketContext.jsx": {
-    "mtime": 1795508296.7673333,
-    "seen": 1795508465.1197567,
+    "mtime": 1795508644.4136584,
+    "seen": 1795509131.3994758,
     "ast_hash": "b26089b0dc74387bee56d37327a7436e",
     "semantic_hash": ""
   },
@@ -2970,8 +2970,8 @@
     "semantic_hash": ""
   },
   "src/utils/api.js": {
-    "mtime": 1795508273.3882484,
-    "seen": 1795508465.1197815,
+    "mtime": 1795508644.446662,
+    "seen": 1795509131.3995283,
     "ast_hash": "4d579a9f4310bb3921e94b61c439075e",
     "semantic_hash": ""
   },
