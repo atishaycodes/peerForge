@@ -28,7 +28,6 @@ const corsOriginHandler = (origin, callback) => {
     origin.includes("localhost") ||
     origin.includes("127.0.0.1") ||
     origin.endsWith(".vercel.app") ||
-    origin.includes("github.io") ||
     origin.endsWith(".loca.lt") ||
     origin.endsWith(".ngrok-free.app") ||
     origin.endsWith(".ngrok.io") ||

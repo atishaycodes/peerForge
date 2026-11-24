@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react';
+import React from 'react';
 
 // AsciiArt — "Vignette Bloom", made with the 21st.dev ASCII editor and baked
 // to its exact rendered output (looping video + poster). Zero dependencies:
@@ -7,38 +7,11 @@ import React, { useRef, useEffect } from 'react';
 // Remix the source recipe (styles, animation, palette) in the editor:
 // https://21st.dev/community/ascii/editor?from=e05cb032-35be-4bcd-999b-cbf5b1588bac
 export function AsciiArt({ className, style }) {
-  const videoRef = useRef(null);
-
-  // Robust asset path: handles subpaths (GitHub Pages) and root domains (Vercel / localhost)
-  let videoSrc = "/vignette-bloom.mp4";
-  let posterSrc = "/vignette-bloom.webp";
-
-  if (typeof window !== "undefined") {
-    // If running in a subpath like /P2P_App/submissions/group-peerforge/
-    const subpathMatch = window.location.pathname.match(/^(\/[^#?]+?)(?:\/index\.html)?$/);
-    const basePath = subpathMatch ? subpathMatch[1].replace(/\/$/, "") : "";
-    if (basePath) {
-      videoSrc = `${basePath}/vignette-bloom.mp4`;
-      posterSrc = `${basePath}/vignette-bloom.webp`;
-    }
-  }
-
-  // Ensure DOM muted property is true so Chrome / Safari never block autoplay
-  useEffect(() => {
-    const video = videoRef.current;
-    if (video) {
-      video.defaultMuted = true;
-      video.muted = true;
-      video.play().catch(() => {});
-    }
-  }, []);
-
   return (
     <video
-      ref={videoRef}
       className={className}
-      src={videoSrc}
-      poster={posterSrc}
+      src="/vignette-bloom.mp4"
+      poster="/vignette-bloom.webp"
       autoPlay
       loop
       muted

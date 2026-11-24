@@ -27,16 +27,14 @@ export function SocketProvider({ children }) {
 
   // Initialize socket instance once across entire app lifecycle
   useEffect(() => {
-    const isRemoteHost =
-      typeof window !== "undefined" &&
-      window.location.hostname !== "localhost" &&
-      window.location.hostname !== "127.0.0.1" &&
-      !window.location.hostname.startsWith("192.168.");
+    const isVercel =
+      typeof window !== 'undefined' &&
+      window.location.hostname.endsWith('.vercel.app');
 
     const backendOrigin =
       import.meta.env.VITE_BACKEND_URL ||
       import.meta.env.VITE_API_URL ||
-      (isRemoteHost ? 'https://peerforge-backend.onrender.com' : (typeof window !== 'undefined' ? window.location.origin : '/'));
+      (isVercel ? 'https://peerforge-backend.onrender.com' : (typeof window !== 'undefined' ? window.location.origin : '/'));
 
     const socket = io(backendOrigin, {
       withCredentials: true,

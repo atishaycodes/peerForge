@@ -2,16 +2,12 @@
  * Global API Base URL and Endpoint Resolution
  * Automatically points to Render backend on Vercel deployments, or localhost in dev.
  */
-const isRemoteHost =
-  typeof window !== "undefined" &&
-  window.location.hostname !== "localhost" &&
-  window.location.hostname !== "127.0.0.1" &&
-  !window.location.hostname.startsWith("192.168.");
+const isVercel = typeof window !== "undefined" && window.location.hostname.endsWith(".vercel.app");
 
 export const API_BASE_URL = (
   import.meta.env.VITE_BACKEND_URL ||
   import.meta.env.VITE_API_URL ||
-  (isRemoteHost ? "https://peerforge-backend.onrender.com" : "")
+  (isVercel ? "https://peerforge-backend.onrender.com" : "")
 ).replace(/\/$/, "");
 
 export const getApiUrl = (endpoint) => {
